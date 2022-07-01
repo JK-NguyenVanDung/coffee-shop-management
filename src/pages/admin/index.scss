@@ -1,0 +1,99 @@
+
+.ant-layout {
+    height: 100vh;
+
+}
+.ant-menu-item-selected {
+ border-left: 3px solid #4CACBA   !important;
+}
+
+
+.menu-layout {
+    min-height: 100vh;
+}
+.trigger {
+    font-size: 18px;
+    line-height: 64px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.trigger:hover {
+    color: #1890ff;
+}
+.centerCont{
+    display: inline-flex;
+    width: 100%;
+    margin-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+}
+.logo {
+    position: relative;
+    height: auto;
+    // background: #eee;
+    padding: 10;
+    margin: 10px;
+    img {
+        max-width: 100%;
+        object-fit: contain;
+    }
+}
+
+.site-layout {
+    background: #F8F9FD;
+    overflow-x: hidden;
+    padding: 10px;
+}
+.ant-layout-sider-children {
+}
+.site-layout-background {
+    background: #F8F9FD;
+    min-height: 280;
+    padding: 10px;
+}
+
+.header {
+    background: #F8F9FD;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    .right {
+        display: flex;
+        align-items: center;
+        margin-right: 30px;
+        .mr15 {
+            margin-right: 15px;
+        }
+    }
+}
+.card-user {
+    align-items: center;
+}
+.pull-right {
+    margin-top: 15px;
+}
+.update-customer {
+    .ant-form-item-control-input-content {
+        display: flex !important;
+        align-items: center;
+    }
+    .ant-upload-list {
+        display: none !important;
+    }
+}
+.box-form {
+    .ant-form-item {
+        margin: 10px 0;
+    }
+}
+.label-custom {
+    label {
+        min-width: 150px;
+    }
+}
+.label-custom-200 {
+    label {
+        min-width: 200px;
+    }
+}

@@ -1,0 +1,21 @@
+
+.centeredCont{
+    width: 100%;
+    height: auto;
+    display:flex;
+    justify-content:space-between;
+    align-items: center;
+    padding-left: 5%;
+    padding-right: 5%;
+
+
+  .menuSearch{
+    width: 50%;
+    .ant-input {
+        border-radius: 25px;
+          width: 100%;
+        
+      }
+  }
+  }
+  

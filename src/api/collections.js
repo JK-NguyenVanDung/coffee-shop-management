@@ -1,8 +1,8 @@
 import api from "./axiosConfig";
 
-const v1 = "/v1/admin/collections";
-const v2 = "/v1/admin";
 
+const v2 = "/v1/admin";
+const v1 = "/v1/admin/collections";
 export const getProperties = async () => {
   try {
     const response = await api.get(`${v1}/properties`);
