@@ -1,0 +1,70 @@
+.dishSearchCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+
+    .dishSearch {
+        width: 30%;
+        .ant-input {
+            border-radius: 25px;
+            width: 100%;
+        }
+    }
+}
+.employeesInfo {
+    min-width: 100px;
+    width: 1000px;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #000;
+    border-radius: 12px ;
+  }
+
+.totalContent {
+    background-color: #fff;
+}
+.employeesTitleInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px;
+}
+.employeesCont {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.employeesName {
+    padding-bottom: 15px;
+}  
+.employeesAge {
+    padding-bottom: 15px;
+}
+.identityCard {
+    padding-bottom: 15px;
+}
+.employeesID {
+    padding-bottom: 15px;
+}
+.employeesEmail {
+    padding-bottom: 15px;
+}
+.employeesPhone {
+    padding-bottom: 15px;
+}
+// .employeesPass {
+
+// }
+.employeesAddress {
+    padding-bottom: 15px;
+}
+// .employeesStatus {
+
+// }
+.employeesPosition {
+    display: flex;
+    justify-content: space-around;
+}
