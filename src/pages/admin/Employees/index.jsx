@@ -7,7 +7,10 @@ import { Input } from "antd";
 
 const { Search } = Input;
 export default function Employees() {
-    return(<></>)
+    return(<>
+    
+    
+    </>)
 
 }
 

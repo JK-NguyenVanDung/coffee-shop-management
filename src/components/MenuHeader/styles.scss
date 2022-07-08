@@ -6,16 +6,103 @@
     justify-content:space-between;
     align-items: center;
     padding-left: 5%;
-    padding-right: 5%;
+    padding-right: 2%;
 
 
   .menuSearch{
     width: 50%;
-    .ant-input {
-        border-radius: 25px;
-          width: 100%;
-        
+    .ant-input-affix-wrapper{
+      border-radius: 8px !important; 
+      width: 100%;
+      border:none !important;
+      padding-left: 3.5rem;
+      height: 5vh; 
+      -webkit-box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
+      box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
+      }
+    
+      .ant-input-group-addon{
+        z-index: 1 !important;
+        border-radius: 8px !important; 
+        position: absolute !important;
+        top:1px !important;
+        left: 0px !important;
+        border:none;
+        width: 40px !important;
+        height: 1rem !important;
+        background: none !important;
+      }
+      .ant-input-group-addon:hover{
+        color: #111 !important;
+        z-index: 1 !important;
+
+      }
+      .ant-input-affix-wrapper-focused{
+        z-index:0 !important; 
+      }
+      .ant-input-affix-wrapper:hover{
+        z-index:0 !important; 
       }
   }
   }
-  
+  .ant-switch-handle{
+    height: 2rem;
+    width: 2rem;
+    border-radius: 2rem;
+  }
+  .ant-switch-handle::before{
+    height: 2rem;
+    width: 2rem;
+    border-radius: 2rem;
+    left: calc(100% - 40px - 2px);
+    top: -0.12rem;
+  }
+  .slick-arrow {
+    color: #111;
+    margin-right: 8px;
+  }
+  .slick-arrow:hover {
+    color: rgb(34, 30, 30);
+  }
+
+  .drop-shadow{
+    -webkit-box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
+    box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
+}
+
+.backdrop{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100vh;
+  background:rgb(34, 30, 30,30%);
+}
+
+.ant-switch{
+  background-color: #ffffff !important;
+  background-image: none !important;
+
+  .ant-switch-handle::before{
+    background-color: #312A21 !important;
+
+  }
+  span{
+    font-size:large !important;
+    color: #312A21 !important;
+    padding-right: 5px;
+
+  }
+}
+.ant-switch-checked{
+  background-color: #312A21 !important;
+  .ant-switch-handle::before{
+    background-color: #ffffff !important;
+
+  }
+  span{
+    color: #ffffff !important;
+  }
+}
+

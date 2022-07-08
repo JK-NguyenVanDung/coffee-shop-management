@@ -10,6 +10,8 @@ import {
   ProfileFilled,
   SettingOutlined,
 } from "@ant-design/icons";
+import Bell from "../../assets/img/bell.svg";
+import { IconButton } from "@mui/material/";
 const test = {
   email: "spottran2001@gmail.com",
   sdt: "03112323123",
@@ -21,8 +23,8 @@ const test = {
   active: true,
   password: "sadasdasd",
   status: 1,
-  role: 1
-}
+  role: 1,
+};
 export default function HeaderProFile() {
   // const getProFile = useAppSelector((state) => state.showProfile.data);
   const info = test; //useAppSelector((state) => state.auth.info);
@@ -56,7 +58,9 @@ export default function HeaderProFile() {
                 </Menu.Item> */}
       </Menu.ItemGroup>
       <Menu.Divider />
-     <Menu.Item icon={<LoginOutlined />} onClick={()=>{}}> {/* logout */}
+      <Menu.Item icon={<LoginOutlined />} onClick={() => {}}>
+        {" "}
+        {/* logout */}
         Logout
       </Menu.Item>
     </Menu>
@@ -66,10 +70,10 @@ export default function HeaderProFile() {
   return (
     <div className="right">
       <div className="mr15">
-        <Badge dot={true} offset={[-2, 0]}>
-          <a style={{ color: "#000" }}>
-            <BellFilled />
-          </a>
+        <Badge dot={true} offset={[-10, 10]}>
+          <IconButton style={{ color: "#000" }}>
+            <img src={Bell} />
+          </IconButton>
         </Badge>
       </div>
       <div>
