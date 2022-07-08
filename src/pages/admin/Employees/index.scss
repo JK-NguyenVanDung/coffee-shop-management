@@ -12,59 +12,203 @@
         }
     }
 }
-.employeesInfo {
-    min-width: 100px;
-    width: 1000px;
-    min-height: 50vh;
+
+// Thêm nhân viên
+
+.employeesAdd {
+    width: 60%;
     display: flex;
     flex-direction: column;
-    background-color: #000;
-    border-radius: 12px ;
-  }
 
-.totalContent {
+    border-radius: 12px ;
+    padding: 0.5%;
+  }
+.totalContentAdd {
     background-color: #fff;
+    border-radius: 12px;
+}
+.employeesTitleAdd {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 4.3%;
+    margin-right: 4.3%;
+}
+.employeesContAdd {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.employeesNameAdd {
+    padding-bottom: 3%;
+}  
+.employeesAgeAdd {
+    padding-bottom: 3%;
+}
+.identityCardAdd {
+    padding-bottom: 3%;
+}
+.employeesIDAdd {
+    padding-bottom: 3%;
+}
+.employeesEmailAdd {
+    padding-bottom: 3%;
+}
+.employeesPhoneAdd {
+    padding-bottom: 3%;
+}
+.employeesPassAdd {
+    padding-bottom: 3%;
+}
+.employeesAddressAdd {
+    padding-bottom: 3%;
+}
+.employeesStatusAdd {
+    padding-bottom: 3%;
+}
+.employeesPositionAdd {
+    padding-bottom: 3%;
+}
+.positionCheckAdd {
+    display: flex;
+    justify-content: space-between;
+}
+.employeesBtnAdd {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 3%;
+}
+
+// Thông tin nhân viên
+.employeesInfo {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 12px ;
+    padding: 0.5%;
+  }
+.totalContentInfo {
+    background-color: #fff;
+    border-radius: 12px;
 }
 .employeesTitleInfo {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 25px;
+    margin-left: 4.3%;
+    margin-right: 4.3%;
 }
-.employeesCont {
+.employeesContInfo {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
-.employeesName {
-    padding-bottom: 15px;
+.employeesNameInfo {
+    padding-bottom: 3%;
 }  
-.employeesAge {
-    padding-bottom: 15px;
+.employeesAgeInfo {
+    padding-bottom: 3%;
 }
-.identityCard {
-    padding-bottom: 15px;
+.identityCardInfo {
+    padding-bottom: 3%;
 }
-.employeesID {
-    padding-bottom: 15px;
+.employeesIDInfo {
+    padding-bottom: 3%;
 }
-.employeesEmail {
-    padding-bottom: 15px;
+.employeesEmailInfo {
+    padding-bottom: 3%;
 }
-.employeesPhone {
-    padding-bottom: 15px;
+.employeesPhoneInfo {
+    padding-bottom: 3%;
 }
-// .employeesPass {
-
-// }
-.employeesAddress {
-    padding-bottom: 15px;
+.employeesPassInfo {
+    padding-bottom: 3%;
 }
-// .employeesStatus {
-
-// }
-.employeesPosition {
+.employeesAddressInfo {
+    padding-bottom: 3%;
+}
+.employeesStatusInfo {
+    padding-bottom: 3%;
+}
+.employeesPositionInfo {
+    padding-bottom: 3%;
+}
+.positionCheckInfo {
+    display: flex;
+    justify-content: space-between;
+}
+.employeesBtnInfo {
     display: flex;
     justify-content: space-around;
+    padding-bottom: 3%;
+}
+
+
+// Sửa thông tin nhân viên
+.employeesEdit {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 12px ;
+    padding: 0.5%;
+  }
+.totalContentEdit {
+    background-color: #fff;
+    border-radius: 12px;
+}
+.employeesTitleEdit {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 4.3%;
+    margin-right: 4.3%;
+}
+.employeesContEdit {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.employeesNameEdit {
+    padding-bottom: 3%;
+}  
+.employeesAgeEdit {
+    padding-bottom: 3%;
+}
+.identityCardEdit {
+    padding-bottom: 3%;
+}
+.employeesIDEdit {
+    padding-bottom: 3%;
+}
+.employeesEmailEdit {
+    padding-bottom: 3%;
+}
+.employeesPhoneEdit {
+    padding-bottom: 3%;
+}
+.employeesPassEdit {
+    padding-bottom: 3%;
+}
+.employeesAddressEdit {
+    padding-bottom: 3%;
+}
+.employeesStatusEdit {
+    padding-bottom: 3%;
+}
+.employeesPositionEdit {
+    padding-bottom: 3%;
+}
+.positionCheckEdit {
+    display: flex;
+    justify-content: space-between;
+}
+.employeesBtnEdit {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 3%;
 }

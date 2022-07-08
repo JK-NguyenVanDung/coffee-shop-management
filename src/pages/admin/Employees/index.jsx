@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
 import { Input, Table } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone, } from '@ant-design/icons';
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
 import './index.scss';
@@ -11,14 +12,11 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import { CloseOutlined } from '@ant-design/icons'
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import { menuText } from '../../../helper/Text'
 
 const { Search } = Input
@@ -60,7 +58,7 @@ const columns = [
         render: () => {
             return (
                 <>
-                    <Button variant="contained" endIcon={<EditIcon />} style={{ marginRight: '20px' }} size="small">
+                    <Button variant="contained" endIcon={<EditIcon />} style={{ marginRight: '7%' }} size="small">
                         Sửa
                     </Button>
                     <Button variant="contained" endIcon={<DeleteSweepIcon />} size="small">
@@ -164,32 +162,19 @@ const rowSelection = {
 };
 const Employees = () => {
     const [selectionType, setSelectionType] = useState('checkbox');
-    const [fullname, setFullName] = React.useState('');
-    const [age, setAge] = React.useState('');
-    const [identityCard, setIdentityCard] = React.useState('');
-    const [employeesID, setEmployeesID] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    const [phone, setPhone] = React.useState('');
-    const [address, setAddress] = React.useState('');
-    // const [age, setAge] = React.useState('');
-    // const [age, setAge] = React.useState('');
-    // const [age, setAge] = React.useState('');
+    const [value, setValue] = React.useState('still break');
     const handleChange = (event) => {
-        setFullName(event.target.value);
-        setAge(event.target.value);
-        setIdentityCard(event.target.value);
-        setEmployeesID(event.target.value);
-        setEmail(event.target.value);
-        setPhone(event.target.value);
-        setAddress(event.target.value);
-        setAge(event.target.value);
+        setValue(event.target.value);
     };
+
+    //Ngày sinh
+
     return (<>
         <div className="dishSearchCont">
-            <Button variant="contained" endIcon={<ConstructionIcon />} style={{ marginRight: '10px' }} size="small">
+            <Button variant="contained" endIcon={<ConstructionIcon />} style={{ marginRight: '1%' }} size="small">
                 QUẢN LÝ
             </Button>
-            <Button variant="contained" endIcon={<AddIcon />} style={{ marginRight: '10px' }} size="small">
+            <Button variant="contained" endIcon={<AddIcon />} style={{ marginRight: '1%' }} size="small">
                 THÊM NHÂN VIÊN
             </Button>
             <div className="dishSearch">
@@ -206,155 +191,259 @@ const Employees = () => {
                 dataSource={data}
             />
         </div>
+
+        {/* Thêm nhân viên */}
+        <div class="employeesAdd">
+            <div className="totalContentAdd">
+                <div class="employeesTitleAdd">
+                    <h2>Thêm nhân viên</h2>
+                    <CloseOutlined />
+                </div>
+                <div class="employeesContAdd">
+                    <div className='employeesAddL'>
+                        <div className='employeesAvatarAdd'>
+                            <h4>Hình ảnh</h4>
+                            <Button
+                                variant="contained"
+                                component="label"
+                            >
+                                Upload File
+                                <input
+                                    type="file"
+                                    hidden
+                                />
+                            </Button>
+                        </div>
+                        <div className='employeesNameAdd'>
+                            <h4>Họ tên</h4>
+                            <Input placeholder="Nhập họ tên" />
+                        </div>
+                        <div className='employeesBirthdayAdd'>
+                            <h4>Ngày sinh</h4>
+
+                        </div>
+                        <div className='identityCardAdd'>
+                            <h4>CMND/CCCD</h4>
+                            <Input placeholder="Nhập CMND" />
+                        </div>
+                    </div>
+                    <div className='employeesAddR'>
+                        <div className='employeesIDAdd'>
+                            <h4>ID nhân viên</h4>
+                            <Input placeholder="Nhập ID nhân viên" />
+                        </div>
+                        <div className='employeesEmailAdd'>
+                            <h4>Email</h4>
+                            <Input placeholder="Nhập email" />
+                        </div>
+                        <div className='employeesPhoneAdd'>
+                            <h4>SĐT</h4>
+                            <Input placeholder="Nhập số điện thoại" />
+                        </div>
+                        <div className='employeesPassAdd'>
+                            <h4>Mật khẩu</h4>
+                            <Input.Password placeholder="Nhập mật khẩu" />
+                        </div>
+                        <div className='employeesAddressAdd'>
+                            <h4>Địa chỉ</h4>
+                            <Input placeholder="Nhập địa chỉ" />
+                        </div>
+                        <div className='employeesStatusAdd'>
+                            <h4>Tình trạng</h4>
+                            <RadioGroup
+                                row
+                                value={value}
+                                onChange={handleChange}
+                            >
+                                <FormControlLabel value="still break" control={<Radio />} label="Còn làm" />
+                                <FormControlLabel value="temporary break" control={<Radio />} label="Tạm nghỉ" />
+                                <FormControlLabel value="took a break" control={<Radio />} label="Đã nghỉ" />
+                            </RadioGroup>
+                        </div>
+                        <div className='employeesPositionAdd'>
+                            <h4>Chức vụ</h4>
+                            <div className="positionCheckAdd">
+                                <FormControlLabel control={<Checkbox defaultChecked />} label="Nhân viên" />
+                                <FormControlLabel control={<Checkbox defaultChecked />} label="Quản lý" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="employeesBtnAdd">
+                    <Button variant="contained">Lưu</Button>
+                    <Button variant="contained">Hủy</Button>
+                </div>
+            </div>
+        </div>
+
+        {/* Thông tin nhân viên */}
         <div class="employeesInfo">
-            <div className="totalContent">
+            <div className="totalContentInfo">
                 <div class="employeesTitleInfo">
                     <h2>Thông tin nhân viên</h2>
                     <CloseOutlined />
                 </div>
-                <div class="employeesCont">
-                    <div className='employeesContL'>
-                        <div className='employeesAvatar'>
-                            <h3>Hình ảnh</h3>
+                <div class="employeesContInfo">
+                    <div className='employeesInfoL'>
+                        <div className='employeesAvatarInfo'>
+                            <h4>Hình ảnh</h4>
+                            <Button
+                                variant="contained"
+                                component="label"
+                            >
+                                Upload File
+                                <input
+                                    type="file"
+                                    hidden
+                                />
+                            </Button>
                         </div>
-                        <div className='employeesName'>
-                            <Box sx={{ minWidth: 306 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Họ Tên</InputLabel>
-                                    <Select
-
-                                        value={fullname}
-                                        label="FullName"
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value={10}>Nguyễn Thị A</MenuItem>
-                                        <MenuItem value={20}>Nguyễn Thị B</MenuItem>
-                                        <MenuItem value={30}>Nguyễn Thị C</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
+                        <div className='employeesNameInfo'>
+                            <h4>Họ tên</h4>
+                            <Input />
                         </div>
-                        <div className='employeesAge'>
-                            <Box sx={{ minWidth: 306 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel >Tuổi</InputLabel>
-                                    <Select
-
-                                        value={age}
-                                        label="Age"
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value={10}>20</MenuItem>
-                                        <MenuItem value={20}>30</MenuItem>
-                                        <MenuItem value={30}>40</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
+                        <div className='employeesBirthdayInfo'>
+                            <h4>Ngày sinh</h4>
+                            <Input />
                         </div>
-                        <div className='identityCard'>
-                            <Box sx={{ minWidth: 306 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel>CMND/CCCD</InputLabel>
-                                    <Select
-
-                                        value={identityCard}
-                                        label="IdentityCard"
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value={10}>4646586786767</MenuItem>
-                                        <MenuItem value={20}>2131241151251</MenuItem>
-                                        <MenuItem value={30}>1251251345355</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
+                        <div className='identityCardInfo'>
+                            <h4>CMND/CCCD</h4>
+                            <Input />
                         </div>
                     </div>
-                    <div className='employeesContR'>
-                        <div className='employeesID'>
-                        
-                            <Box sx={{ minWidth: 590 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel >ID nhân viên</InputLabel>
-                                    <Select
-                                        value={employeesID}
-                                        label="EmployeesID"
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value={10}>32423423423</MenuItem>
-                                        <MenuItem value={20}>23423423423</MenuItem>
-                                        <MenuItem value={30}>75887867866</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
+                    <div className='employeesInfoR'>
+                        <div className='employeesIDInfo'>
+                            <h4>ID nhân viên</h4>
+                            <Input />
                         </div>
-                        <div className='employeesEmail'>
-                            <Box sx={{ minWidth: 590 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel >Email</InputLabel>
-                                    <Select
-                                        value={email}
-                                        label="Email"
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value={10}>spottran2001@gmail.com</MenuItem>
-                                        <MenuItem value={20}>spottran2002@gmail.com</MenuItem>
-                                        <MenuItem value={30}>spottran2003@gmail.com</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
+                        <div className='employeesEmailInfo'>
+                            <h4>Email</h4>
+                            <Input />
                         </div>
-                        <div className='employeesPhone'>
-                            <Box sx={{ minWidth: 590 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel >SĐT</InputLabel>
-                                    <Select
-                                        value={phone}
-                                        label="Phone"
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value={10}>0987564523</MenuItem>
-                                        <MenuItem value={20}>0923434134</MenuItem>
-                                        <MenuItem value={30}>0122353456</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
+                        <div className='employeesPhoneInfo'>
+                            <h4>SĐT</h4>
+                            <Input />
                         </div>
-                        <div className='employeesPass'>
-                            <h3>Mật khẩu</h3>
-
+                        <div className='employeesPassInfo'>
+                            <h4>Mật khẩu</h4>
+                            <Input.Password />
                         </div>
-                        <div className='employeesAddress'>
-                            <Box sx={{ minWidth: 590 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel >Địa chỉ</InputLabel>
-                                    <Select
-                                        value={address}
-                                        label="Address"
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value={10}>123 Trần Phú</MenuItem>
-                                        <MenuItem value={20}>231 Trần Phú</MenuItem>
-                                        <MenuItem value={30}>321 Trần Phú</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
+                        <div className='employeesAddressInfo'>
+                            <h4>Địa chỉ</h4>
+                            <Input />
                         </div>
-                        <div className='employeesStatus'>
-                            <h3>Tình trạng</h3>
-
+                        <div className='employeesStatusInfo'>
+                            <h4>Tình trạng</h4>
+                            <RadioGroup
+                                row
+                                value={value}
+                                onChange={handleChange}
+                            >
+                                <FormControlLabel value="still break" control={<Radio />} label="Còn làm" />
+                                <FormControlLabel value="temporary break" control={<Radio />} label="Tạm nghỉ" />
+                                <FormControlLabel value="took a break" control={<Radio />} label="Đã nghỉ" />
+                            </RadioGroup>
                         </div>
-                        <div className='employeesPosition'>
-                            <h3>Chức vụ</h3>
-                            <FormGroup>
+                        <div className='employeesPositionInfo'>
+                            <h4>Chức vụ</h4>
+                            <div className="positionCheckInfo">
                                 <FormControlLabel control={<Checkbox defaultChecked />} label="Nhân viên" />
                                 <FormControlLabel control={<Checkbox defaultChecked />} label="Quản lý" />
-                            </FormGroup>
+                            </div>
                         </div>
-
                     </div>
+                </div>
+                <div className="employeesBtnInfo">
+                    <Button variant="contained">Sửa</Button>
+                    <Button variant="contained">Xóa</Button>
                 </div>
             </div>
         </div>
+
+        {/* Sửa thông tin nhân viên */}
+        <div class="employeesEdit">
+                    <div className="totalContentEdit">
+                        <div class="employeesTitleEdit">
+                            <h2>Sửa thông tin nhân viên</h2>
+                            <CloseOutlined />
+                        </div>
+                        <div class="employeesContEdit">
+                            <div className='employeesEditL'>
+                                <div className='employeesAvatarEdit'>
+                                    <h4>Hình ảnh</h4>
+                                    <Button
+                                        variant="contained"
+                                        component="label"
+                                    >
+                                        Upload File
+                                        <input
+                                            type="file"
+                                            hidden
+                                        />
+                                    </Button>
+                                </div>
+                                <div className='employeesNameEdit'>
+                                    <h4>Họ tên</h4>
+                                    <Input />
+                                </div>
+                                <div className='employeesBirthdayEdit'>
+                                    <h4>Ngày sinh</h4>
+                                    <Input />
+                                </div>
+                                <div className='identityCardEdit'>
+                                    <h4>CMND/CCCD</h4>
+                                    <Input />
+                                </div>
+                            </div>
+                            <div className='employeesEditR'>
+                                <div className='employeesIDEdit'>
+                                    <h4>ID nhân viên</h4>
+                                    <Input />
+                                </div>
+                                <div className='employeesEmailEdit'>
+                                    <h4>Email</h4>
+                                    <Input />
+                                </div>
+                                <div className='employeesPhoneEdit'>
+                                    <h4>SĐT</h4>
+                                    <Input />
+                                </div>
+                                <div className='employeesPassEdit'>
+                                    <h4>Mật khẩu</h4>
+                                    <Input.Password />
+                                </div>
+                                <div className='employeesAddressEdit'>
+                                    <h4>Địa chỉ</h4>
+                                    <Input />
+                                </div>
+                                <div className='employeesStatusEdit'>
+                                    <h4>Tình trạng</h4>
+                                    <RadioGroup
+                                        row
+                                        value={value}
+                                        onChange={handleChange}
+                                    >
+                                        <FormControlLabel value="still break" control={<Radio />} label="Còn làm" />
+                                        <FormControlLabel value="temporary break" control={<Radio />} label="Tạm nghỉ" />
+                                        <FormControlLabel value="took a break" control={<Radio />} label="Đã nghỉ" />
+                                    </RadioGroup>
+                                </div>
+                                <div className='employeesPositionEdit'>
+                                    <h4>Chức vụ</h4>
+                                    <div className="positionCheckEdit">
+                                        <FormControlLabel control={<Checkbox defaultChecked />} label="Nhân viên" />
+                                        <FormControlLabel control={<Checkbox defaultChecked />} label="Quản lý" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="employeesBtnEdit">
+                            <Button variant="contained">Lưu</Button>
+                            <Button variant="contained">Hủy</Button>
+                        </div>
+                    </div>
+                </div>
+
     </>)
 }
 export default Employees;
