@@ -1,27 +1,36 @@
 import React, { useEffect, useState } from "react";
-import  './styles.scss';
+import "./styles.scss";
 
-import {menuText} from "../../helper/Text"
-
-import {Switch,Input} from 'antd';
-
+import { menuText } from "../../helper/Text";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { Switch, Input, Button } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import { IconButton } from "@mui/material/";
 const { Search } = Input;
 
-
-const MenuHeader = ()=>{
-    function onSearch(){
-
-    }
-    return(<div className="centeredCont">
-            <Switch checkedChildren={menuText.switchOp1} unCheckedChildren={menuText.switchOp2} defaultChecked />
-        <Search placeholder={menuText.searchMenu}   allowClear       size="large"
-  className="menuSearch"
-
-  style={{borderRadius: '10px'}}
-
-      onSearch={onSearch}
+const MenuHeader = () => {
+  function onSearch() {}
+  return (
+    <div className="centeredCont">
+      <Switch
+        checkedChildren={menuText.switchOp1}
+        unCheckedChildren={menuText.switchOp2}
+        defaultChecked
+        style={{ minHeight: "2rem", width: "7rem" }}
       />
-    </div>)
-  }
+      <Input
+        placeholder={menuText.searchMenu}
+        allowClear
+        size="large"
+        className="menuSearch"
+        addonBefore={
+          <IconButton>
+            <SearchRoundedIcon />
+          </IconButton>
+        }
+      />
+    </div>
+  );
+};
 
- export default MenuHeader;
+export default MenuHeader;

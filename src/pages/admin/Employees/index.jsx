@@ -34,6 +34,7 @@ const style = {
 };
 
 
+
 const { Search } = Input
 const columns = [
     {

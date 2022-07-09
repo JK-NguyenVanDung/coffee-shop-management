@@ -20,6 +20,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
     }
 }
 
@@ -33,12 +34,271 @@
 
 }
 
+.orderItemCont{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    bottom: 1.2rem;
+    .orderItemImage{
+        margin-right:2rem;
+        width: 7rem;
+        height: 7rem;
+        border-radius:12px;
+        display:inline-flex;
+        justify-content:space-between; 
+        align-items:flex-end;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        cursor:pointer;
+    }
+    .infoCont{               
+        width:auto;
+
+        position:relative;
+
+        span{
+            width:80%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+    }
+}
+.orderBarCont{
+    position:absolute;
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 2%;
+    height: 140px;
+    border-radius: 20px;
+    bottom:5.9vh;
+    max-width: 100%;
+    .clipboardCont{              
+        display: flex;
+        flex-direction: column;
+        position: relative;         
+        width: 11rem;
+        height: 200px;
+        .divider{
+            margin-top: 0.5rem;
+            height: 8rem;
+        
+            border-left:1px solid #fff;
+        }
+        .cbCont{
+
+            margin-left: 12%;
+            position: absolute;     
+            bottom: 2.5rem;
+
+            .clipboardImg{  
+                width: 135px;
+                height: 200px;
+                background-repeat: no-repeat;
+                display:inline-flex;
+                flex-direction: column;
+                justify-content:flex-start; 
+                align-items:center;
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+                cursor:pointer;
+                h2{                
+                    padding-top: 15%;
+
+                }
+                i{
+                    margin: 0;
+                    padding: 0;
+                    margin-top: -1rem;
+                    font-size: 0.5rem;
+                }
+                .contentCont{
+                    width: 100%;
+                    margin-top: 0.7rem;
+                    margin-bottom: 0.7rem;
+
+                    display: inline-flex;
+                    justify-content: space-evenly;
+                    align-items: flex-start;
+                    align-content: flex-start ;
+                    padding-left: 1rem;
+                    flex-direction: column;
+                    span{
+
+                        font-size: 0.6rem;
+                    }
+                }
+               
+            }
+        }
+}
+
+}
+.removeBtnCont{
+    position: absolute;
+    top: -1.5rem;
+    right: -1.5rem;
+    span{
+        background-color: rgb(0, 0, 0);
+        width: 1.3rem;
+        height: 1.3rem;
+        left: 1rem;
+        top: 1rem;
+        z-index: 1;
+    }
+}
+.smallRemoveBtnCont{
+    position: absolute;
+
+    right: 0.7rem;
+    top:-1.1rem;
+    span{
+        background-color: rgb(0, 0, 0);
+        width: 1rem;
+        height: 1rem;
+        left: 0.7rem;
+        top: 0.8rem;
+        z-index: 1;
+    }
+}
+.billDetailCont{
+    z-index: 10;
+
+    position: absolute;
+    top:0;
+    left: 100px; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 40%;
+    height: 50%;
+    padding-top:4.5rem;
+    padding-bottom:10px;
+ 
+ 
+    box-shadow: 24;
+ 
+    .clipper{
+        position: absolute;
+        left: 0;
+        right: 0; 
+        margin-left: auto; 
+        margin-right: auto; 
+        width:10rem;
+        top: 0.7rem;
+        padding-top: 5px;
+    }
+    .billBgCont{
+        overflow: scroll;
+        border: 20px solid #614A35;
+        background-color: rgb(255, 255, 255);
+        width:100%;
+        height: 89vh;
+        border-radius: 20px;
+        padding: 10px;
+        padding-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        -webkit-border-radius: 40px;
+        -moz-border-radius: 40px;
+
+        background-position: center;
+        background-repeat: no-repeat;
+        padding-left: 1rem;
+        padding-right:  1rem;
+
+        .billHeader{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            
+        }
+        .billListCont{
+            margin-top: 1rem;
+
+            width:100%;
+            height: auto;
+            width: 100%;
+            height: auto;
+            flex-wrap: wrap;            
+            display: inline-flex;
+            flex-direction: row;
+            justify-content:flex-start;
+            align-items: space-evenly;
+
+            .billItemCont{
+                .orderItemCont{
+               
+                }
+                span{
+                    color: #111;
+                }
+               
+             
+            }
+        }
+        .noteCont{
+            display:flex;
+            width: 100%;
+
+            
+        }
+        .cardCont{
+            margin-top:1rem;
+            display:flex;
+            width: 100%;    
+            .billListCont{       
+                display: inline-flex;
+                width: 100%;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+               
+            }
+            
+        }
+        .checkbox{
+            display: flex;
+            width: 100%;
+            justify-content: flex-staet;
+        }
+        .buttonCont{
+            display:flex;
+            width: 100%;
+            margin: 1rem;
+            justify-content: space-evenly;
+        }
+    }
+}
+.billContentCont{
+    display: inline-flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.drop-shadow{
+    -webkit-box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
+    box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
+}
+
+
 .itemCont{
     margin-right:2rem;
     width:12rem;
     height: 12rem;
-    -webkit-box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
-    box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
+
     border-radius:12px;
     display:inline-flex;
     justify-content:space-between; 
@@ -51,7 +311,7 @@
         margin-left: 10px;
         margin-right: 10px;
         margin-bottom: 5px;
-        font-size: 1rem;
+        font-size: 0.9rem;
         color: #fff;
     }
 
@@ -61,4 +321,7 @@
 .itemCont:hover{
     transform: scale(1.05);
     border: 2px solid #fff;
+}
+.changeAmountCont{
+    padding-right: 10%;
 }

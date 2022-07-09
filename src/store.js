@@ -5,7 +5,7 @@ import { persistStore, persistReducer } from 'redux-persist'
 import { PersistConfig } from "redux-persist/es/types";
 const config = combineReducers({
     auth: reducers.authReducers,
-    // user: reducers.userReducer,
+    menu: reducers.menuReducer,
     form: reducers.formReducer,
     // category: reducers.categoryReducer,
     // product: reducers.productReducer,
