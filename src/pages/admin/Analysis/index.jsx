@@ -7,7 +7,9 @@ import { Input } from "antd";
 
 const { Search } = Input;
 export default function Analysis() {
-    return(<>ayy</>)
+    return(<>
+        Dìa Diaaaaa
+    </>)
 
 }
 
