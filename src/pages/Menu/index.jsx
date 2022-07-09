@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Input, Carousel } from "antd";
+
 import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
 import { actions } from "../../redux";
 import "./index.scss";
 import { billText } from "../../helper/Text";
+
 import Slider from "react-slick";
 import { useDoubleTap } from "use-double-tap";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
@@ -26,6 +28,7 @@ import {
   Checkbox,
 } from "@mui/material/";
 import Coffee from "../../assets/img/coffee_test.png";
+
 import WoodBoard from "../../assets/img/wood.svg";
 import Clipboard from "../../assets/img/clipboard.svg";
 import Clipper from "../../assets/img/clipper.svg";
@@ -53,6 +56,7 @@ let menuItem = {
   create_date: "30/06/2022",
   update_by: "dung001",
 };
+
 let menuItem2 = {
   id: 2,
   name: "Cafe sữa đá",
@@ -283,6 +287,7 @@ export const MenuList = ({ categoryName }) => {
     swipeToSlide: true,
     prevArrow: <ArrowBackIosRoundedIcon />,
     nextArrow: <ArrowForwardIosRoundedIcon />,
+
     responsive: [
       {
         breakpoint: 1024,
@@ -320,6 +325,7 @@ export const MenuList = ({ categoryName }) => {
       <h2> {categoryName}</h2>
       <div className="meunItemCont">
         <Slider {...settings}>
+
           <div className="meunItemsCont ">
             <MenuItem item={menuItem} />
           </div>
@@ -346,14 +352,17 @@ export const MenuList = ({ categoryName }) => {
           <div className="meunItemsCont ">
             <MenuItem item={menuItem42} />
           </div>
+
         </Slider>
       </div>
     </div>
   );
 };
+
 export const Category = () => {
   let selected = useAppSelector((state) => state.menu.selectedCate);
   const dispatch = useAppDispatch();
+
 
   let settings = {
     infinite: false,
