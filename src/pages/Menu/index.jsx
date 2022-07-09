@@ -126,13 +126,33 @@ const OrderItem = ({ item, changeAmount = false }) => {
         <span>{numbToCurrency(item.price)}</span>
       </div>
       {changeAmount && (
-        <div class="changeAmountCont">
-          <IconButton onClick={onDecrease}>
+        <div
+          class="changeAmountCont"
+          style={{
+            display: "flex",
+            width: "80%",
+            alignItem: "center",
+            justifyContent: "center",
+            marginLeft: 5,
+            marginTop: 5,
+          }}
+        >
+          <IconButton
+            size="small"
+            onClick={onDecrease}
+            color="primary"
+            style={{ width: 30, height: 30, marginRight: 2 }}
+          >
             <RemoveCircleIcon />
           </IconButton>
           <Input style={{ width: 40 }} value={item.amount} disabled />
-          <IconButton>
-            <AddCircleIcon onClick={onIncrease} />
+          <IconButton
+            color="primary"
+            onClick={onIncrease}
+            size="small"
+            style={{ width: 30, height: 30, marginLeft: 2 }}
+          >
+            <AddCircleIcon />
           </IconButton>
         </div>
       )}
@@ -145,11 +165,7 @@ const OrderItem = ({ item, changeAmount = false }) => {
 export const RemoveButton = (props = { size: "medium", action: null }) => {
   return (
     <div>
-      <IconButton
-        color="primary"
-        aria-label="add an alarm"
-        onClick={props.action}
-      >
+      <IconButton color="info" aria-label="add an alarm" onClick={props.action}>
         <CancelIcon fontSize={props.size} style={{ zIndex: 10 }} />
       </IconButton>
     </div>
@@ -216,7 +232,11 @@ const OrderBar = () => {
                   <br />
                   <span>Tổng tiền: {numbToCurrency(total)}</span>
                 </div>
-                <Button variant="contained" onClick={openDetail}>
+                <Button
+                  variant="contained"
+                  onClick={openDetail}
+                  color="secondary"
+                >
                   Tạo đơn
                 </Button>
               </div>
@@ -586,12 +606,14 @@ const BillDetail = () => {
                   variant="contained"
                   size="large"
                   onClick={() => createOrder()}
+                  color="success"
                 >
                   Tạo đơn
                 </Button>
                 <Button
                   variant="contained"
                   size="large"
+                  color="error"
                   onClick={() => cancelOrder()}
                 >
                   Huỷ đơn

@@ -29,6 +29,10 @@ const theme = createTheme({
     error: {
       main: colors.error,
     },
+    info: {
+      main: colors.info,
+      dark: colors.infoDark,
+    },
   },
 });
 
