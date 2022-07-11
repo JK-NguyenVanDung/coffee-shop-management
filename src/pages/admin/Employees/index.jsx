@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table } from "antd";
+import { Input, Table, Form, DatePicker } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone, } from '@ant-design/icons';
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -21,16 +21,17 @@ import { menuText } from '../../../helper/Text'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
+
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
 };
 
 
@@ -185,113 +186,111 @@ const Employees = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+
     
-
-
-    //Ngày sinh
 
     return (<>
         <div className="dishSearchCont">
             <Button variant="contained" endIcon={<ConstructionIcon />} style={{ marginRight: '1%' }} size="small">
                 QUẢN LÝ
             </Button>
-            
-                <Button onClick={handleOpen} variant="contained" endIcon={<AddIcon />} style={{ marginRight: '1%' }} size="small">
-                    THÊM NHÂN VIÊN
-                </Button>
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="employeesTitleAdd"
-                    aria-describedby="employeesContAdd"
-                >
-                    <Box sx={{style}}>
-                        {/* Thêm nhân viên */}  
-                        <div class="employeesAdd">
-                            <div className="totalContentAdd">
-                                <div class="employeesTitleAdd">
-                                    <h2>Thêm nhân viên</h2>
-                                    <CloseOutlined />
-                                </div>
-                                <div class="employeesContAdd">
-                                    <div className='employeesAddL'>
-                                        <div className='employeesAvatarAdd'>
-                                            <h4>Hình ảnh</h4>
-                                            <Button
-                                                variant="contained"
-                                                component="label"
-                                            >
-                                                Upload File
-                                                <input
-                                                    type="file"
-                                                    hidden
-                                                />
-                                            </Button>
-                                        </div>
-                                        <div className='employeesNameAdd'>
-                                            <h4>Họ tên</h4>
-                                            <Input placeholder="Nhập họ tên" />
-                                        </div>
-                                        <div className='employeesBirthdayAdd'>
-                                            <h4>Ngày sinh</h4>
-                                            <Input />
-                                        </div>
-                                        <div className='identityCardAdd'>
-                                            <h4>CMND/CCCD</h4>
-                                            <Input placeholder="Nhập CMND" />
-                                        </div>
-                                    </div>
-                                    <div className='employeesAddR'>
-                                        <div className='employeesIDAdd'>
-                                            <h4>ID nhân viên</h4>
-                                            <Input placeholder="Nhập ID nhân viên" />
-                                        </div>
-                                        <div className='employeesEmailAdd'>
-                                            <h4>Email</h4>
-                                            <Input placeholder="Nhập email" />
-                                        </div>
-                                        <div className='employeesPhoneAdd'>
-                                            <h4>SĐT</h4>
-                                            <Input placeholder="Nhập số điện thoại" />
-                                        </div>
-                                        <div className='employeesPassAdd'>
-                                            <h4>Mật khẩu</h4>
-                                            <Input.Password placeholder="Nhập mật khẩu" />
-                                        </div>
-                                        <div className='employeesAddressAdd'>
-                                            <h4>Địa chỉ</h4>
-                                            <Input placeholder="Nhập địa chỉ" />
-                                        </div>
-                                        <div className='employeesStatusAdd'>
-                                            <h4>Tình trạng</h4>
-                                            <RadioGroup
-                                                row
-                                                value={value}
-                                                onChange={handleChange}
-                                            >
-                                                <FormControlLabel value="still break" control={<Radio />} label="Còn làm" />
-                                                <FormControlLabel value="temporary break" control={<Radio />} label="Tạm nghỉ" />
-                                                <FormControlLabel value="took a break" control={<Radio />} label="Đã nghỉ" />
-                                            </RadioGroup>
-                                        </div>
-                                        <div className='employeesPositionAdd'>
-                                            <h4>Chức vụ</h4>
-                                            <div className="positionCheckAdd">
-                                                <FormControlLabel control={<Checkbox defaultChecked />} label="Nhân viên" />
-                                                <FormControlLabel control={<Checkbox defaultChecked />} label="Quản lý" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="employeesBtnAdd">
-                                    <Button variant="contained">Lưu</Button>
-                                    <Button variant="contained">Hủy</Button>
-                                </div>
-                            </div>
-                        </div>
-                    </Box>
-                </Modal>
-            
+
+            <Button onClick={handleOpen} variant="contained" endIcon={<AddIcon />} style={{ marginRight: '1%' }} size="small">
+                THÊM NHÂN VIÊN
+            </Button>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="employeesTitleAdd"
+                aria-describedby="employeesContAdd"
+            >
+                <Box sx={{ style }}>
+                    {/* Thêm nhân viên */}
+                    <Form layout="horizontal" class="employeesAdd">
+                        <Form className="totalContentAdd">
+                            <Form.Item class="employeesTitleAdd">
+                                <h2>Thêm nhân viên</h2>
+                                <CloseOutlined />
+                            </Form.Item>
+                            <Form class="employeesContAdd">
+                                <Form className='employeesAddL'>
+                                    <Form.Item className='employeesAvatarAdd'>
+                                        <h4>Hình ảnh</h4>
+                                        <Button
+                                            variant="contained"
+                                            component="label"
+                                        >
+                                            Upload File
+                                            <input
+                                                type="file"
+                                                hidden
+                                            />
+                                        </Button>
+                                    </Form.Item>
+                                    <Form.Item className='employeesNameAdd'>
+                                        <h4>Họ tên</h4>
+                                        <Input placeholder="Nhập họ tên" />
+                                    </Form.Item>
+                                    <Form.Item className='employeesBirthdayAdd'>
+                                        <h4>Ngày sinh</h4>
+                                        <DatePicker />
+                                    </Form.Item>
+                                    <Form.Item className='identityCardAdd'>
+                                        <h4>CMND/CCCD</h4>
+                                        <Input placeholder="Nhập CMND" />
+                                    </Form.Item>
+                                </Form>
+                                <Form className='employeesAddR'>
+                                    <Form.Item className='employeesIDAdd'>
+                                        <h4>ID nhân viên</h4>
+                                        <Input placeholder="Nhập ID nhân viên" />
+                                    </Form.Item>
+                                    <Form.Item className='employeesEmailAdd'>
+                                        <h4>Email</h4>
+                                        <Input placeholder="Nhập email" />
+                                    </Form.Item>
+                                    <Form.Item className='employeesPhoneAdd'>
+                                        <h4>SĐT</h4>
+                                        <Input placeholder="Nhập số điện thoại" />
+                                    </Form.Item>
+                                    <Form.Item className='employeesPassAdd'>
+                                        <h4>Mật khẩu</h4>
+                                        <Input.Password placeholder="Nhập mật khẩu" />
+                                    </Form.Item>
+                                    <Form.Item className='employeesAddressAdd'>
+                                        <h4>Địa chỉ</h4>
+                                        <Input placeholder="Nhập địa chỉ" />
+                                    </Form.Item>
+                                    <Form.Item className='employeesStatusAdd'>
+                                        <h4>Tình trạng</h4>
+                                        <RadioGroup
+                                            row
+                                            value={value}
+                                            onChange={handleChange}
+                                        >
+                                            <FormControlLabel value="still break" control={<Radio />} label="Còn làm" />
+                                            <FormControlLabel value="temporary break" control={<Radio />} label="Tạm nghỉ" />
+                                            <FormControlLabel value="took a break" control={<Radio />} label="Đã nghỉ" />
+                                        </RadioGroup>
+                                    </Form.Item>
+                                    <Form.Item className='employeesPositionAdd'>
+                                        <h4>Chức vụ</h4>
+                                        <Form.Item className="positionCheckAdd">
+                                            <FormControlLabel control={<Checkbox defaultChecked />} label="Nhân viên" />
+                                            <FormControlLabel control={<Checkbox defaultChecked />} label="Quản lý" />
+                                        </Form.Item>
+                                    </Form.Item>
+                                </Form>
+                            </Form>
+                            <Form.Item className="employeesBtnAdd">
+                                <Button variant="contained">Lưu</Button>
+                                <Button variant="contained">Hủy</Button>
+                            </Form.Item>
+                        </Form>
+                    </Form>
+                </Box>
+            </Modal>
+
             <div className="dishSearch">
                 <Search placeholder={menuText.searchMenu} allowClear size="default" />
             </div>
@@ -310,15 +309,15 @@ const Employees = () => {
 
 
         {/* Thông tin nhân viên */}
-        <div class="employeesInfo">
-            <div className="totalContentInfo">
-                <div class="employeesTitleInfo">
+        <Form class="employeesInfo">
+            <Form className="totalContentInfo">
+                <Form.Item class="employeesTitleInfo">
                     <h2>Thông tin nhân viên</h2>
                     <CloseOutlined />
-                </div>
-                <div class="employeesContInfo">
-                    <div className='employeesInfoL'>
-                        <div className='employeesAvatarInfo'>
+                </Form.Item>
+                <Form class="employeesContInfo">
+                    <Form className='employeesInfoL'>
+                        <Form.Item className='employeesAvatarInfo'>
                             <h4>Hình ảnh</h4>
                             <Button
                                 variant="contained"
@@ -330,42 +329,42 @@ const Employees = () => {
                                     hidden
                                 />
                             </Button>
-                        </div>
-                        <div className='employeesNameInfo'>
+                        </Form.Item>
+                        <Form.Item className='employeesNameInfo'>
                             <h4>Họ tên</h4>
                             <Input />
-                        </div>
-                        <div className='employeesBirthdayInfo'>
+                        </Form.Item>
+                        <Form.Item className='employeesBirthdayInfo'>
                             <h4>Ngày sinh</h4>
                             <Input />
-                        </div>
-                        <div className='identityCardInfo'>
+                        </Form.Item>
+                        <Form.Item className='identityCardInfo'>
                             <h4>CMND/CCCD</h4>
                             <Input />
-                        </div>
-                    </div>
-                    <div className='employeesInfoR'>
-                        <div className='employeesIDInfo'>
+                        </Form.Item>
+                    </Form>
+                    <Form className='employeesInfoR'>
+                        <Form.Item className='employeesIDInfo'>
                             <h4>ID nhân viên</h4>
                             <Input />
-                        </div>
-                        <div className='employeesEmailInfo'>
+                        </Form.Item>
+                        <Form.Item className='employeesEmailInfo'>
                             <h4>Email</h4>
                             <Input />
-                        </div>
-                        <div className='employeesPhoneInfo'>
+                        </Form.Item>
+                        <Form.Item className='employeesPhoneInfo'>
                             <h4>SĐT</h4>
                             <Input />
-                        </div>
-                        <div className='employeesPassInfo'>
+                        </Form.Item>
+                        <Form.Item className='employeesPassInfo'>
                             <h4>Mật khẩu</h4>
                             <Input.Password />
-                        </div>
-                        <div className='employeesAddressInfo'>
+                        </Form.Item>
+                        <Form.Item className='employeesAddressInfo'>
                             <h4>Địa chỉ</h4>
                             <Input />
-                        </div>
-                        <div className='employeesStatusInfo'>
+                        </Form.Item>
+                        <Form.Item className='employeesStatusInfo'>
                             <h4>Tình trạng</h4>
                             <RadioGroup
                                 row
@@ -376,33 +375,33 @@ const Employees = () => {
                                 <FormControlLabel value="temporary break" control={<Radio />} label="Tạm nghỉ" />
                                 <FormControlLabel value="took a break" control={<Radio />} label="Đã nghỉ" />
                             </RadioGroup>
-                        </div>
-                        <div className='employeesPositionInfo'>
+                        </Form.Item>
+                        <Form.Item className='employeesPositionInfo'>
                             <h4>Chức vụ</h4>
-                            <div className="positionCheckInfo">
+                            <Form.Item className="positionCheckInfo">
                                 <FormControlLabel control={<Checkbox defaultChecked />} label="Nhân viên" />
                                 <FormControlLabel control={<Checkbox defaultChecked />} label="Quản lý" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="employeesBtnInfo">
+                            </Form.Item>
+                        </Form.Item>
+                    </Form>
+                </Form>
+                <Form.Item className="employeesBtnInfo">
                     <Button variant="contained">Sửa</Button>
                     <Button variant="contained">Xóa</Button>
-                </div>
-            </div>
-        </div>
+                </Form.Item>
+            </Form>
+        </Form>
 
         {/* Sửa thông tin nhân viên */}
-        <div class="employeesEdit">
-            <div className="totalContentEdit">
-                <div class="employeesTitleEdit">
+        <Form class="employeesEdit">
+            <Form className="totalContentEdit">
+                <Form.Item class="employeesTitleEdit">
                     <h2>Sửa thông tin nhân viên</h2>
                     <CloseOutlined />
-                </div>
-                <div class="employeesContEdit">
-                    <div className='employeesEditL'>
-                        <div className='employeesAvatarEdit'>
+                </Form.Item>
+                <Form class="employeesContEdit">
+                    <Form className='employeesEditL'>
+                        <Form.Item className='employeesAvatarEdit'>
                             <h4>Hình ảnh</h4>
                             <Button
                                 variant="contained"
@@ -414,42 +413,42 @@ const Employees = () => {
                                     hidden
                                 />
                             </Button>
-                        </div>
-                        <div className='employeesNameEdit'>
+                        </Form.Item>
+                        <Form.Item className='employeesNameEdit'>
                             <h4>Họ tên</h4>
                             <Input />
-                        </div>
-                        <div className='employeesBirthdayEdit'>
+                        </Form.Item>
+                        <Form.Item className='employeesBirthdayEdit'>
                             <h4>Ngày sinh</h4>
                             <Input />
-                        </div>
-                        <div className='identityCardEdit'>
+                        </Form.Item>
+                        <Form.Item className='identityCardEdit'>
                             <h4>CMND/CCCD</h4>
                             <Input />
-                        </div>
-                    </div>
-                    <div className='employeesEditR'>
-                        <div className='employeesIDEdit'>
+                        </Form.Item>
+                    </Form>
+                    <Form className='employeesEditR'>
+                        <Form.Item className='employeesIDEdit'>
                             <h4>ID nhân viên</h4>
                             <Input />
-                        </div>
-                        <div className='employeesEmailEdit'>
+                        </Form.Item>
+                        <Form.Item className='employeesEmailEdit'>
                             <h4>Email</h4>
                             <Input />
-                        </div>
-                        <div className='employeesPhoneEdit'>
+                        </Form.Item>
+                        <Form.Item className='employeesPhoneEdit'>
                             <h4>SĐT</h4>
                             <Input />
-                        </div>
-                        <div className='employeesPassEdit'>
+                        </Form.Item>
+                        <Form.Item className='employeesPassEdit'>
                             <h4>Mật khẩu</h4>
                             <Input.Password />
-                        </div>
-                        <div className='employeesAddressEdit'>
+                        </Form.Item>
+                        <Form.Item className='employeesAddressEdit'>
                             <h4>Địa chỉ</h4>
                             <Input />
-                        </div>
-                        <div className='employeesStatusEdit'>
+                        </Form.Item>
+                        <Form.Item className='employeesStatusEdit'>
                             <h4>Tình trạng</h4>
                             <RadioGroup
                                 row
@@ -460,22 +459,22 @@ const Employees = () => {
                                 <FormControlLabel value="temporary break" control={<Radio />} label="Tạm nghỉ" />
                                 <FormControlLabel value="took a break" control={<Radio />} label="Đã nghỉ" />
                             </RadioGroup>
-                        </div>
-                        <div className='employeesPositionEdit'>
+                        </Form.Item>
+                        <Form.Item className='employeesPositionEdit'>
                             <h4>Chức vụ</h4>
-                            <div className="positionCheckEdit">
+                            <Form.Item className="positionCheckEdit">
                                 <FormControlLabel control={<Checkbox defaultChecked />} label="Nhân viên" />
                                 <FormControlLabel control={<Checkbox defaultChecked />} label="Quản lý" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="employeesBtnEdit">
+                            </Form.Item>
+                        </Form.Item>
+                    </Form>
+                </Form>
+                <Form.Item className="employeesBtnEdit">
                     <Button variant="contained">Lưu</Button>
                     <Button variant="contained">Hủy</Button>
-                </div>
-            </div>
-        </div>
+                </Form.Item>
+            </Form>
+        </Form>   
 
     </>)
 }
