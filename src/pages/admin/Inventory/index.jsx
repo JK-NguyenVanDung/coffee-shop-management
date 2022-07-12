@@ -7,7 +7,5 @@ import { Input } from "antd";
 
 const { Search } = Input;
 export default function Inventory() {
-    return(<></>)
-
+  return <></>;
 }
-

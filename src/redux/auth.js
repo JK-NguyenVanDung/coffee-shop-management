@@ -6,7 +6,10 @@ const slice = createSlice({
     name: 'auth',
     initialState: {
         token: null,
-        info: null
+        info: {
+            name: "test"
+        },
+        name: "a"
 
     },
     reducers: {

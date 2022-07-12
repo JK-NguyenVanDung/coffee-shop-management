@@ -7,4 +7,8 @@ export const menuText = {
 
 }
 
- 
+export const billText={
+    header1: "Thông tin hoá đơn",
+    header2: "Phương thức thanh toán",
+
+}

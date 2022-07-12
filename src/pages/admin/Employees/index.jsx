@@ -35,7 +35,8 @@ const style = {
   p: 4,
 };
 
-const { Search } = Input;
+const { Search } = Input
+
 const columns = [
   {
     title: "ID nhân viên",
