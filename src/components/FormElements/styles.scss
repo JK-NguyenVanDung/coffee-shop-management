@@ -15,26 +15,30 @@
 
 // Thêm nhân viên
 
-.ModalCont {
-    width: 100%;
+.AddCont {
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     border-radius: 12px ;
     padding: 0.5%;
   }
-
-.headerCont {
+.totalContentAdd {
+    background-color: #fff;
+    border-radius: 12px;
+}
+.TitleAdd {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 4%;
-  
+    padding-top: 4%;
+    padding-left: 5.5%;
+    padding-right: 5.5%;
+    padding-bottom: 4%;
 }
-.bodyCont {
-    width: 100%;
+.ContAdd {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -74,11 +78,36 @@
     flex-direction: row;
     justify-content: space-around;
 }
-.ItemCont {
+.NameInfo {
     padding-bottom: 3%;
 }  
-
-
+.AgeInfo {
+    padding-bottom: 3%;
+}
+.identityCardInfo {
+    padding-bottom: 3%;
+}
+.IDInfo {
+    padding-bottom: 3%;
+}
+.EmailInfo {
+    padding-bottom: 3%;
+}
+.PhoneInfo {
+    padding-bottom: 3%;
+}
+.PassInfo {
+    padding-bottom: 3%;
+}
+.AddressInfo {
+    padding-bottom: 3%;
+}
+.StatusInfo {
+    padding-bottom: 3%;
+}
+.PositionInfo {
+    padding-bottom: 3%;
+}
 .positionCheckInfo {
     display: flex;
     justify-content: space-between;
