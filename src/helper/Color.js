@@ -7,5 +7,6 @@ export const colors = {
     error: "#B2431E", // do
     secondaryDark: "#312A21", // nau dam
     infoDark: "#111", // den
-    info: "#fff" // trang
+    info: "#fff", // trang
+    warning:"#FFA726" //vang
 }

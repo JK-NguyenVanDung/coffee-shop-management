@@ -15,7 +15,7 @@
 
 // Thêm nhân viên
 
-.employeesAdd {
+.AddCont {
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -27,61 +27,33 @@
     background-color: #fff;
     border-radius: 12px;
 }
-.employeesTitleAdd {
+.TitleAdd {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-left: 5.5%;
-    margin-right: 5.5%;
+    padding-top: 4%;
+    padding-left: 5.5%;
+    padding-right: 5.5%;
+    padding-bottom: 4%;
 }
-.employeesContAdd {
+.ContAdd {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-}
-.employeesNameAdd {
-    padding-bottom: 3%;
-}  
-.employeesAgeAdd {
-    padding-bottom: 3%;
-}
-.identityCardAdd {
-    padding-bottom: 3%;
-}
-.employeesIDAdd {
-    padding-bottom: 3%;
-}
-.employeesEmailAdd {
-    padding-bottom: 3%;
-}
-.employeesPhoneAdd {
-    padding-bottom: 3%;
-}
-.employeesPassAdd {
-    padding-bottom: 3%;
-}
-.employeesAddressAdd {
-    padding-bottom: 3%;
-}
-.employeesStatusAdd {
-    padding-bottom: 3%;
-}
-.employeesPositionAdd {
-    padding-bottom: 3%;
 }
 .positionCheckAdd {
     display: flex;
     justify-content: space-between;
 }
-.employeesBtnAdd {
+.BtnAdd {
     display: flex;
     justify-content: space-around;
-    padding-bottom: 3%;
 }
 
 // Thông tin nhân viên
-.employeesInfo {
+.Info {
     width: 60%;
     display: flex;
     flex-direction: column;
@@ -93,7 +65,7 @@
     background-color: #fff;
     border-radius: 12px;
 }
-.employeesTitleInfo {
+.TitleInfo {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -101,46 +73,46 @@
     margin-left: 4.3%;
     margin-right: 4.3%;
 }
-.employeesContInfo {
+.ContInfo {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
-.employeesNameInfo {
+.NameInfo {
     padding-bottom: 3%;
 }  
-.employeesAgeInfo {
+.AgeInfo {
     padding-bottom: 3%;
 }
 .identityCardInfo {
     padding-bottom: 3%;
 }
-.employeesIDInfo {
+.IDInfo {
     padding-bottom: 3%;
 }
-.employeesEmailInfo {
+.EmailInfo {
     padding-bottom: 3%;
 }
-.employeesPhoneInfo {
+.PhoneInfo {
     padding-bottom: 3%;
 }
-.employeesPassInfo {
+.PassInfo {
     padding-bottom: 3%;
 }
-.employeesAddressInfo {
+.AddressInfo {
     padding-bottom: 3%;
 }
-.employeesStatusInfo {
+.StatusInfo {
     padding-bottom: 3%;
 }
-.employeesPositionInfo {
+.PositionInfo {
     padding-bottom: 3%;
 }
 .positionCheckInfo {
     display: flex;
     justify-content: space-between;
 }
-.employeesBtnInfo {
+.BtnInfo {
     display: flex;
     justify-content: space-around;
     padding-bottom: 3%;
@@ -148,7 +120,7 @@
 
 
 // Sửa thông tin nhân viên
-.employeesEdit {
+.Edit {
     width: 60%;
     display: flex;
     flex-direction: column;
@@ -160,7 +132,7 @@
     background-color: #fff;
     border-radius: 12px;
 }
-.employeesTitleEdit {
+.TitleEdit {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -168,46 +140,46 @@
     margin-left: 4.3%;
     margin-right: 4.3%;
 }
-.employeesContEdit {
+.ContEdit {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
-.employeesNameEdit {
+.NameEdit {
     padding-bottom: 3%;
 }  
-.employeesAgeEdit {
+.AgeEdit {
     padding-bottom: 3%;
 }
 .identityCardEdit {
     padding-bottom: 3%;
 }
-.employeesIDEdit {
+.IDEdit {
     padding-bottom: 3%;
 }
-.employeesEmailEdit {
+.EmailEdit {
     padding-bottom: 3%;
 }
-.employeesPhoneEdit {
+.PhoneEdit {
     padding-bottom: 3%;
 }
-.employeesPassEdit {
+.PassEdit {
     padding-bottom: 3%;
 }
-.employeesAddressEdit {
+.AddressEdit {
     padding-bottom: 3%;
 }
-.employeesStatusEdit {
+.StatusEdit {
     padding-bottom: 3%;
 }
-.employeesPositionEdit {
+.PositionEdit {
     padding-bottom: 3%;
 }
 .positionCheckEdit {
     display: flex;
     justify-content: space-between;
 }
-.employeesBtnEdit {
+.BtnEdit {
     display: flex;
     justify-content: space-around;
     padding-bottom: 3%;

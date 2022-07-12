@@ -33,6 +33,9 @@ const theme = createTheme({
       main: colors.info,
       dark: colors.infoDark,
     },
+    warning: {
+      main: colors.warning,
+    },
   },
 });
 
