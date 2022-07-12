@@ -14,6 +14,8 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+
+import { numbToCurrency } from "../../helper/currency";
 import {
   Button,
   TextField,
@@ -97,12 +99,6 @@ let menuItem42 = {
   update_by: "dung001",
 };
 
-function numbToCurrency(price) {
-  return new Intl.NumberFormat("vi-VI", {
-    style: "currency",
-    currency: "VND",
-  }).format(parseInt(price));
-}
 const OrderItem = ({ item, changeAmount = false }) => {
   let list = useAppSelector((state) => state.menu.orderList);
   const dispatch = useAppDispatch();
@@ -325,7 +321,6 @@ export const MenuList = ({ categoryName }) => {
       <h2> {categoryName}</h2>
       <div className="meunItemCont">
         <Slider {...settings}>
-
           <div className="meunItemsCont ">
             <MenuItem item={menuItem} />
           </div>
@@ -352,7 +347,6 @@ export const MenuList = ({ categoryName }) => {
           <div className="meunItemsCont ">
             <MenuItem item={menuItem42} />
           </div>
-
         </Slider>
       </div>
     </div>
@@ -362,7 +356,6 @@ export const MenuList = ({ categoryName }) => {
 export const Category = () => {
   let selected = useAppSelector((state) => state.menu.selectedCate);
   const dispatch = useAppDispatch();
-
 
   let settings = {
     infinite: false,
