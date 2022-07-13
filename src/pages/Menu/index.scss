@@ -196,6 +196,94 @@
         top: 0.7rem;
         padding-top: 5px;
     }
+//     .billBgCont{
+//         overflow: scroll;
+//         border: 20px solid #614A35;
+//         background-color: rgb(255, 255, 255);
+//         width:100%;
+//         height: 89vh;
+//         border-radius: 20px;
+//         padding: 10px;
+//         padding-top: 1rem;
+//         display: flex;
+//         flex-direction: column;
+//         align-items: center;
+//         justify-content: flex-start;
+//         -webkit-border-radius: 40px;
+//         -moz-border-radius: 40px;
+
+//         background-position: center;
+//         background-repeat: no-repeat;
+//         padding-left: 1rem;
+//         padding-right:  1rem;
+
+//         .billHeader{
+//             display: flex;
+//             flex-direction: column;
+//             align-items: center;
+//             justify-content: flex-start;
+
+//         }
+//         .billListCont{
+//             margin-top: 1rem;
+
+//             width:100%;
+//             height: auto;
+//             width: 100%;
+//             height: auto;
+//             flex-wrap: wrap;            
+//             display: inline-flex;
+//             flex-direction: row;
+//             justify-content:flex-start;
+//             align-items: space-evenly;
+
+//             .billItemCont{
+//                 .orderItemCont{
+               
+//                 }
+//                 span{
+//                     color: #111;
+//                 }
+               
+             
+//             }
+//         }
+//         .noteCont{
+//             display:flex;
+//             width: 100%;
+
+            
+//         }
+//         .cardCont{
+//             margin-top:1rem;
+//             display:flex;
+//             width: 100%;    
+//             .billListCont{       
+//                 display: inline-flex;
+//                 width: 100%;
+//                 flex-direction: column;
+//                 justify-content: space-between;
+//                 align-items: center;
+               
+//             }
+            
+//         }
+//         .checkbox{
+//             display: flex;
+//             width: 100%;
+//             justify-content: flex-staet;
+//         }
+//         .buttonCont{
+//             display:flex;
+//             width: 100%;
+//             margin: 1rem;
+//             justify-content: space-evenly;
+//         }
+//     }
+// }
+
+
+// hóa đơn
     .billBgCont{
         overflow: scroll;
         border: 20px solid #614A35;
@@ -222,7 +310,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
+            font-size: large;
             
+        }
+        .locationCont {  
+            width: 100%;                                                         
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
         }
         .billListCont{
             margin-top: 1rem;
@@ -255,7 +351,6 @@
             
         }
         .cardCont{
-            margin-top:1rem;
             display:flex;
             width: 100%;    
             .billListCont{       
@@ -280,7 +375,10 @@
             justify-content: space-evenly;
         }
     }
+
 }
+
+//--------------------------------------------------------
 .billContentCont{
     display: inline-flex;
     width: 100%;
