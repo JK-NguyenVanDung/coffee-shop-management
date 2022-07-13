@@ -67,7 +67,7 @@ const columns = [
           <Button
             variant="contained"
             endIcon={<EditIcon />}
-            style={{ marginRight: "7%" }}
+            style={{ marginRight: "7%", backgroundColor: "#4CACBA", color: "#fff" }}
             size="small"
           >
             Sửa
@@ -75,6 +75,7 @@ const columns = [
           <Button
             variant="contained"
             endIcon={<DeleteSweepIcon />}
+            style={{  backgroundColor: "#B2431E", color: "#fff" }}
             size="small"
           >
             Xóa
@@ -402,7 +403,7 @@ const Employees = () => {
         <Button
           variant="contained"
           endIcon={<ConstructionIcon />}
-          style={{ marginRight: "1%" }}
+          style={{ marginRight: "1%", backgroundColor: "#111", color: "#fff" }}
           size="small"
         >
           QUẢN LÝ
@@ -412,7 +413,7 @@ const Employees = () => {
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
-          style={{ marginRight: "1%" }}
+          style={{ marginRight: "1%", backgroundColor: "#4BB984", color: "#fff" }}
           size="small"
         >
           THÊM NHÂN VIÊN
