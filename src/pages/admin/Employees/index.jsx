@@ -154,7 +154,16 @@ const ModalContent = () => {
     return "Thêm nhân viên";
   }
   const labels = {
-    picture: "Hình Ảnh",
+    picture: "Hình ảnh",
+    fullname: "Họ tên",
+    birthday: "Ngày sinh",
+    idcard: "CMND/CCCD",
+    email: "Email",
+    phone: "SĐT",
+    password: "Mật khẩu",
+    address: "Địa chỉ",
+    status: "Tình trạng",
+    position: "Chức vụ",
   };
   return (
     <div className="ModalCont">
@@ -176,13 +185,29 @@ const ModalContent = () => {
                 </Button>
               </div>
             </Form.Item>
-            <Form.Item>
+            <Form.Item
+              name="full_name"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống họ tên`,
+                },
+              ]}
+            >
               <div>
-                <h4>Họ tên</h4>
+                <h4>{labels.fullname}</h4>
                 <Input placeholder="Nhập họ tên" />
               </div>
             </Form.Item>
-            <Form.Item>
+            <Form.Item
+              name="age"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống ngày sinh`,
+                },
+              ]}
+            >
               <div>
                 <h4>Ngày sinh</h4>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -212,61 +237,107 @@ const ModalContent = () => {
               ]}
             >
               <div>
-                <h4>CMND/CCCD</h4>
+                <h4>{labels.idcard}</h4>
                 <Input placeholder="Nhập CMND" />
               </div>
             </Form.Item>
           </div>
           <div>
-            <Form.Item>
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống email`,
+                },
+              ]}
+            >
               <div>
-                <h4>Email</h4>
+                <h4>{labels.email}</h4>
                 <Input placeholder="Nhập email" />
               </div>
             </Form.Item>
-            <Form.Item>
+            <Form.Item
+              name="sdt"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống sdt`,
+                },
+              ]}
+            >
               <div>
-                <h4>SĐT</h4>
+                <h4>{labels.phone}</h4>
                 <Input placeholder="Nhập số điện thoại" />
               </div>
             </Form.Item>
-            <Form.Item>
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống mật khẩu`,
+                },
+              ]}
+            >
               <div>
-                <h4>Mật khẩu</h4>
+                <h4>{labels.password}</h4>
                 <Input.Password placeholder="Nhập mật khẩu" />
               </div>
             </Form.Item>
-            <Form.Item>
+            <Form.Item name="address">
               <div>
-                <h4>Địa chỉ</h4>
-                <Input placeholder="Nhập địa chỉ (không bắt buộc)" />
+                <h4>{labels.address}</h4>
+                <Input placeholder="Nhập địa chỉ" />
               </div>
             </Form.Item>
-            <Form.Item>
+            <Form.Item
+              name="status"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống tình trạng`,
+                },
+              ]}
+            >
               <div>
-                <h4>Tình trạng</h4>
+                <h4>{labels.status}</h4>
                 <RadioGroup row value={value} onChange={handleChange}>
-                  <FormControlLabel
-                    value="1"
-                    control={<Radio />}
-                    label="Còn làm"
-                  />
-                  <FormControlLabel
-                    value="2"
-                    control={<Radio />}
-                    label="Tạm nghỉ"
-                  />
-                  <FormControlLabel
-                    value="3"
-                    control={<Radio />}
-                    label="Đã nghỉ"
-                  />
+                  <div class="still">
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio size="small" />}
+                      label="Còn làm"
+                    />
+                  </div>
+                  <div class="temporary">
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio size="small" />} // radio này có khi nó lỗi chú chỉnh width lại giúp tui vs nha
+                      label="Tạm nghỉ"
+                    />
+                  </div>
+                  <div class="vacation">
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio size="small" />}
+                      label="Đã nghỉ"
+                    />
+                  </div>
                 </RadioGroup>
               </div>
             </Form.Item>
-            <Form.Item>
+            <Form.Item
+              name="position"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống chức vụ`,
+                },
+              ]}
+            >
               <div className="PositionAdd">
-                <h4>Chức vụ</h4>
+                <h4>{labels.position}</h4>
                 <Form.Item>
                   <div className="positionCheckAdd">
                     <FormControlLabel
@@ -284,10 +355,33 @@ const ModalContent = () => {
           </div>
         </div>
         <div className="BtnAdd">
-          <Button variant="contained" onClick={handleOk}>
+          <Button
+            size="Large"
+            color="primary"
+            variant="contained"
+            style={{
+              paddingLeft: "15%",
+              paddingRight: "15%",
+              paddingTop: "2%",
+              paddingBottom: "2%",
+            }}
+            onClick={handleOk}
+          >
             Lưu
           </Button>
-          <Button variant="contained">Hủy</Button>
+          <Button
+            size="Large"
+            color="primary"
+            variant="contained"
+            style={{
+              paddingLeft: "15%",
+              paddingRight: "15%",
+              paddingTop: "2%",
+              paddingBottom: "2%",
+            }}
+          >
+            Hủy
+          </Button>
         </div>
       </Form>
     </div>
@@ -494,7 +588,7 @@ const Employees = () => {
         <Button
           variant="contained"
           endIcon={<ConstructionIcon />}
-          style={{ marginRight: "1%" }}
+          style={{ marginRight: "1%", backgroundColor: "#111", color: "#fff" }}
           size="small"
         >
           QUẢN LÝ
@@ -504,7 +598,11 @@ const Employees = () => {
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
-          style={{ marginRight: "1%" }}
+          style={{
+            marginRight: "1%",
+            backgroundColor: "#4BB984",
+            color: "#fff",
+          }}
           size="small"
         >
           THÊM NHÂN VIÊN
@@ -540,96 +638,189 @@ export default Employees;
   /* Thông tin nhân viên */
 }
 {
-  /*  <Form class="Info">
-  <Form className="totalContentInfo">
-    <Form.Item class="TitleInfo">
-      <h2>Thông tin nhân viên</h2>
-      <CloseOutlined />
-    </Form.Item>
-    <Form class="ContInfo">
-      <Form className="InfoL">
-        <Form.Item className="AvatarInfo">
-          <h4>Hình ảnh</h4>
-          <Button variant="contained" component="label">
-            Upload File
-            <input type="file" hidden />
-          </Button>
-        </Form.Item>
-        <Form.Item className="NameInfo">
-          <h4>Họ tên</h4>
-          <Input />
-        </Form.Item>
-        <Form.Item className="BirthdayInfo">
-          <h4>Ngày sinh</h4>
-          <Input />
-        </Form.Item>
-        <Form.Item className="identityCardInfo">
-          <h4>CMND/CCCD</h4>
-          <Input />
-        </Form.Item>
-      </Form>
-      <Form className="InfoR">
-        <Form.Item className="IDInfo">
-          <h4>ID nhân viên</h4>
-          <Input />
-        </Form.Item>
-        <Form.Item className="EmailInfo">
-          <h4>Email</h4>
-          <Input />
-        </Form.Item>
-        <Form.Item className="PhoneInfo">
-          <h4>SĐT</h4>
-          <Input />
-        </Form.Item>
-        <Form.Item className="PassInfo">
-          <h4>Mật khẩu</h4>
-          <Input.Password />
-        </Form.Item>
-        <Form.Item className="AddressInfo">
-          <h4>Địa chỉ</h4>
-          <Input />
-        </Form.Item>
-        <Form.Item className="StatusInfo">
-          <h4>Tình trạng</h4>
-          <RadioGroup row value={value} onChange={handleChange}>
-            <FormControlLabel
-              value="still break"
-              control={<Radio />}
-              label="Còn làm"
-            />
-            <FormControlLabel
-              value="temporary break"
-              control={<Radio />}
-              label="Tạm nghỉ"
-            />
-            <FormControlLabel
-              value="took a break"
-              control={<Radio />}
-              label="Đã nghỉ"
-            />
-          </RadioGroup>
-        </Form.Item>
-        <Form.Item className="PositionInfo">
-          <h4>Chức vụ</h4>
-          <Form.Item className="positionCheckInfo">
-            <FormControlLabel
-              control={<Checkbox defaultChecked />}
-              label="Nhân viên"
-            />
-            <FormControlLabel
-              control={<Checkbox defaultChecked />}
-              label="Quản lý"
-            />
-          </Form.Item>
-        </Form.Item>
-      </Form>
-    </Form>
-    <Form.Item className="BtnInfo">
-      <Button variant="contained">Sửa</Button>
-      <Button variant="contained">Xóa</Button>
-    </Form.Item>
-  </Form>
-</Form>*/
+  // <div class="ModalCont">
+  //   <div class="headerCont">
+  //     <h2>{getHeaderTitle()}</h2>                          // thêm giúp tui title với lại xét cho nó hiện bên trong input tui ko biết
+  //     <IconButton onClick={handleClose}>
+  //       <CloseOutlined />
+  //     </IconButton>
+  //   </div>
+  //   <Form form={form}>
+  //     <div class="bodyCont">
+  //       <div>
+  //         <Form.Item>
+  //           <div>
+  //             <h4>{labels.picture}</h4>
+  //             <Button variant="contained" component="label">
+  //               Upload File
+  //               <input type="file" hidden />
+  //             </Button>
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="full_name"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống họ tên`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.fullname}</h4>
+  //             <Input placeholder="Nhập họ tên" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="age"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống ngày sinh`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.birthday}</h4>
+  //             {/* <DatePicker
+  //             value={value}
+  //             onChange={(newValue) => {
+  //               setValue(newValue);
+  //             }}
+  //             renderInput={(params) => <TextField {...params} />}
+  //           /> */}
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="id_card"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống CMND/CCCD`,
+  //             },
+  //           ]}
+  //         >
+  //           <div>
+  //             <h4>{labels.idcard}</h4>
+  //             <Input placeholder="Nhập CMND" />
+  //           </div>
+  //         </Form.Item>
+  //       </div>
+  //       <div>
+  //         <Form.Item
+  //           name="email"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống email`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.email}</h4>
+  //             <Input placeholder="Nhập email" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="sdt"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống sdt`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.phone}</h4>
+  //             <Input placeholder="Nhập số điện thoại" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="password"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống mật khẩu`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.password}</h4>
+  //             <Input.Password placeholder="Nhập mật khẩu" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="address"
+  //         >
+  //           <div>
+  //             <h4>{labels.address}</h4>
+  //             <Input placeholder="Nhập địa chỉ" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="status"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống tình trạng`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.status}</h4>
+  //             <RadioGroup row value={value} onChange={handleChange}>
+  //               <div class="still">
+  //                 <FormControlLabel
+  //                   value="1"
+  //                   control={<Radio size="small" />}
+  //                   label="Còn làm"
+  //                 />
+  //               </div>
+  //               <div class="temporary">
+  //                 <FormControlLabel
+  //                   value="2"
+  //                   control={<Radio size="small" />}
+  //                   label="Tạm nghỉ"
+  //                 />
+  //               </div>
+  //               <div class="vacation">
+  //                 <FormControlLabel
+  //                   value="3"
+  //                   control={<Radio size="small" />}
+  //                   label="Đã nghỉ"
+  //                 />
+  //               </div>
+  //             </RadioGroup>
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="position"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống chức vụ`,
+  //             },
+  //           ]}>
+  //           <div className="PositionAdd">
+  //             <h4>{labels.position}</h4>
+  //             <Form.Item>
+  //               <div className="positionCheckAdd">
+  //                 <FormControlLabel
+  //                   control={<Checkbox defaultChecked />}
+  //                   label="Nhân viên"
+  //                 />
+  //                 <FormControlLabel
+  //                   control={<Checkbox defaultChecked />}
+  //                   label="Quản lý"
+  //                 />
+  //               </div>
+  //             </Form.Item>
+  //           </div>
+  //         </Form.Item>
+  //       </div>
+  //     </div>
+  //     <Form.Item>
+  //       <div className="BtnAdd">
+  //         <Button size="Large" color="primary" variant="contained" style={{ paddingLeft: '15%', paddingRight: '15%', paddingTop: '2%', paddingBottom: '2%' }}>Sửa</Button>
+  //         <Button size="Large" color="error" variant="contained" style={{ paddingLeft: '15%', paddingRight: '15%', paddingTop: '2%', paddingBottom: '2%' }}>Xóa</Button>
+  //       </div>
+  //     </Form.Item>
+  //   </Form>
+  // </div>
 }
 
 {
@@ -637,94 +828,187 @@ export default Employees;
 }
 
 {
-  /* <Form class="Edit">
-<div className="totalContentEdit">
-  <Form.Item class="TitleEdit">
-    <h2>Sửa thông tin nhân viên</h2>
-    <CloseOutlined />
-  </Form.Item>
-  <div class="ContEdit">
-    <div className="EditL">
-      <Form.Item className="AvatarEdit">
-        <h4>Hình ảnh</h4>
-        <Button variant="contained" component="label">
-          Upload File
-          <input type="file" hidden />
-        </Button>
-      </Form.Item>
-      <Form.Item className="NameEdit">
-        <h4>Họ tên</h4>
-        <Input />
-      </Form.Item>
-      <Form.Item className="BirthdayEdit">
-        <h4>Ngày sinh</h4>
-        <Input />
-      </Form.Item>
-      <Form.Item className="identityCardEdit">
-        <h4>CMND/CCCD</h4>
-        <Input />
-      </Form.Item>
-    </div>
-    <div className="EditR">
-      <Form.Item className="IDEdit">
-        <h4>ID nhân viên</h4>
-        <Input />
-      </Form.Item>
-      <Form.Item className="EmailEdit">
-        <h4>Email</h4>
-        <Input />
-      </Form.Item>
-      <Form.Item className="PhoneEdit">
-        <h4>SĐT</h4>
-        <Input />
-      </Form.Item>
-      <Form.Item className="PassEdit">
-        <h4>Mật khẩu</h4>
-        <Input.Password />
-      </Form.Item>
-      <Form.Item className="AddressEdit">
-        <h4>Địa chỉ</h4>
-        <Input />
-      </Form.Item>
-      <Form.Item className="StatusEdit">
-        <h4>Tình trạng</h4>
-        <RadioGroup row value={value} onChange={handleChange}>
-          <FormControlLabel
-            value="still break"
-            control={<Radio />}
-            label="Còn làm"
-          />
-          <FormControlLabel
-            value="temporary break"
-            control={<Radio />}
-            label="Tạm nghỉ"
-          />
-          <FormControlLabel
-            value="took a break"
-            control={<Radio />}
-            label="Đã nghỉ"
-          />
-        </RadioGroup>
-      </Form.Item>
-      <Form.Item className="PositionEdit">
-        <h4>Chức vụ</h4>
-        <Form.Item className="positionCheckEdit">
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
-            label="Nhân viên"
-          />
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
-            label="Quản lý"
-          />
-        </Form.Item>
-      </Form.Item>
-    </div>
-  </div>
-  <Form.Item className="BtnEdit">
-    <Button variant="contained">Lưu</Button>
-    <Button variant="contained">Hủy</Button>
-  </Form.Item>
-</div>
-</Form> */
+  // <div class="ModalCont">
+  //   <div class="headerCont">
+  //     <h2>{getHeaderTitle()}</h2>                          // thêm giúp tui title với lại xét cho nó hiện bên trong input tui ko biết
+  //     <IconButton onClick={handleClose}>
+  //       <CloseOutlined />
+  //     </IconButton>
+  //   </div>
+  //   <Form form={form}>
+  //     <div class="bodyCont">
+  //       <div>
+  //         <Form.Item>
+  //           <div>
+  //             <h4>{labels.picture}</h4>
+  //             <Button variant="contained" component="label">
+  //               Upload File
+  //               <input type="file" hidden />
+  //             </Button>
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="full_name"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống họ tên`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.fullname}</h4>
+  //             <Input placeholder="Nhập họ tên" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="age"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống ngày sinh`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.birthday}</h4>
+  //             {/* <DatePicker
+  //             value={value}
+  //             onChange={(newValue) => {
+  //               setValue(newValue);
+  //             }}
+  //             renderInput={(params) => <TextField {...params} />}
+  //           /> */}
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="id_card"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống CMND/CCCD`,
+  //             },
+  //           ]}
+  //         >
+  //           <div>
+  //             <h4>{labels.idcard}</h4>
+  //             <Input placeholder="Nhập CMND" />
+  //           </div>
+  //         </Form.Item>
+  //       </div>
+  //       <div>
+  //         <Form.Item
+  //           name="email"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống email`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.email}</h4>
+  //             <Input placeholder="Nhập email" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="sdt"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống sdt`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.phone}</h4>
+  //             <Input placeholder="Nhập số điện thoại" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="password"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống mật khẩu`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.password}</h4>
+  //             <Input.Password placeholder="Nhập mật khẩu" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="address"
+  //         >
+  //           <div>
+  //             <h4>{labels.address}</h4>
+  //             <Input placeholder="Nhập địa chỉ" />
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="status"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống tình trạng`,
+  //             },
+  //           ]}>
+  //           <div>
+  //             <h4>{labels.status}</h4>
+  //             <RadioGroup row value={value} onChange={handleChange}>
+  //               <div class="still">
+  //                 <FormControlLabel
+  //                   value="1"
+  //                   control={<Radio size="small" />}
+  //                   label="Còn làm"
+  //                 />
+  //               </div>
+  //               <div class="temporary">
+  //                 <FormControlLabel
+  //                   value="2"
+  //                   control={<Radio size="small" />}
+  //                   label="Tạm nghỉ"
+  //                 />
+  //               </div>
+  //               <div class="vacation">
+  //                 <FormControlLabel
+  //                   value="3"
+  //                   control={<Radio size="small" />}
+  //                   label="Đã nghỉ"
+  //                 />
+  //               </div>
+  //             </RadioGroup>
+  //           </div>
+  //         </Form.Item>
+  //         <Form.Item
+  //           name="position"
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: `Không được để trống chức vụ`,
+  //             },
+  //           ]}>
+  //           <div className="PositionAdd">
+  //             <h4>{labels.position}</h4>
+  //             <Form.Item>
+  //               <div className="positionCheckAdd">
+  //                 <FormControlLabel
+  //                   control={<Checkbox defaultChecked />}
+  //                   label="Nhân viên"
+  //                 />
+  //                 <FormControlLabel
+  //                   control={<Checkbox defaultChecked />}
+  //                   label="Quản lý"
+  //                 />
+  //               </div>
+  //             </Form.Item>
+  //           </div>
+  //         </Form.Item>
+  //       </div>
+  //     </div>
+  //     <Form.Item>
+  //       <div className="BtnAdd">
+  //         <Button size="Large" color="primary" variant="contained" style={{ paddingLeft: '15%', paddingRight: '15%', paddingTop: '2%', paddingBottom: '2%' }}>Lưu</Button>
+  //         <Button size="Large" color="error" variant="contained" style={{ paddingLeft: '15%', paddingRight: '15%', paddingTop: '2%', paddingBottom: '2%' }}>Hủy</Button>
+  //       </div>
+  //     </Form.Item>
+  //   </Form>
+  // </div>
 }

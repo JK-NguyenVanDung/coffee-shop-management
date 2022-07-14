@@ -15,7 +15,6 @@
     flex-direction: column;
     justify-content: center;
     border-radius: 12px ;
-    padding: 0.5%;
   }
 
 .headerCont {
@@ -24,8 +23,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 4%;
-  
+    padding-left: 4%;
+    padding-right: 3%;
 }
 .form{
     height: 90vh;
@@ -38,6 +37,20 @@
     justify-content: space-around;   
     overflow-y: scroll;
 
+}
+.still {
+    background-color: #4BB984;
+    border-radius: 12px;
+    margin-right: 2%;
+}
+.temporary {
+    background-color: #FFA726;
+    border-radius: 12px;
+    margin-right: 2%;
+}
+.vacation {
+    background-color: #B2431E;
+    border-radius: 12px;
 }
 .positionCheckAdd {
     display: flex;
