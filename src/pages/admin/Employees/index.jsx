@@ -75,7 +75,7 @@ const columns = [
           <Button
             variant="contained"
             endIcon={<DeleteSweepIcon />}
-            style={{  backgroundColor: "#B2431E", color: "#fff" }}
+            style={{ backgroundColor: "#B2431E", color: "#fff" }}
             size="small"
           >
             Xóa
@@ -196,6 +196,7 @@ const ModalContent = () => {
     email: "Email",
     phone: "SĐT",
     password: "Mật khẩu",
+    resetpassword: "Nhập lại mật khẩu",
     address: "Địa chỉ",
     status: "Tình trạng",
     position: "Chức vụ",
@@ -305,6 +306,19 @@ const ModalContent = () => {
               <div>
                 <h4>{labels.password}</h4>
                 <Input.Password placeholder="Nhập mật khẩu" />
+              </div>
+            </Form.Item>
+            <Form.Item
+              name="resetpassword"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống mật khẩu`,
+                },
+              ]}>
+              <div>
+                <h4>{labels.resetpassword}</h4>
+                <Input.Password placeholder="Nhập lại mật khẩu" />
               </div>
             </Form.Item>
             <Form.Item
@@ -548,6 +562,19 @@ export default Employees;
   //             <Input.Password placeholder="Nhập mật khẩu" />
   //           </div>
   //         </Form.Item>
+  // <Form.Item
+  //   name="resetpassword"
+  //   rules={[
+  //     {
+  //       required: true,
+  //       message: `Không được để trống mật khẩu`,
+  //     },
+  //   ]}>
+  //   <div>
+  //     <h4>{labels.resetpassword}</h4>
+  //     <Input.Password placeholder="Nhập lại mật khẩu" />
+  //   </div>
+  // </Form.Item>
   //         <Form.Item
   //           name="address"
   //         >
@@ -738,6 +765,19 @@ export default Employees;
   //             <Input.Password placeholder="Nhập mật khẩu" />
   //           </div>
   //         </Form.Item>
+  // <Form.Item
+  //   name="resetpassword"
+  //   rules={[
+  //     {
+  //       required: true,
+  //       message: `Không được để trống mật khẩu`,
+  //     },
+  //   ]}>
+  //   <div>
+  //     <h4>{labels.resetpassword}</h4>
+  //     <Input.Password placeholder="Nhập lại mật khẩu" />
+  //   </div>
+  // </Form.Item>
   //         <Form.Item
   //           name="address"
   //         >
