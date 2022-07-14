@@ -3,20 +3,14 @@
     display: flex;
     flex-direction: row;
     justify-content: end;
-
-    .dishSearch {
-        width: 30%;
-        .ant-input {
-            border-radius: 25px;
-            width: 100%;
-        }
-    }
+    padding: 10px;
 }
 
 // Thêm nhân viên
 
 .ModalCont {
     width: 100%;
+    height: 95vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -33,11 +27,17 @@
     padding: 4%;
   
 }
+.form{
+    height: 90vh;
+    overflow-y: scroll;
+}
 .bodyCont {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-around;   
+    overflow-y: scroll;
+
 }
 .positionCheckAdd {
     display: flex;

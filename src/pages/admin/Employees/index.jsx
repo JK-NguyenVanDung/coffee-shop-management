@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table, Form } from "antd";
+import { Input, Table, Form, Popconfirm } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -19,72 +19,19 @@ import RadioGroup from "@mui/material/RadioGroup";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { menuText } from "../../../helper/Text";
 import TextField from "@mui/material/TextField";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import FormModal from "../../../components/FormElements/FormModal";
 import { IconButton } from "@mui/material";
+import * as collections from "../../../api/Collections/employees";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
+import SearchTable from "../../../components/Table/SearchTable";
+
 const { Search } = Input;
 
-const columns = [
-  {
-    title: "ID nhân viên",
-    dataIndex: "id_card",
-    // render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Họ tên",
-    dataIndex: "full_name",
-  },
-  {
-    title: "Thông tin liên lạc",
-    dataIndex: "address",
-    // dataIndex: 'sdt',
-    // dataIndex: 'avatar',
-    // dataIndex: 'age',
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Password",
-    dataIndex: "password",
-  },
-  {
-    title: "Tình trạng",
-    dataIndex: "status",
-  },
-  {
-    title: "Chức vụ",
-    dataIndex: "position",
-  },
-  {
-    title: "Hoạt động",
-    render: () => {
-      return (
-        <>
-          <Button
-            variant="contained"
-            endIcon={<EditIcon />}
-            style={{ marginRight: "7%" }}
-            size="small"
-          >
-            Sửa
-          </Button>
-          <Button
-            variant="contained"
-            endIcon={<DeleteSweepIcon />}
-            size="small"
-          >
-            Xóa
-          </Button>
-        </>
-      );
-    },
-  },
-];
 const data = [
   {
     key: "1",
@@ -175,16 +122,34 @@ const rowSelection = {
   },
 };
 const ModalContent = () => {
-  const [value, setValue] = React.useState("still break" & null);
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  const [loading, setLoading] = useState(false);
+  const dataItem = useAppSelector((state) => state.employees.detail);
+  const [value, setValue] = React.useState(new Date("2014-08-18T21:11:54"));
+
+  const handleChange = (newValue) => {
+    setValue(newValue);
   };
+
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
   const handleOpen = () => dispatch(actions.formActions.showForm());
   const handleClose = () => dispatch(actions.formActions.closeForm());
-  const handleOk = () => {};
+
+  const handleOk = async () => {
+    form
+      .validateFields()
+      .then(async (values) => {
+        setLoading(true);
+        const temp = [];
+        if (dataItem) {
+        }
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+        setLoading(false);
+      });
+  };
   function getHeaderTitle() {
     return "Thêm nhân viên";
   }
@@ -192,15 +157,15 @@ const ModalContent = () => {
     picture: "Hình Ảnh",
   };
   return (
-    <div class="ModalCont">
-      <div class="headerCont">
+    <div className="ModalCont">
+      <div className="headerCont">
         <h2>{getHeaderTitle()}</h2>
         <IconButton onClick={handleClose}>
           <CloseOutlined />
         </IconButton>
       </div>
-      <Form form={form}>
-        <div class="bodyCont">
+      <Form form={form} className="form">
+        <div className="bodyCont">
           <div>
             <Form.Item>
               <div>
@@ -220,13 +185,21 @@ const ModalContent = () => {
             <Form.Item>
               <div>
                 <h4>Ngày sinh</h4>
-                {/* <DatePicker
-                  value={value}
-                  onChange={(newValue) => {
-                    setValue(newValue);
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                /> */}
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DesktopDatePicker
+                    inputFormat="MM/dd/yyyy"
+                    value={value}
+                    onChange={handleChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label=""
+                        variant="standard"
+                        InputLabelProps={{ shrink: false }}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
               </div>
             </Form.Item>
             <Form.Item
@@ -310,27 +283,211 @@ const ModalContent = () => {
             </Form.Item>
           </div>
         </div>
-        <Form.Item>
-          <div className="BtnAdd">
-            <Button variant="contained">Lưu</Button>
-            <Button variant="contained">Hủy</Button>
-          </div>
-        </Form.Item>
+        <div className="BtnAdd">
+          <Button variant="contained" onClick={handleOk}>
+            Lưu
+          </Button>
+          <Button variant="contained">Hủy</Button>
+        </div>
       </Form>
     </div>
   );
 };
 
 const Employees = () => {
+  const [loading, setLoading] = useState(false);
+  const [dataList, setDataList] = useState({});
+  const [showList, setShowList] = useState(false);
+
   const [selectionType, setSelectionType] = useState("checkbox");
   const [value, setValue] = React.useState("still break" & null);
+
+  const [postList, setPostList] = useState({ page: 1, per_page: 10 });
+  const checkOnload = useAppSelector((state) => state.employees.loadData);
+  const fetchData = async (value) => {
+    try {
+      setLoading(true);
+      const response = await collections.getEmployees();
+      dispatch(actions.employeesActions.setListAll(response));
+      setDataList(response);
+      setShowList(true);
+      setLoading(false);
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      //history.replace("/");
+    }
+  };
+
+  useEffect(() => {
+    // test.current = 2;
+    fetchData(postList);
+  }, [checkOnload]);
+
+  useEffect(() => {
+    async function getData() {
+      const response = await collections();
+    }
+  }, []);
+  const columns = [
+    {
+      title: "ID nhân viên",
+      dataIndex: "id_card",
+      // render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Họ tên",
+      dataIndex: "full_name",
+    },
+    {
+      title: "Thông tin liên lạc",
+      dataIndex: "address",
+      // dataIndex: 'sdt',
+      // dataIndex: 'avatar',
+      // dataIndex: 'age',
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Password",
+      dataIndex: "password",
+    },
+    {
+      title: "Tình trạng",
+      dataIndex: "account_status",
+      render: (item) => {
+        let status = " ";
+        switch (item.account_status) {
+          case 1:
+            status = "Còn làm";
+            break;
+          case 2:
+            status = "Tạm nghỉ";
+            break;
+          case 3:
+            status = "Đã nghỉ";
+            break;
+          default:
+            status = "Còn làm";
+            break;
+        }
+
+        return (
+          <>
+            <p>{status}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "Chức vụ",
+      dataIndex: "role",
+      render: (item) => {
+        let role = " ";
+        switch (item.role) {
+          case 1:
+            role = "Nhân viên";
+            break;
+          case 2:
+            role = "Quản lý";
+            break;
+
+          default:
+            role = "Nhân viên";
+            break;
+        }
+
+        return (
+          <>
+            <p>{role}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "Hoạt động",
+      render: (item) => {
+        return (
+          <>
+            <Button
+              variant="contained"
+              endIcon={<EditIcon />}
+              style={{ marginRight: "7%" }}
+              size="small"
+            >
+              Sửa
+            </Button>
+            <Popconfirm
+              title={`Bạn có muốn xoá ${item.name}`}
+              onConfirm={() => handleDelete(item, item.stt)}
+              onCancel={cancel}
+              okText="Có"
+              cancelText="Không"
+              placement="left"
+            >
+              <Button
+                variant="contained"
+                endIcon={<DeleteSweepIcon />}
+                size="small"
+              >
+                Xóa
+              </Button>
+            </Popconfirm>
+          </>
+        );
+      },
+    },
+  ];
+  const data = showList
+    ? dataList.map((item, index) => {
+        return {
+          id: item._id,
+          key: index + 1,
+          stt: index + 1,
+          // active: item, // placeholder, still waiting for API
+          _id: item._id,
+          email: item.email,
+          phone_number: item.phone_number,
+          password: item.password,
+          address: item.address,
+          account_status: item.account_status,
+          role: item.role,
+          full_name: item.full_name,
+          id_card: item.id_card,
+          date_of_birth: item.date_of_birth,
+          avatar: item.avatar,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+        };
+      })
+    : [];
   const handleChange = (event) => {
     setValue(event.target.value);
   };
   const dispatch = useAppDispatch();
 
-  const handleOpen = () => dispatch(actions.formActions.showForm());
+  const handleOpen = () => {
+    dispatch(actions.employeesActions.setDetail(null));
+    dispatch(actions.formActions.showForm());
+  };
+  async function handleDelete(item, index) {
+    // loading = true;
+    // await productService.delete(item.id);
+    // dispatch(actions.formActions.changeLoad(!loadData));
+    // loading = false;
+  }
+  function cancel(e) {
+    // message.error('Click on No');
+  }
 
+  const onSearch = (value) => console.log(value);
+  const onChangeSearch = async (value) => {
+    // await setSearch(value);
+    // pagination.name = value;
+  };
   return (
     <>
       <div className="dishSearchCont">
@@ -355,7 +512,14 @@ const Employees = () => {
         <FormModal children={<ModalContent />} />
 
         <div className="dishSearch">
-          <Search placeholder={menuText.searchMenu} allowClear size="default" />
+          <SearchTable
+            placeholder={menuText.searchEmployees}
+            allowClear
+            size="default"
+            onChange={(e) => onChangeSearch(e.target.value)}
+            onSearch={onSearch}
+            enterButton
+          />
         </div>
       </div>
       <div>

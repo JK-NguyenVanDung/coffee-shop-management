@@ -2,6 +2,7 @@
 
 export const menuText = {
     searchMenu: "Tìm kiếm các món bên trong menu...",
+    searchEmployees:  "Tìm kiếm nhân viên...",
     switchOp1: "Đồ uống",
     switchOp2: "Đồ ăn",
 

@@ -444,7 +444,6 @@ export const Category = () => {
     </Slider>
   );
 };
-const { Search } = Input;
 
 const BillDetail = () => {
   let orderList = useAppSelector((state) => state.menu.orderList);
