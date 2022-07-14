@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table, Form, Popconfirm } from "antd";
+import { Input, Table, Form, Popconfirm, Upload, message } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -30,82 +30,40 @@ import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+
+const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
+};
+
+const beforeUpload = (file) => {
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+
+  if (!isJpgOrPng) {
+    message.error("You can only upload JPG/PNG file!");
+  }
+
+  const isLt2M = file.size / 1024 / 1024 < 2;
+
+  if (!isLt2M) {
+    message.error("Image must smaller than 2MB!");
+  }
+
+  return isJpgOrPng && isLt2M;
+};
+
 const { Search } = Input;
 
 const data = [
   {
-    key: "1",
     id_card: "0123456789",
     full_name: "Trần Văn A",
     email: "spottran2001@gmail.com",
-    sdt: "0567656521",
+    phone_number: "0567656521",
     address: "123 Trần Phú",
-    age: 25,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Còn làm",
-    position: "Nhân viên",
-  },
-  {
-    key: "2",
-    id_card: "1234567890",
-    full_name: "Trần Văn B",
-    email: "spottran2001@gmail.com",
-    sdt: "0123347685",
-    address: "231 Trần Phú",
-    age: 10,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Còn làm",
-    position: "Nhân viên",
-  },
-  {
-    key: "3",
-    id_card: "2345678901",
-    full_name: "Trần Văn C",
-    email: "spottran2001@gmail.com",
-    sdt: "0182763347",
-    address: "321 Trần Phú",
-    age: 27,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Tạm nghỉ",
-    position: "Nhân viên",
-  },
-  {
-    key: "4",
-    id_card: "3456789012",
-    full_name: "Trần Văn D",
-    email: "spottran2001@gmail.com",
-    sdt: "0127324334",
-    address: "012 Trần Phú",
-    age: 20,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Đã nghỉ",
-    position: "Nhân viên",
-  },
-  {
-    key: "5",
-    id_card: "3456789012",
-    full_name: "Trần Văn D",
-    email: "spottran2001@gmail.com",
-    sdt: "0127324334",
-    address: "012 Trần Phú",
-    age: 20,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Còn làm",
-    position: "Nhân viên",
-  },
-  {
-    key: "6",
-    id_card: "3456789012",
-    full_name: "Trần Văn D",
-    email: "spottran2001@gmail.com",
-    sdt: "0127324334",
-    address: "012 Trần Phú",
-    age: 20,
+    date_of_birth: 25,
     avatar: "Hình",
     password: "sadasdasd",
     status: "Còn làm",
@@ -124,25 +82,61 @@ const rowSelection = {
 const ModalContent = () => {
   const [loading, setLoading] = useState(false);
   const dataItem = useAppSelector((state) => state.employees.detail);
-  const [value, setValue] = React.useState(new Date("2014-08-18T21:11:54"));
+  const [date, setDate] = React.useState(new Date("2014-08-18T21:11:54"));
+  const [role, setRole] = React.useState("");
 
   const handleChange = (newValue) => {
-    setValue(newValue);
+    setDate(newValue);
   };
-
+  const handleRole = (newValue) => {
+    setRole(newValue);
+  };
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
   const handleOpen = () => dispatch(actions.formActions.showForm());
   const handleClose = () => dispatch(actions.formActions.closeForm());
 
+  const uploadButton = (
+    <div>
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
   const handleOk = async () => {
     form
       .validateFields()
       .then(async (values) => {
+        console.log(values);
         setLoading(true);
         const temp = [];
         if (dataItem) {
+        } else {
+          await collections.addEmployee({
+            email: values.email,
+            phone_number: values.phone_number,
+            password: values.password,
+            address: values.address,
+            account_status: 1,
+            role: 1,
+            full_name: values.full_name,
+            id_card: values.id_card,
+            date_of_birth:
+              date.getDate() +
+              "/" +
+              (date.getMonth() + 1) +
+              "/" +
+              date.getFullYear(),
+            avatar: "a",
+          });
+          handleClose();
+          setLoading(false);
         }
       })
       .catch((info) => {
@@ -154,7 +148,7 @@ const ModalContent = () => {
     return "Thêm nhân viên";
   }
   const labels = {
-    picture: "Hình ảnh",
+    avatar: "Hình ảnh",
     fullname: "Họ tên",
     birthday: "Ngày sinh",
     idcard: "CMND/CCCD",
@@ -173,16 +167,17 @@ const ModalContent = () => {
           <CloseOutlined />
         </IconButton>
       </div>
-      <Form form={form} className="form">
+      <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
           <div>
-            <Form.Item>
+            <Form.Item name="avatar">
               <div>
-                <h4>{labels.picture}</h4>
+                {/* <h4>{labels.avatar}</h4>
                 <Button variant="contained" component="label">
                   Upload File
                   <input type="file" hidden />
-                </Button>
+                </Button> */}
+                <Input placeholder="test" />
               </div>
             </Form.Item>
             <Form.Item
@@ -199,21 +194,13 @@ const ModalContent = () => {
                 <Input placeholder="Nhập họ tên" />
               </div>
             </Form.Item>
-            <Form.Item
-              name="age"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống ngày sinh`,
-                },
-              ]}
-            >
+            <Form.Item name="date_of_birth">
               <div>
                 <h4>Ngày sinh</h4>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     inputFormat="MM/dd/yyyy"
-                    value={value}
+                    value={date}
                     onChange={handleChange}
                     renderInput={(params) => (
                       <TextField
@@ -225,6 +212,7 @@ const ModalContent = () => {
                     )}
                   />
                 </LocalizationProvider>
+                <Input placeholder="test" />
               </div>
             </Form.Item>
             <Form.Item
@@ -258,7 +246,7 @@ const ModalContent = () => {
               </div>
             </Form.Item>
             <Form.Item
-              name="sdt"
+              name="phone_number"
               rules={[
                 {
                   required: true,
@@ -291,18 +279,10 @@ const ModalContent = () => {
                 <Input placeholder="Nhập địa chỉ" />
               </div>
             </Form.Item>
-            <Form.Item
-              name="status"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống tình trạng`,
-                },
-              ]}
-            >
+            <Form.Item name="status">
               <div>
                 <h4>{labels.status}</h4>
-                <RadioGroup row value={value} onChange={handleChange}>
+                <RadioGroup row value={role} onChange={handleRole}>
                   <div class="still">
                     <FormControlLabel
                       value="1"
@@ -398,32 +378,9 @@ const Employees = () => {
 
   const [postList, setPostList] = useState({ page: 1, per_page: 10 });
   const checkOnload = useAppSelector((state) => state.employees.loadData);
-  const fetchData = async (value) => {
-    try {
-      setLoading(true);
-      const response = await collections.getEmployees();
-      dispatch(actions.employeesActions.setListAll(response));
-      setDataList(response);
-      setShowList(true);
-      setLoading(false);
-      // setPagination({
-      //   totalDocs: response.metadata.count,
-      // });
-    } catch (error) {
-      //history.replace("/");
-    }
-  };
 
-  useEffect(() => {
-    // test.current = 2;
-    fetchData(postList);
-  }, [checkOnload]);
+  const loadData = useAppSelector((state) => state.form.loadData);
 
-  useEffect(() => {
-    async function getData() {
-      const response = await collections();
-    }
-  }, []);
   const columns = [
     {
       title: "ID nhân viên",
@@ -516,7 +473,7 @@ const Employees = () => {
             </Button>
             <Popconfirm
               title={`Bạn có muốn xoá ${item.name}`}
-              onConfirm={() => handleDelete(item, item.stt)}
+              onConfirm={() => handleDelete(item)}
               onCancel={cancel}
               okText="Có"
               cancelText="Không"
@@ -535,13 +492,50 @@ const Employees = () => {
       },
     },
   ];
+
+  const handleUploadChange = (info) => {
+    if (info.file.status === "uploading") {
+      setLoading(true);
+      return;
+    }
+
+    if (info.file.status === "done") {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, (url) => {
+        setLoading(false);
+        setImageUrl(url);
+      });
+    }
+  };
+
+  const fetchData = async (value) => {
+    try {
+      setLoading(true);
+      const response = await collections.getEmployees();
+      dispatch(actions.employeesActions.setListAll(response));
+      setDataList(response);
+      setShowList(true);
+      setLoading(false);
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      //history.replace("/");
+    }
+  };
+
+  useEffect(() => {
+    // test.current = 2;
+    fetchData(postList);
+  }, [checkOnload]);
+
+  useEffect(() => {
+    fetchData(postList);
+  }, []);
+
   const data = showList
     ? dataList.map((item, index) => {
         return {
-          id: item._id,
-          key: index + 1,
-          stt: index + 1,
-          // active: item, // placeholder, still waiting for API
           _id: item._id,
           email: item.email,
           phone_number: item.phone_number,
@@ -567,11 +561,11 @@ const Employees = () => {
     dispatch(actions.employeesActions.setDetail(null));
     dispatch(actions.formActions.showForm());
   };
-  async function handleDelete(item, index) {
-    // loading = true;
-    // await productService.delete(item.id);
-    // dispatch(actions.formActions.changeLoad(!loadData));
-    // loading = false;
+  async function handleDelete(item) {
+    loading = true;
+    await collections.removeEmployee(item._id);
+    dispatch(actions.formActions.changeLoad(!loadData));
+    loading = false;
   }
   function cancel(e) {
     // message.error('Click on No');
@@ -582,6 +576,7 @@ const Employees = () => {
     // await setSearch(value);
     // pagination.name = value;
   };
+
   return (
     <>
       <div className="dishSearchCont">
@@ -634,381 +629,3 @@ const Employees = () => {
   );
 };
 export default Employees;
-{
-  /* Thông tin nhân viên */
-}
-{
-  // <div class="ModalCont">
-  //   <div class="headerCont">
-  //     <h2>{getHeaderTitle()}</h2>                          // thêm giúp tui title với lại xét cho nó hiện bên trong input tui ko biết
-  //     <IconButton onClick={handleClose}>
-  //       <CloseOutlined />
-  //     </IconButton>
-  //   </div>
-  //   <Form form={form}>
-  //     <div class="bodyCont">
-  //       <div>
-  //         <Form.Item>
-  //           <div>
-  //             <h4>{labels.picture}</h4>
-  //             <Button variant="contained" component="label">
-  //               Upload File
-  //               <input type="file" hidden />
-  //             </Button>
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="full_name"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống họ tên`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.fullname}</h4>
-  //             <Input placeholder="Nhập họ tên" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="age"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống ngày sinh`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.birthday}</h4>
-  //             {/* <DatePicker
-  //             value={value}
-  //             onChange={(newValue) => {
-  //               setValue(newValue);
-  //             }}
-  //             renderInput={(params) => <TextField {...params} />}
-  //           /> */}
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="id_card"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống CMND/CCCD`,
-  //             },
-  //           ]}
-  //         >
-  //           <div>
-  //             <h4>{labels.idcard}</h4>
-  //             <Input placeholder="Nhập CMND" />
-  //           </div>
-  //         </Form.Item>
-  //       </div>
-  //       <div>
-  //         <Form.Item
-  //           name="email"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống email`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.email}</h4>
-  //             <Input placeholder="Nhập email" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="sdt"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống sdt`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.phone}</h4>
-  //             <Input placeholder="Nhập số điện thoại" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="password"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống mật khẩu`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.password}</h4>
-  //             <Input.Password placeholder="Nhập mật khẩu" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="address"
-  //         >
-  //           <div>
-  //             <h4>{labels.address}</h4>
-  //             <Input placeholder="Nhập địa chỉ" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="status"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống tình trạng`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.status}</h4>
-  //             <RadioGroup row value={value} onChange={handleChange}>
-  //               <div class="still">
-  //                 <FormControlLabel
-  //                   value="1"
-  //                   control={<Radio size="small" />}
-  //                   label="Còn làm"
-  //                 />
-  //               </div>
-  //               <div class="temporary">
-  //                 <FormControlLabel
-  //                   value="2"
-  //                   control={<Radio size="small" />}
-  //                   label="Tạm nghỉ"
-  //                 />
-  //               </div>
-  //               <div class="vacation">
-  //                 <FormControlLabel
-  //                   value="3"
-  //                   control={<Radio size="small" />}
-  //                   label="Đã nghỉ"
-  //                 />
-  //               </div>
-  //             </RadioGroup>
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="position"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống chức vụ`,
-  //             },
-  //           ]}>
-  //           <div className="PositionAdd">
-  //             <h4>{labels.position}</h4>
-  //             <Form.Item>
-  //               <div className="positionCheckAdd">
-  //                 <FormControlLabel
-  //                   control={<Checkbox defaultChecked />}
-  //                   label="Nhân viên"
-  //                 />
-  //                 <FormControlLabel
-  //                   control={<Checkbox defaultChecked />}
-  //                   label="Quản lý"
-  //                 />
-  //               </div>
-  //             </Form.Item>
-  //           </div>
-  //         </Form.Item>
-  //       </div>
-  //     </div>
-  //     <Form.Item>
-  //       <div className="BtnAdd">
-  //         <Button size="Large" color="primary" variant="contained" style={{ paddingLeft: '15%', paddingRight: '15%', paddingTop: '2%', paddingBottom: '2%' }}>Sửa</Button>
-  //         <Button size="Large" color="error" variant="contained" style={{ paddingLeft: '15%', paddingRight: '15%', paddingTop: '2%', paddingBottom: '2%' }}>Xóa</Button>
-  //       </div>
-  //     </Form.Item>
-  //   </Form>
-  // </div>
-}
-
-{
-  /* Sửa thông tin nhân viên */
-}
-
-{
-  // <div class="ModalCont">
-  //   <div class="headerCont">
-  //     <h2>{getHeaderTitle()}</h2>                          // thêm giúp tui title với lại xét cho nó hiện bên trong input tui ko biết
-  //     <IconButton onClick={handleClose}>
-  //       <CloseOutlined />
-  //     </IconButton>
-  //   </div>
-  //   <Form form={form}>
-  //     <div class="bodyCont">
-  //       <div>
-  //         <Form.Item>
-  //           <div>
-  //             <h4>{labels.picture}</h4>
-  //             <Button variant="contained" component="label">
-  //               Upload File
-  //               <input type="file" hidden />
-  //             </Button>
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="full_name"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống họ tên`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.fullname}</h4>
-  //             <Input placeholder="Nhập họ tên" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="age"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống ngày sinh`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.birthday}</h4>
-  //             {/* <DatePicker
-  //             value={value}
-  //             onChange={(newValue) => {
-  //               setValue(newValue);
-  //             }}
-  //             renderInput={(params) => <TextField {...params} />}
-  //           /> */}
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="id_card"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống CMND/CCCD`,
-  //             },
-  //           ]}
-  //         >
-  //           <div>
-  //             <h4>{labels.idcard}</h4>
-  //             <Input placeholder="Nhập CMND" />
-  //           </div>
-  //         </Form.Item>
-  //       </div>
-  //       <div>
-  //         <Form.Item
-  //           name="email"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống email`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.email}</h4>
-  //             <Input placeholder="Nhập email" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="sdt"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống sdt`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.phone}</h4>
-  //             <Input placeholder="Nhập số điện thoại" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="password"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống mật khẩu`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.password}</h4>
-  //             <Input.Password placeholder="Nhập mật khẩu" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="address"
-  //         >
-  //           <div>
-  //             <h4>{labels.address}</h4>
-  //             <Input placeholder="Nhập địa chỉ" />
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="status"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống tình trạng`,
-  //             },
-  //           ]}>
-  //           <div>
-  //             <h4>{labels.status}</h4>
-  //             <RadioGroup row value={value} onChange={handleChange}>
-  //               <div class="still">
-  //                 <FormControlLabel
-  //                   value="1"
-  //                   control={<Radio size="small" />}
-  //                   label="Còn làm"
-  //                 />
-  //               </div>
-  //               <div class="temporary">
-  //                 <FormControlLabel
-  //                   value="2"
-  //                   control={<Radio size="small" />}
-  //                   label="Tạm nghỉ"
-  //                 />
-  //               </div>
-  //               <div class="vacation">
-  //                 <FormControlLabel
-  //                   value="3"
-  //                   control={<Radio size="small" />}
-  //                   label="Đã nghỉ"
-  //                 />
-  //               </div>
-  //             </RadioGroup>
-  //           </div>
-  //         </Form.Item>
-  //         <Form.Item
-  //           name="position"
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Không được để trống chức vụ`,
-  //             },
-  //           ]}>
-  //           <div className="PositionAdd">
-  //             <h4>{labels.position}</h4>
-  //             <Form.Item>
-  //               <div className="positionCheckAdd">
-  //                 <FormControlLabel
-  //                   control={<Checkbox defaultChecked />}
-  //                   label="Nhân viên"
-  //                 />
-  //                 <FormControlLabel
-  //                   control={<Checkbox defaultChecked />}
-  //                   label="Quản lý"
-  //                 />
-  //               </div>
-  //             </Form.Item>
-  //           </div>
-  //         </Form.Item>
-  //       </div>
-  //     </div>
-  //     <Form.Item>
-  //       <div className="BtnAdd">
-  //         <Button size="Large" color="primary" variant="contained" style={{ paddingLeft: '15%', paddingRight: '15%', paddingTop: '2%', paddingBottom: '2%' }}>Lưu</Button>
-  //         <Button size="Large" color="error" variant="contained" style={{ paddingLeft: '15%', paddingRight: '15%', paddingTop: '2%', paddingBottom: '2%' }}>Hủy</Button>
-  //       </div>
-  //     </Form.Item>
-  //   </Form>
-  // </div>
-}
