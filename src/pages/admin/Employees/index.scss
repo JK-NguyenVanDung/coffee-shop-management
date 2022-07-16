@@ -182,5 +182,15 @@
         display:flex;
             justify-content: center;
         align-items: center; 
+        .ant-upload-list-picture-card-container{
+            // width: 63%;
+            // height: 63%;
+            width: 320px;
+            height: 23.5vh;
+        }
+        .ant-upload-select-picture-card{
+            width: 98%;
+            height: 150%;
+        }
     }
 }

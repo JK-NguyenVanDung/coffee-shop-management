@@ -29,9 +29,11 @@ import * as collections from "../../../api/Collections/employees";
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
-
+import LockOpenRoundedIcon from "@mui/icons-material/LockOpenRounded";
+import LockRoundedIcon from "@mui/icons-material/LockRounded";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { colors } from "../../../helper/Color";
+import { errorText } from "../../../helper/Text";
 import ImgCrop from "antd-img-crop";
 
 const getBase64 = (img, callback) => {
@@ -95,6 +97,13 @@ const ModalContent = () => {
   let [role, setRole] = useState(true);
   const loadData = useAppSelector((state) => state.form.loadData);
   const [fileList, setFileList] = useState([]);
+  const [disablePass, setDisablePass] = useState(true);
+
+  const [phone, setPhone] = useState({
+    value: "",
+    validateStatus: "",
+    errorMsg: "",
+  });
 
   const handleChange = (newValue) => {
     setDate(newValue);
@@ -113,11 +122,7 @@ const ModalContent = () => {
     else setRole(false);
     console.log(role);
   };
-  useEffect(() => {
-    form.setFieldsValue({
-      email: "aa",
-    });
-  }, []);
+
   useEffect(() => {
     form.resetFields();
     setFileList(null);
@@ -183,35 +188,42 @@ const ModalContent = () => {
   const handleCancel = () => {
     form.setFieldsValue({ email: "asdasd" });
   };
+
+  function disablePassword() {
+    setDisablePass(!disablePass);
+  }
   const handleOk = async () => {
     form
       .validateFields()
       .then(async (values) => {
-        console.log(values);
         setLoading(true);
         const temp = [];
         if (dataItem) {
           await collections.editEmployee({
             _id: dataItem._id,
-            email: values.email,
-            phone_number: values.phone_number,
-            password: values.password,
-            address: values.address,
-            account_status: Number(status),
-            role: role ? 0 : 1,
-            full_name: values.full_name,
-            id_card: values.id_card,
-            date_of_birth:
-              date.getUTCMonth() +
-              1 +
-              "/" +
-              date.getUTCDate() +
-              "/" +
-              date.getUTCFullYear(),
-            avatar: fileList[0].name,
+            body: {
+              email: values.email,
+              phone_number: values.phone_number,
+              password: values.password,
+              address: values.address,
+              account_status: Number(status),
+              role: role ? 0 : 1,
+              full_name: values.full_name,
+              id_card: values.id_card,
+              date_of_birth:
+                date.getMonth() +
+                1 +
+                "/" +
+                date.getDate() +
+                "/" +
+                date.getFullYear(),
+              avatar: fileList[0].name,
+            },
           });
           handleClose();
           dispatch(actions.formActions.changeLoad(!loadData));
+          message.success("Thay đổi thành công");
+
           setLoading(false);
         } else {
           await collections.addEmployee({
@@ -224,16 +236,17 @@ const ModalContent = () => {
             full_name: values.full_name,
             id_card: values.id_card,
             date_of_birth:
-              date.getUTCMonth() +
+              date.getMonth() +
               1 +
               "/" +
-              date.getUTCDate() +
+              date.getDate() +
               "/" +
-              date.getUTCFullYear(),
+              date.getFullYear(),
             avatar: fileList[0].name,
           });
           handleClose();
           dispatch(actions.formActions.changeLoad(!loadData));
+          message.success("Thêm thành công");
 
           setLoading(false);
         }
@@ -243,12 +256,38 @@ const ModalContent = () => {
         setLoading(false);
       });
   };
+  function isVietnamesePhoneNumberValid(number) {
+    return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(number);
+  }
+  const validatePhone = (value) => {
+    if (value.length < 10) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.password1,
+      };
+    }
+    if (isVietnamesePhoneNumberValid(value)) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.password2,
+      };
+    }
+    return {
+      value: value,
+      validateStatus: "success",
+      errorMsg: "Số điện thoại hợp lệ",
+    };
+  };
+
   function getHeaderTitle() {
     if (dataItem) {
       return "Sửa nhân viên";
     }
     return "Thêm nhân viên";
   }
+
   const labels = {
     avatar: "Hình ảnh",
     fullname: "Họ tên",
@@ -257,6 +296,8 @@ const ModalContent = () => {
     email: "Email",
     phone: "SĐT",
     password: "Mật khẩu",
+    repeatPassword: "Nhập lại Mật khẩu",
+
     address: "Địa chỉ",
     status: "Tình trạng",
     position: "Chức vụ",
@@ -275,17 +316,18 @@ const ModalContent = () => {
         initialValues={{ full_name: "a", modifier: "public" }}
       >
         <div className="bodyCont">
-          <div>
+          <div style={{ width: "40%" }}>
+            <h4>{labels.avatar}</h4>
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
               <Upload
-                name="avatar"
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 listType="picture-card"
                 fileList={fileList}
                 maxCount={1}
                 onChange={onChange}
                 onPreview={onPreview}
+                style={{ width: "500px", height: "100%" }}
               >
                 {"+ \nUpload"}
               </Upload>
@@ -303,26 +345,26 @@ const ModalContent = () => {
             >
               <Input placeholder="Nhập họ tên" />
             </Form.Item>
-            <Form.Item name="date_of_birth">
-              <div>
-                <h4>Ngày sinh</h4>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DesktopDatePicker
-                    inputFormat="dd/MM/yyyy"
-                    value={date}
-                    onChange={handleChange}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label=""
-                        variant="standard"
-                        InputLabelProps={{ shrink: false }}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-              </div>
-            </Form.Item>
+
+            <div style={{ marginBottom: "10%" }}>
+              <h4>{labels.birthday}</h4>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DesktopDatePicker
+                  inputFormat="dd/MM/yyyy"
+                  value={date}
+                  onChange={handleChange}
+                  renderInput={(params) => (
+                    <TextField
+                      style={{ width: "100%" }}
+                      {...params}
+                      label=""
+                      variant="standard"
+                      InputLabelProps={{ shrink: false }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+            </div>
             <h4>{labels.idcard}</h4>
             <Form.Item
               name="id_card"
@@ -358,8 +400,16 @@ const ModalContent = () => {
                   message: `Không được để trống sdt`,
                 },
               ]}
+              validateStatus={phone.validateStatus}
+              help={phone.errorMsg}
             >
-              <Input placeholder="Nhập số điện thoại" />
+              <Input
+                min={9}
+                max={12}
+                value={phone.value}
+                placeholder="Nhập số điện thoại"
+                onChange={validatePhone}
+              />
             </Form.Item>
             <h4>{labels.password}</h4>
             <Form.Item
@@ -371,19 +421,29 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input.Password placeholder="Nhập mật khẩu" />
+              {dataItem ? (
+                <Input.Password
+                  placeholder="Nhập mật khẩu"
+                  disabled={disablePass}
+                  prefix={
+                    <IconButton onClick={() => disablePassword()}>
+                      {!disablePass ? (
+                        <LockOpenRoundedIcon fontSize="small" color="primary" />
+                      ) : (
+                        <LockRoundedIcon
+                          fontSize="small"
+                          color="primary"
+                          style={{ backgrounColor: "#fff" }}
+                        />
+                      )}
+                    </IconButton>
+                  }
+                />
+              ) : (
+                <Input.Password placeholder="Nhập mật khẩu" />
+              )}
             </Form.Item>
-            <Form.Item
-              name="repeat-password"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống mật khẩu`,
-                },
-              ]}
-            >
-              <Input.Password placeholder="Nhập lại mật khẩu" />
-            </Form.Item>
+
             <h4>{labels.address}</h4>
             <Form.Item name="address">
               <Input placeholder="Nhập địa chỉ" />
@@ -460,7 +520,7 @@ const ModalContent = () => {
         <div className="BtnAdd">
           <Button
             size="Large"
-            color="primary"
+            color={dataItem ? "primary" : "success"}
             variant="contained"
             style={{
               paddingLeft: "15%",
@@ -475,7 +535,7 @@ const ModalContent = () => {
           </Button>
           <Button
             size="Large"
-            color="primary"
+            color="error"
             variant="contained"
             style={{
               paddingLeft: "15%",
@@ -484,7 +544,7 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            onClick={handleCancel}
+            onClick={handleClose}
           >
             Hủy
           </Button>
@@ -584,8 +644,9 @@ const Employees = () => {
             <Button
               variant="contained"
               endIcon={<EditIcon />}
-              style={{ marginRight: "7%" }}
+              style={{ marginRight: "7%", color: "#fff" }}
               size="small"
+              color="primary"
               onClick={() => handleEdit(item)}
             >
               Sửa
@@ -675,6 +736,8 @@ const Employees = () => {
     setLoading(true);
     await collections.removeEmployee(item.id);
     dispatch(actions.formActions.changeLoad(!loadData));
+    message.success("Xoá thành công");
+
     setLoading(false);
   }
   function cancel(e) {

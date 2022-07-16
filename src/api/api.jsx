@@ -7,6 +7,7 @@ export const API_CONFIG = {
   ACCOUNTS: {
     GET: `/accounts`,
     EDIT: (id) => `/accounts/${id}`,
+    DELETE: (id) => `/accounts/${id}`,
   },
   ADMIN: {
     GET: `/admins`,
