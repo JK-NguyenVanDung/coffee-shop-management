@@ -7,7 +7,7 @@ const config = combineReducers({
     auth: reducers.authReducers,
     menu: reducers.menuReducer,
     form: reducers.formReducer,
-    // category: reducers.categoryReducer,
+    employees: reducers.employeesReducer,
     // product: reducers.productReducer,
     // brand: reducers.brandReducer,
     // banner: reducers.bannerReducer,

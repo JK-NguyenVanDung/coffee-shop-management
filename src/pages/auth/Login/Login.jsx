@@ -9,7 +9,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import bgImg from "../../../assets/img/coffee-background.png";
 import formBg from "../../../assets/img/coffeeCup.svg";
 import formWaves from "../../../assets/img/waves.svg";
-import {MailOutlined} from '@ant-design/icons';
+import { MailOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import "antd/dist/antd.css";
@@ -18,16 +18,15 @@ import "antd/dist/antd.css";
 function Login() {
   const [loading, setLoading] = useState(false);
 
-  function onFinish(){
-  }
+  function onFinish() {}
 
   const layout = {
     labelCol: {
-      span: 8
+      span: 8,
     },
     wrapperCol: {
-      span: 16
-    }
+      span: 16,
+    },
   };
 
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -38,65 +37,78 @@ function Login() {
           <div className="auth-inner">
             <div className="img-cont">
               <div className="bg-cont">
-              <img src={bgImg}/>
-
+                <img src={bgImg} />
               </div>
             </div>
-            <div className="form-cont" >
-            <div className="form-img" >
-            <img src={formBg} />
-            </div>
-            <div className="form-waves" >
-            <img src={formWaves} />
-            </div>
-            
-            <h1>Đăng nhập</h1>
+            <div className="form-cont">
+              <div className="form-img">
+                <img src={formBg} />
+              </div>
+              <div className="form-waves">
+                <img src={formWaves} />
+              </div>
 
-            <Form
-              layout="vertical"
-              name="basic"
-              initialValues={{
-                remember: true
-              }}
-              requiredMark= {false}
-              onFinish={onFinish}
-              size='large'
-            >
-              <Form.Item
-              
-                label="Email"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    type: "email",
-                    message: "Please input your email!"
-                  }
-                ]}
-              >
-                <Input suffix={<MailOutlined />} placeholder="Vui lòng nhập email" type="email" />
-              </Form.Item>
+              <h1>Đăng nhập</h1>
 
-              <Form.Item
-                label="Password"
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your password!"
-                  }
-                ]}
+              <Form
+                layout="vertical"
+                name="basic"
+                initialValues={{
+                  remember: true,
+                }}
+                requiredMark={false}
+                onFinish={onFinish}
+                size="large"
               >
-                <Input.Password  placeholder="Vui lòng nhập mật khẩu" />
-              </Form.Item>
-              <Form.Item style={{marginTop:35}}>
-                <Spin indicator={antIcon} spinning={loading}  >
-                  <Button type="primary" htmlType="submit" block size="large" style={{ background: "#111", width: "100%", justifySelf:'center', border:'none' }}>
-                  Đăng nhập
-                  </Button>
-                </Spin>
-              </Form.Item>
-            </Form>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[
+                    {
+                      required: true,
+                      type: "email",
+                      message: "Please input your email!",
+                    },
+                  ]}
+                >
+                  <Input
+                    suffix={<MailOutlined />}
+                    placeholder="Vui lòng nhập email"
+                    type="email"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your password!",
+                    },
+                  ]}
+                >
+                  <Input.Password placeholder="Vui lòng nhập mật khẩu" />
+                </Form.Item>
+                <Form.Item style={{ marginTop: 35 }}>
+                  <Spin indicator={antIcon} spinning={loading}>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      block
+                      size="large"
+                      style={{
+                        background: "#111",
+                        width: "100%",
+                        justifySelf: "center",
+                        border: "none",
+                      }}
+                    >
+                      Đăng nhập
+                    </Button>
+                  </Spin>
+                </Form.Item>
+              </Form>
             </div>
           </div>
         </div>
@@ -110,34 +122,34 @@ function Login1() {
   // const token = useAppSelector((state) => state.auth.token);
   const [loading, setLoading] = useState(false);
   // useEffect(() => {
-    // if (token) {
-    //   history.push("/admin");
-    // } else {
-    //   history.push("/");
-    //   openNotification();
-    // }
+  // if (token) {
+  //   history.push("/admin");
+  // } else {
+  //   history.push("/");
+  //   openNotification();
+  // }
   // }, []);
 
   const layout = {
     labelCol: {
-      span: 8
+      span: 8,
     },
     wrapperCol: {
-      span: 16
-    }
+      span: 16,
+    },
   };
   const tailLayout = {
     wrapperCol: {
       offset: 8,
-      span: 16
-    }
+      span: 16,
+    },
   };
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
   const openNotification = () => {
     const args = {
       message: "Đăng nhập Admin",
       description: "Xin mời đăng nhập",
-      duration: 2
+      duration: 2,
     };
     notification.success(args);
   };
@@ -177,7 +189,7 @@ function Login1() {
               {...layout}
               name="basic"
               initialValues={{
-                remember: true
+                remember: true,
               }}
               onFinish={onFinish}
             >
@@ -188,11 +200,11 @@ function Login1() {
                   {
                     required: true,
                     type: "email",
-                    message: "Please input your email!"
-                  }
+                    message: "Please input your email!",
+                  },
                 ]}
               >
-                <Input  type="email" />
+                <Input type="email" />
               </Form.Item>
 
               <Form.Item
@@ -201,21 +213,20 @@ function Login1() {
                 rules={[
                   {
                     required: true,
-                    message: "Please input your password!"
-                  }
+                    message: "Please input your password!",
+                  },
                 ]}
               >
                 <Input.Password />
               </Form.Item>
               <Form.Item {...tailLayout} size="large">
-                <Spin indicator={antIcon} spinning={loading} >
-                <Button type="primary" htmlType="submit" size="large">
+                <Spin indicator={antIcon} spinning={loading}>
+                  <Button type="primary" htmlType="submit" size="large">
                     Login
                   </Button>
                 </Spin>
               </Form.Item>
             </Form>
-            
           </div>
         </div>
       </div>

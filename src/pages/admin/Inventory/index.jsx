@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-// import MyPagination from "../../../components/Pagination";
-import { Input } from "antd";
-// import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
-// import { actions } from "../../../redux";
+import { Form, Input, message, notification, Spin } from "antd";
 
-const { Search } = Input;
-export default function Inventory() {
-  return <></>;
+import { LoadingOutlined } from "@ant-design/icons";
+
+function Inventory() {
+  const [loading, setLoading] = useState(false);
+
+  function onFinish() {}
+
+  const layout = {
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 16,
+    },
+  };
+
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+  return <div></div>;
 }
+
+export default Inventory;

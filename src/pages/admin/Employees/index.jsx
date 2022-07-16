@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table, Form } from "antd";
+import { Input, Table, Form, Popconfirm, Upload, message } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -18,157 +18,60 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { menuText } from "../../../helper/Text";
-import TextField from "@mui/material/TextField";
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
+import { TextField, FormControl } from "@mui/material/";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import FormModal from "../../../components/FormElements/FormModal";
+import { IconButton, Typography } from "@mui/material";
+import * as collections from "../../../api/Collections/employees";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
+import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
+import { actions } from "../../../redux";
+import SearchTable from "../../../components/Table/SearchTable";
+
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { colors } from "../../../helper/Color";
+import ImgCrop from "antd-img-crop";
+
+const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
 };
 
-const { Search } = Input;
+const beforeUpload = (file) => {
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
 
-const columns = [
-  {
-    title: "ID nhân viên",
-    dataIndex: "id_card",
-    // render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Họ tên",
-    dataIndex: "full_name",
-  },
-  {
-    title: "Thông tin liên lạc",
-    dataIndex: "address",
-    // dataIndex: 'sdt',
-    // dataIndex: 'avatar',
-    // dataIndex: 'age',
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Password",
-    dataIndex: "password",
-  },
-  {
-    title: "Tình trạng",
-    dataIndex: "status",
-  },
-  {
-    title: "Chức vụ",
-    dataIndex: "position",
-  },
-  {
-    title: "Hoạt động",
-    render: () => {
-      return (
-        <>
-          <Button
-            variant="contained"
-            endIcon={<EditIcon />}
-            style={{ marginRight: "7%" }}
-            size="small"
-          >
-            Sửa
-          </Button>
-          <Button
-            variant="contained"
-            endIcon={<DeleteSweepIcon />}
-            size="small"
-          >
-            Xóa
-          </Button>
-        </>
-      );
+  if (!isJpgOrPng) {
+    message.error("You can only upload JPG/PNG file!");
+  }
+
+  const isLt2M = file.size / 1024 / 1024 < 2;
+
+  if (!isLt2M) {
+    message.error("Image must smaller than 2MB!");
+  }
+
+  return isJpgOrPng && isLt2M;
+};
+
+const radioBtnstyles = (theme) => ({
+  radio: {
+    "&$checked": {
+      color: "#4B8DF8",
     },
   },
-];
+  checked: {},
+});
 const data = [
   {
-    key: "1",
     id_card: "0123456789",
     full_name: "Trần Văn A",
     email: "spottran2001@gmail.com",
-    sdt: "0567656521",
+    phone_number: "0567656521",
     address: "123 Trần Phú",
-    age: 25,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Còn làm",
-    position: "Nhân viên",
-  },
-  {
-    key: "2",
-    id_card: "1234567890",
-    full_name: "Trần Văn B",
-    email: "spottran2001@gmail.com",
-    sdt: "0123347685",
-    address: "231 Trần Phú",
-    age: 10,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Còn làm",
-    position: "Nhân viên",
-  },
-  {
-    key: "3",
-    id_card: "2345678901",
-    full_name: "Trần Văn C",
-    email: "spottran2001@gmail.com",
-    sdt: "0182763347",
-    address: "321 Trần Phú",
-    age: 27,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Tạm nghỉ",
-    position: "Nhân viên",
-  },
-  {
-    key: "4",
-    id_card: "3456789012",
-    full_name: "Trần Văn D",
-    email: "spottran2001@gmail.com",
-    sdt: "0127324334",
-    address: "012 Trần Phú",
-    age: 20,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Đã nghỉ",
-    position: "Nhân viên",
-  },
-  {
-    key: "5",
-    id_card: "3456789012",
-    full_name: "Trần Văn D",
-    email: "spottran2001@gmail.com",
-    sdt: "0127324334",
-    address: "012 Trần Phú",
-    age: 20,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Còn làm",
-    position: "Nhân viên",
-  },
-  {
-    key: "6",
-    id_card: "3456789012",
-    full_name: "Trần Văn D",
-    email: "spottran2001@gmail.com",
-    sdt: "0127324334",
-    address: "012 Trần Phú",
-    age: 20,
+    date_of_birth: 25,
     avatar: "Hình",
     password: "sadasdasd",
     status: "Còn làm",
@@ -184,15 +87,609 @@ const rowSelection = {
     );
   },
 };
+const ModalContent = () => {
+  const [loading, setLoading] = useState(false);
+  const dataItem = useAppSelector((state) => state.employees.detail);
+  const [date, setDate] = React.useState(new Date("2001-08-18"));
+  const [status, setStatus] = React.useState("1");
+  let [role, setRole] = useState(true);
+  const loadData = useAppSelector((state) => state.form.loadData);
+  const [fileList, setFileList] = useState([]);
+
+  const handleChange = (newValue) => {
+    setDate(newValue);
+    console.log(date.getUTCDate());
+  };
+  const handleStatus = (e) => {
+    setStatus(e.target.value);
+  };
+  const dispatch = useAppDispatch();
+  const [form] = Form.useForm();
+
+  const handleOpen = () => dispatch(actions.formActions.showForm());
+  const handleClose = () => dispatch(actions.formActions.closeForm());
+  const handleCheckbox = (event) => {
+    if (event.target.name === "employee") setRole(true);
+    else setRole(false);
+    console.log(role);
+  };
+  useEffect(() => {
+    form.setFieldsValue({
+      email: "aa",
+    });
+  }, []);
+  useEffect(() => {
+    form.resetFields();
+    setFileList(null);
+
+    const setForm = () => {
+      if (dataItem) {
+        form.setFieldsValue({
+          email: dataItem.email,
+          phone_number: dataItem.phone_number,
+          password: dataItem.password,
+          address: dataItem.address,
+          full_name: dataItem.full_name,
+          id_card: dataItem.id_card,
+        });
+        setFileList([dataItem.avatar]);
+        setRole(dataItem.role === 0 ? true : false);
+        setStatus(dataItem.account_status);
+        setDate(new Date(dataItem.date_of_birth));
+        console.log(date);
+      }
+    };
+
+    if (dataItem) {
+      setForm();
+    }
+  }, [dataItem]);
+  const { employee, manager } = role;
+  const error = [employee, manager].filter((v) => v).length !== 1;
+  const uploadButton = (
+    <div>
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
+
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
+  const onPreview = async (file) => {
+    let src = file.url;
+
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
+  const handleCancel = () => {
+    form.setFieldsValue({ email: "asdasd" });
+  };
+  const handleOk = async () => {
+    form
+      .validateFields()
+      .then(async (values) => {
+        console.log(values);
+        setLoading(true);
+        const temp = [];
+        if (dataItem) {
+          await collections.editEmployee({
+            _id: dataItem._id,
+            email: values.email,
+            phone_number: values.phone_number,
+            password: values.password,
+            address: values.address,
+            account_status: Number(status),
+            role: role ? 0 : 1,
+            full_name: values.full_name,
+            id_card: values.id_card,
+            date_of_birth:
+              date.getUTCMonth() +
+              1 +
+              "/" +
+              date.getUTCDate() +
+              "/" +
+              date.getUTCFullYear(),
+            avatar: fileList[0].name,
+          });
+          handleClose();
+          dispatch(actions.formActions.changeLoad(!loadData));
+          setLoading(false);
+        } else {
+          await collections.addEmployee({
+            email: values.email,
+            phone_number: values.phone_number,
+            password: values.password,
+            address: values.address,
+            account_status: Number(status),
+            role: role ? 0 : 1,
+            full_name: values.full_name,
+            id_card: values.id_card,
+            date_of_birth:
+              date.getUTCMonth() +
+              1 +
+              "/" +
+              date.getUTCDate() +
+              "/" +
+              date.getUTCFullYear(),
+            avatar: fileList[0].name,
+          });
+          handleClose();
+          dispatch(actions.formActions.changeLoad(!loadData));
+
+          setLoading(false);
+        }
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+        setLoading(false);
+      });
+  };
+  function getHeaderTitle() {
+    if (dataItem) {
+      return "Sửa nhân viên";
+    }
+    return "Thêm nhân viên";
+  }
+  const labels = {
+    avatar: "Hình ảnh",
+    fullname: "Họ tên",
+    birthday: "Ngày sinh",
+    idcard: "CMND/CCCD",
+    email: "Email",
+    phone: "SĐT",
+    password: "Mật khẩu",
+    address: "Địa chỉ",
+    status: "Tình trạng",
+    position: "Chức vụ",
+  };
+  return (
+    <div className="ModalCont">
+      <div className="headerCont">
+        <h2>{getHeaderTitle()}</h2>
+        <IconButton onClick={handleClose}>
+          <CloseOutlined />
+        </IconButton>
+      </div>
+      <Form
+        form={form}
+        className="form"
+        initialValues={{ full_name: "a", modifier: "public" }}
+      >
+        <div className="bodyCont">
+          <div>
+            <div className="avatarCont">
+              {/* <ImgCrop rotate> */}
+              <Upload
+                name="avatar"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                listType="picture-card"
+                fileList={fileList}
+                maxCount={1}
+                onChange={onChange}
+                onPreview={onPreview}
+              >
+                {"+ \nUpload"}
+              </Upload>
+              {/* </ImgCrop> */}
+            </div>
+            <h4>{labels.fullname}</h4>
+            <Form.Item
+              name="full_name"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống họ tên`,
+                },
+              ]}
+            >
+              <Input placeholder="Nhập họ tên" />
+            </Form.Item>
+            <Form.Item name="date_of_birth">
+              <div>
+                <h4>Ngày sinh</h4>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DesktopDatePicker
+                    inputFormat="dd/MM/yyyy"
+                    value={date}
+                    onChange={handleChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label=""
+                        variant="standard"
+                        InputLabelProps={{ shrink: false }}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </div>
+            </Form.Item>
+            <h4>{labels.idcard}</h4>
+            <Form.Item
+              name="id_card"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống CMND/CCCD`,
+                },
+              ]}
+            >
+              <Input placeholder="Nhập CMND" />
+            </Form.Item>
+          </div>
+          <div>
+            <h4>{labels.email}</h4>
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống email`,
+                },
+              ]}
+            >
+              <Input placeholder="Nhập email" />
+            </Form.Item>
+            <h4>{labels.phone}</h4>
+            <Form.Item
+              name="phone_number"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống sdt`,
+                },
+              ]}
+            >
+              <Input placeholder="Nhập số điện thoại" />
+            </Form.Item>
+            <h4>{labels.password}</h4>
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống mật khẩu`,
+                },
+              ]}
+            >
+              <Input.Password placeholder="Nhập mật khẩu" />
+            </Form.Item>
+            <Form.Item
+              name="repeat-password"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống mật khẩu`,
+                },
+              ]}
+            >
+              <Input.Password placeholder="Nhập lại mật khẩu" />
+            </Form.Item>
+            <h4>{labels.address}</h4>
+            <Form.Item name="address">
+              <Input placeholder="Nhập địa chỉ" />
+            </Form.Item>
+            <h4>{labels.status}</h4>
+            <div style={{ marginTop: "5%", marginBottom: "5%" }}>
+              <div>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  value={status}
+                  onChange={handleStatus}
+                  name="radio-buttons-group"
+                >
+                  <div class="radiogroupCont">
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio size="small" color="info" />}
+                      label="Còn làm"
+                      style={{
+                        backgroundColor: colors.success,
+                        borderRadius: 12,
+                      }}
+                    />
+
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio size="small" color="info" />}
+                      label="Tạm nghỉ"
+                      style={{
+                        backgroundColor: colors.warning,
+                        borderRadius: 12,
+                      }}
+                    />
+
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio size="small" color="info" />}
+                      label="Đã nghỉ"
+                      style={{
+                        backgroundColor: colors.error,
+                        borderRadius: 12,
+                      }}
+                    />
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+            <h4>{labels.position}</h4>
+            <div style={{ marginBottom: "15%" }}>
+              <div className="PositionAdd">
+                <div>
+                  <div className="checkboxCont">
+                    <FormControlLabel
+                      control={
+                        <Checkbox onChange={handleCheckbox} checked={role} />
+                      }
+                      name="employee"
+                      label="Nhân viên"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox onChange={handleCheckbox} checked={!role} />
+                      }
+                      name="manager"
+                      label="Quản lý"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="BtnAdd">
+          <Button
+            size="Large"
+            color="primary"
+            variant="contained"
+            style={{
+              paddingLeft: "15%",
+              paddingRight: "15%",
+              paddingTop: "2%",
+              paddingBottom: "2%",
+              color: "#fff",
+            }}
+            onClick={handleOk}
+          >
+            {dataItem ? "Sửa" : "Lưu"}
+          </Button>
+          <Button
+            size="Large"
+            color="primary"
+            variant="contained"
+            style={{
+              paddingLeft: "15%",
+              paddingRight: "15%",
+              paddingTop: "2%",
+              paddingBottom: "2%",
+              color: "#fff",
+            }}
+            onClick={handleCancel}
+          >
+            Hủy
+          </Button>
+        </div>
+      </Form>
+    </div>
+  );
+};
+
 const Employees = () => {
+  const [loading, setLoading] = useState(false);
+  const [dataList, setDataList] = useState({});
+  const [showList, setShowList] = useState(false);
+
   const [selectionType, setSelectionType] = useState("checkbox");
   const [value, setValue] = React.useState("still break" & null);
+
+  const [postList, setPostList] = useState({ page: 1, per_page: 10 });
+  const checkOnload = useAppSelector((state) => state.form.loadData);
+
+  const loadData = useAppSelector((state) => state.form.loadData);
+
+  const columns = [
+    {
+      title: "ID nhân viên",
+      dataIndex: "id",
+      // render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Họ tên",
+      dataIndex: "full_name",
+    },
+    {
+      title: "Thông tin liên lạc",
+      dataIndex: "address",
+      // dataIndex: 'sdt',
+      // dataIndex: 'avatar',
+      // dataIndex: 'age',
+    },
+    {
+      title: "Tình trạng",
+      dataIndex: "account_status",
+      render: (item) => {
+        let status = " ";
+        switch (item.account_status) {
+          case 1:
+            status = "Còn làm";
+            break;
+          case 2:
+            status = "Tạm nghỉ";
+            break;
+          case 3:
+            status = "Đã nghỉ";
+            break;
+          default:
+            status = "Còn làm";
+            break;
+        }
+
+        return (
+          <>
+            <p>{status}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "Chức vụ",
+      dataIndex: "role",
+      render: (item) => {
+        let role = " ";
+        switch (item.role) {
+          case 1:
+            role = "Nhân viên";
+            break;
+          case 2:
+            role = "Quản lý";
+            break;
+
+          default:
+            role = "Nhân viên";
+            break;
+        }
+
+        return (
+          <>
+            <p>{role}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "Hoạt động",
+      render: (item) => {
+        return (
+          <>
+            <Button
+              variant="contained"
+              endIcon={<EditIcon />}
+              style={{ marginRight: "7%" }}
+              size="small"
+              onClick={() => handleEdit(item)}
+            >
+              Sửa
+            </Button>
+            <Popconfirm
+              title={`Bạn có muốn xoá ${item.name}`}
+              onConfirm={() => handleDelete(item)}
+              onCancel={cancel}
+              okText="Có"
+              cancelText="Không"
+              placement="left"
+            >
+              <Button
+                variant="contained"
+                endIcon={<DeleteSweepIcon />}
+                size="small"
+                color="error"
+              >
+                Xóa
+              </Button>
+            </Popconfirm>
+          </>
+        );
+      },
+    },
+  ];
+
+  const fetchData = async (value) => {
+    try {
+      setLoading(true);
+      const response = await collections.getEmployees();
+      dispatch(actions.employeesActions.setListAll(response));
+      setDataList(response);
+      setShowList(true);
+      setLoading(false);
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      //history.replace("/");
+    }
+  };
+
+  useEffect(() => {
+    // test.current = 2;
+    fetchData(postList);
+  }, [checkOnload, postList]);
+
+  useEffect(() => {
+    fetchData(postList);
+  }, []);
+
+  const data = showList
+    ? dataList.map((item, index) => {
+        return {
+          id: item._id,
+          email: item.email,
+          phone_number: item.phone_number,
+          password: item.password,
+          address: item.address,
+          account_status: item.account_status,
+          role: item.role,
+          full_name: item.full_name,
+          id_card: item.id_card,
+          date_of_birth: item.date_of_birth,
+          avatar: item.avatar,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+        };
+      })
+    : [];
   const handleChange = (event) => {
     setValue(event.target.value);
   };
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const dispatch = useAppDispatch();
+
+  const handleOpen = () => {
+    dispatch(actions.employeesActions.setDetail(null));
+    dispatch(actions.formActions.showForm());
+  };
+  async function handleEdit(item) {
+    dispatch(actions.formActions.showForm());
+
+    dispatch(actions.employeesActions.setDetail(item.id));
+  }
+  async function handleDelete(item) {
+    setLoading(true);
+    await collections.removeEmployee(item.id);
+    dispatch(actions.formActions.changeLoad(!loadData));
+    setLoading(false);
+  }
+  function cancel(e) {
+    // message.error('Click on No');
+  }
+  useEffect(() => {
+    // test.current = 2;
+    fetchData(postList);
+  }, [checkOnload, loadData]);
+
+  const onSearch = (value) => console.log(value);
+  const onChangeSearch = async (value) => {
+    // await setSearch(value);
+    // pagination.name = value;
+  };
 
   return (
     <>
@@ -200,7 +697,7 @@ const Employees = () => {
         <Button
           variant="contained"
           endIcon={<ConstructionIcon />}
-          style={{ marginRight: "1%" }}
+          style={{ marginRight: "1%", backgroundColor: "#111", color: "#fff" }}
           size="small"
         >
           QUẢN LÝ
@@ -210,22 +707,26 @@ const Employees = () => {
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
-          style={{ marginRight: "1%" }}
+          style={{
+            marginRight: "1%",
+            backgroundColor: "#4BB984",
+            color: "#fff",
+          }}
           size="small"
         >
           THÊM NHÂN VIÊN
         </Button>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="employeesTitleAdd"
-          aria-describedby="employeesContAdd"
-        >
-          <Box sx={{ style }}></Box>
-        </Modal>
+        <FormModal children={<ModalContent />} />
 
         <div className="dishSearch">
-          <Search placeholder={menuText.searchMenu} allowClear size="default" />
+          <SearchTable
+            placeholder={menuText.searchEmployees}
+            allowClear
+            size="default"
+            onChange={(e) => onChangeSearch(e.target.value)}
+            onSearch={onSearch}
+            enterButton
+          />
         </div>
       </div>
       <div>
@@ -234,312 +735,11 @@ const Employees = () => {
             type: selectionType,
             ...rowSelection,
           }}
+          loading={loading}
           columns={columns}
           dataSource={data}
         />
       </div>
-
-      {/* Thêm nhân viên */}
-      <div class="AddCont">
-        <div className="totalContentAdd">
-          <div class="TitleAdd">
-            <h2>Thêm nhân viên</h2>
-            <CloseOutlined />
-          </div>
-          <div class="ContAdd">
-            <Form className="AddL">
-              <Form.Item>
-                <div className="AvatarAdd">
-                  <h4>Hình ảnh</h4>
-                  <Button variant="contained" component="label">
-                    Upload File
-                    <input type="file" hidden />
-                  </Button>
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <div className="NameAdd">
-                  <h4>Họ tên</h4>
-                  <Input placeholder="Nhập họ tên" />
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <div className="BirthdayAdd">
-                  <h4>Ngày sinh</h4>
-                  {/* <DatePicker                                                 
-                                                    value={value}
-                                                    onChange={(newValue) => {
-                                                        setValue(newValue);
-                                                    }}
-                                                    renderInput={(params) => <TextField {...params} />}
-                                                />                                           */}
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <div className="identityCardAdd">
-                  <h4>CMND/CCCD</h4>
-                  <Input placeholder="Nhập CMND" />
-                </div>
-              </Form.Item>
-            </Form>
-            <Form className="AddR">
-              <Form.Item>
-                <div className="EmailAdd">
-                  <h4>Email</h4>
-                  <Input placeholder="Nhập email" />
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <div className="PhoneAdd">
-                  <h4>SĐT</h4>
-                  <Input placeholder="Nhập số điện thoại" />
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <div className="PassAdd">
-                  <h4>Mật khẩu</h4>
-                  <Input.Password placeholder="Nhập mật khẩu" />
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <div className="AddressAdd">
-                  <h4>Địa chỉ</h4>
-                  <Input placeholder="Nhập địa chỉ" />
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <div className="StatusAdd">
-                  <h4>Tình trạng</h4>
-                  <RadioGroup row value={value} onChange={handleChange}>
-                    <FormControlLabel
-                      value="still break"
-                      control={<Radio />}
-                      label="Còn làm"
-                    />
-                    <FormControlLabel
-                      value="temporary break"
-                      control={<Radio />}
-                      label="Tạm nghỉ"
-                    />
-                    <FormControlLabel
-                      value="took a break"
-                      control={<Radio />}
-                      label="Đã nghỉ"
-                    />
-                  </RadioGroup>
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <div className="PositionAdd">
-                  <h4>Chức vụ</h4>
-                  <Form.Item>
-                    <div className="positionCheckAdd">
-                      <FormControlLabel
-                        control={<Checkbox defaultChecked />}
-                        label="Nhân viên"
-                      />
-                      <FormControlLabel
-                        control={<Checkbox defaultChecked />}
-                        label="Quản lý"
-                      />
-                    </div>
-                  </Form.Item>
-                </div>
-              </Form.Item>
-            </Form>
-          </div>
-          <Form.Item>
-            <div className="BtnAdd">
-              <Button variant="contained">Lưu</Button>
-              <Button variant="contained">Hủy</Button>
-            </div>
-          </Form.Item>
-        </div>
-      </div>
-
-      {/* Thông tin nhân viên */}
-      <Form class="Info">
-        <Form className="totalContentInfo">
-          <Form.Item class="TitleInfo">
-            <h2>Thông tin nhân viên</h2>
-            <CloseOutlined />
-          </Form.Item>
-          <Form class="ContInfo">
-            <Form className="InfoL">
-              <Form.Item className="AvatarInfo">
-                <h4>Hình ảnh</h4>
-                <Button variant="contained" component="label">
-                  Upload File
-                  <input type="file" hidden />
-                </Button>
-              </Form.Item>
-              <Form.Item className="NameInfo">
-                <h4>Họ tên</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="BirthdayInfo">
-                <h4>Ngày sinh</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="identityCardInfo">
-                <h4>CMND/CCCD</h4>
-                <Input />
-              </Form.Item>
-            </Form>
-            <Form className="InfoR">
-              <Form.Item className="IDInfo">
-                <h4>ID nhân viên</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="EmailInfo">
-                <h4>Email</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="PhoneInfo">
-                <h4>SĐT</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="PassInfo">
-                <h4>Mật khẩu</h4>
-                <Input.Password />
-              </Form.Item>
-              <Form.Item className="AddressInfo">
-                <h4>Địa chỉ</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="StatusInfo">
-                <h4>Tình trạng</h4>
-                <RadioGroup row value={value} onChange={handleChange}>
-                  <FormControlLabel
-                    value="still break"
-                    control={<Radio />}
-                    label="Còn làm"
-                  />
-                  <FormControlLabel
-                    value="temporary break"
-                    control={<Radio />}
-                    label="Tạm nghỉ"
-                  />
-                  <FormControlLabel
-                    value="took a break"
-                    control={<Radio />}
-                    label="Đã nghỉ"
-                  />
-                </RadioGroup>
-              </Form.Item>
-              <Form.Item className="PositionInfo">
-                <h4>Chức vụ</h4>
-                <Form.Item className="positionCheckInfo">
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Nhân viên"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Quản lý"
-                  />
-                </Form.Item>
-              </Form.Item>
-            </Form>
-          </Form>
-          <Form.Item className="BtnInfo">
-            <Button variant="contained">Sửa</Button>
-            <Button variant="contained">Xóa</Button>
-          </Form.Item>
-        </Form>
-      </Form>
-
-      {/* Sửa thông tin nhân viên */}
-      <Form class="Edit">
-        <Form className="totalContentEdit">
-          <Form.Item class="TitleEdit">
-            <h2>Sửa thông tin nhân viên</h2>
-            <CloseOutlined />
-          </Form.Item>
-          <Form class="ContEdit">
-            <Form className="EditL">
-              <Form.Item className="AvatarEdit">
-                <h4>Hình ảnh</h4>
-                <Button variant="contained" component="label">
-                  Upload File
-                  <input type="file" hidden />
-                </Button>
-              </Form.Item>
-              <Form.Item className="NameEdit">
-                <h4>Họ tên</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="BirthdayEdit">
-                <h4>Ngày sinh</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="identityCardEdit">
-                <h4>CMND/CCCD</h4>
-                <Input />
-              </Form.Item>
-            </Form>
-            <Form className="EditR">
-              <Form.Item className="IDEdit">
-                <h4>ID nhân viên</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="EmailEdit">
-                <h4>Email</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="PhoneEdit">
-                <h4>SĐT</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="PassEdit">
-                <h4>Mật khẩu</h4>
-                <Input.Password />
-              </Form.Item>
-              <Form.Item className="AddressEdit">
-                <h4>Địa chỉ</h4>
-                <Input />
-              </Form.Item>
-              <Form.Item className="StatusEdit">
-                <h4>Tình trạng</h4>
-                <RadioGroup row value={value} onChange={handleChange}>
-                  <FormControlLabel
-                    value="still break"
-                    control={<Radio />}
-                    label="Còn làm"
-                  />
-                  <FormControlLabel
-                    value="temporary break"
-                    control={<Radio />}
-                    label="Tạm nghỉ"
-                  />
-                  <FormControlLabel
-                    value="took a break"
-                    control={<Radio />}
-                    label="Đã nghỉ"
-                  />
-                </RadioGroup>
-              </Form.Item>
-              <Form.Item className="PositionEdit">
-                <h4>Chức vụ</h4>
-                <Form.Item className="positionCheckEdit">
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Nhân viên"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Quản lý"
-                  />
-                </Form.Item>
-              </Form.Item>
-            </Form>
-          </Form>
-          <Form.Item className="BtnEdit">
-            <Button variant="contained">Lưu</Button>
-            <Button variant="contained">Hủy</Button>
-          </Form.Item>
-        </Form>
-      </Form>
     </>
   );
 };
