@@ -18,7 +18,7 @@ export const addEmployee = async (body) => {
   };
   export const editEmployee = async (props) => {
     try {
-      const response = await api.put(`/accounts/${props.id}`,props.body);
+      const response = await api.put(`/accounts/${props._id}`,props.body);
       return response;
     } catch (err) {
       throw err.message;

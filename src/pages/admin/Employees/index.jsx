@@ -18,12 +18,12 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { menuText } from "../../../helper/Text";
-import TextField from "@mui/material/TextField";
+import { TextField, FormControl } from "@mui/material/";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import FormModal from "../../../components/FormElements/FormModal";
-import { IconButton } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/employees";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
@@ -31,6 +31,8 @@ import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { colors } from "../../../helper/Color";
+import ImgCrop from "antd-img-crop";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -54,8 +56,14 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-const { Search } = Input;
-
+const radioBtnstyles = (theme) => ({
+  radio: {
+    "&$checked": {
+      color: "#4B8DF8",
+    },
+  },
+  checked: {},
+});
 const data = [
   {
     id_card: "0123456789",
@@ -82,21 +90,62 @@ const rowSelection = {
 const ModalContent = () => {
   const [loading, setLoading] = useState(false);
   const dataItem = useAppSelector((state) => state.employees.detail);
-  const [date, setDate] = React.useState(new Date("2014-08-18T21:11:54"));
-  const [role, setRole] = React.useState("");
+  const [date, setDate] = React.useState(new Date("2001-08-18"));
+  const [status, setStatus] = React.useState("1");
+  let [role, setRole] = useState(true);
+  const loadData = useAppSelector((state) => state.form.loadData);
+  const [fileList, setFileList] = useState([]);
 
   const handleChange = (newValue) => {
     setDate(newValue);
+    console.log(date.getUTCDate());
   };
-  const handleRole = (newValue) => {
-    setRole(newValue);
+  const handleStatus = (e) => {
+    setStatus(e.target.value);
   };
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
   const handleOpen = () => dispatch(actions.formActions.showForm());
   const handleClose = () => dispatch(actions.formActions.closeForm());
+  const handleCheckbox = (event) => {
+    if (event.target.name === "employee") setRole(true);
+    else setRole(false);
+    console.log(role);
+  };
+  useEffect(() => {
+    form.setFieldsValue({
+      email: "aa",
+    });
+  }, []);
+  useEffect(() => {
+    form.resetFields();
+    setFileList(null);
 
+    const setForm = () => {
+      if (dataItem) {
+        form.setFieldsValue({
+          email: dataItem.email,
+          phone_number: dataItem.phone_number,
+          password: dataItem.password,
+          address: dataItem.address,
+          full_name: dataItem.full_name,
+          id_card: dataItem.id_card,
+        });
+        setFileList([dataItem.avatar]);
+        setRole(dataItem.role === 0 ? true : false);
+        setStatus(dataItem.account_status);
+        setDate(new Date(dataItem.date_of_birth));
+        console.log(date);
+      }
+    };
+
+    if (dataItem) {
+      setForm();
+    }
+  }, [dataItem]);
+  const { employee, manager } = role;
+  const error = [employee, manager].filter((v) => v).length !== 1;
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -109,6 +158,31 @@ const ModalContent = () => {
       </div>
     </div>
   );
+
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
+  const onPreview = async (file) => {
+    let src = file.url;
+
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
+  const handleCancel = () => {
+    form.setFieldsValue({ email: "asdasd" });
+  };
   const handleOk = async () => {
     form
       .validateFields()
@@ -117,25 +191,50 @@ const ModalContent = () => {
         setLoading(true);
         const temp = [];
         if (dataItem) {
+          await collections.editEmployee({
+            _id: dataItem._id,
+            email: values.email,
+            phone_number: values.phone_number,
+            password: values.password,
+            address: values.address,
+            account_status: Number(status),
+            role: role ? 0 : 1,
+            full_name: values.full_name,
+            id_card: values.id_card,
+            date_of_birth:
+              date.getUTCMonth() +
+              1 +
+              "/" +
+              date.getUTCDate() +
+              "/" +
+              date.getUTCFullYear(),
+            avatar: fileList[0].name,
+          });
+          handleClose();
+          dispatch(actions.formActions.changeLoad(!loadData));
+          setLoading(false);
         } else {
           await collections.addEmployee({
             email: values.email,
             phone_number: values.phone_number,
             password: values.password,
             address: values.address,
-            account_status: 1,
-            role: 1,
+            account_status: Number(status),
+            role: role ? 0 : 1,
             full_name: values.full_name,
             id_card: values.id_card,
             date_of_birth:
-              date.getDate() +
+              date.getUTCMonth() +
+              1 +
               "/" +
-              (date.getMonth() + 1) +
+              date.getUTCDate() +
               "/" +
-              date.getFullYear(),
-            avatar: "a",
+              date.getUTCFullYear(),
+            avatar: fileList[0].name,
           });
           handleClose();
+          dispatch(actions.formActions.changeLoad(!loadData));
+
           setLoading(false);
         }
       })
@@ -145,6 +244,9 @@ const ModalContent = () => {
       });
   };
   function getHeaderTitle() {
+    if (dataItem) {
+      return "Sửa nhân viên";
+    }
     return "Thêm nhân viên";
   }
   const labels = {
@@ -167,19 +269,29 @@ const ModalContent = () => {
           <CloseOutlined />
         </IconButton>
       </div>
-      <Form form={form} className="form" initialValues={{ modifier: "public" }}>
+      <Form
+        form={form}
+        className="form"
+        initialValues={{ full_name: "a", modifier: "public" }}
+      >
         <div className="bodyCont">
           <div>
-            <Form.Item name="avatar">
-              <div>
-                {/* <h4>{labels.avatar}</h4>
-                <Button variant="contained" component="label">
-                  Upload File
-                  <input type="file" hidden />
-                </Button> */}
-                <Input placeholder="test" />
-              </div>
-            </Form.Item>
+            <div className="avatarCont">
+              {/* <ImgCrop rotate> */}
+              <Upload
+                name="avatar"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                listType="picture-card"
+                fileList={fileList}
+                maxCount={1}
+                onChange={onChange}
+                onPreview={onPreview}
+              >
+                {"+ \nUpload"}
+              </Upload>
+              {/* </ImgCrop> */}
+            </div>
+            <h4>{labels.fullname}</h4>
             <Form.Item
               name="full_name"
               rules={[
@@ -189,17 +301,14 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <div>
-                <h4>{labels.fullname}</h4>
-                <Input placeholder="Nhập họ tên" />
-              </div>
+              <Input placeholder="Nhập họ tên" />
             </Form.Item>
             <Form.Item name="date_of_birth">
               <div>
                 <h4>Ngày sinh</h4>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
-                    inputFormat="MM/dd/yyyy"
+                    inputFormat="dd/MM/yyyy"
                     value={date}
                     onChange={handleChange}
                     renderInput={(params) => (
@@ -212,9 +321,9 @@ const ModalContent = () => {
                     )}
                   />
                 </LocalizationProvider>
-                <Input placeholder="test" />
               </div>
             </Form.Item>
+            <h4>{labels.idcard}</h4>
             <Form.Item
               name="id_card"
               rules={[
@@ -224,13 +333,11 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <div>
-                <h4>{labels.idcard}</h4>
-                <Input placeholder="Nhập CMND" />
-              </div>
+              <Input placeholder="Nhập CMND" />
             </Form.Item>
           </div>
           <div>
+            <h4>{labels.email}</h4>
             <Form.Item
               name="email"
               rules={[
@@ -240,11 +347,9 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <div>
-                <h4>{labels.email}</h4>
-                <Input placeholder="Nhập email" />
-              </div>
+              <Input placeholder="Nhập email" />
             </Form.Item>
+            <h4>{labels.phone}</h4>
             <Form.Item
               name="phone_number"
               rules={[
@@ -254,11 +359,9 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <div>
-                <h4>{labels.phone}</h4>
-                <Input placeholder="Nhập số điện thoại" />
-              </div>
+              <Input placeholder="Nhập số điện thoại" />
             </Form.Item>
+            <h4>{labels.password}</h4>
             <Form.Item
               name="password"
               rules={[
@@ -268,70 +371,90 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <div>
-                <h4>{labels.password}</h4>
-                <Input.Password placeholder="Nhập mật khẩu" />
-              </div>
+              <Input.Password placeholder="Nhập mật khẩu" />
             </Form.Item>
+            <Form.Item
+              name="repeat-password"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống mật khẩu`,
+                },
+              ]}
+            >
+              <Input.Password placeholder="Nhập lại mật khẩu" />
+            </Form.Item>
+            <h4>{labels.address}</h4>
             <Form.Item name="address">
-              <div>
-                <h4>{labels.address}</h4>
-                <Input placeholder="Nhập địa chỉ" />
-              </div>
+              <Input placeholder="Nhập địa chỉ" />
             </Form.Item>
-            <Form.Item name="status">
+            <h4>{labels.status}</h4>
+            <div style={{ marginTop: "5%", marginBottom: "5%" }}>
               <div>
-                <h4>{labels.status}</h4>
-                <RadioGroup row value={role} onChange={handleRole}>
-                  <div class="still">
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  value={status}
+                  onChange={handleStatus}
+                  name="radio-buttons-group"
+                >
+                  <div class="radiogroupCont">
                     <FormControlLabel
                       value="1"
-                      control={<Radio size="small" />}
+                      control={<Radio size="small" color="info" />}
                       label="Còn làm"
+                      style={{
+                        backgroundColor: colors.success,
+                        borderRadius: 12,
+                      }}
                     />
-                  </div>
-                  <div class="temporary">
+
                     <FormControlLabel
                       value="2"
-                      control={<Radio size="small" />} // radio này có khi nó lỗi chú chỉnh width lại giúp tui vs nha
+                      control={<Radio size="small" color="info" />}
                       label="Tạm nghỉ"
+                      style={{
+                        backgroundColor: colors.warning,
+                        borderRadius: 12,
+                      }}
                     />
-                  </div>
-                  <div class="vacation">
+
                     <FormControlLabel
                       value="3"
-                      control={<Radio size="small" />}
+                      control={<Radio size="small" color="info" />}
                       label="Đã nghỉ"
+                      style={{
+                        backgroundColor: colors.error,
+                        borderRadius: 12,
+                      }}
                     />
                   </div>
                 </RadioGroup>
               </div>
-            </Form.Item>
-            <Form.Item
-              name="position"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống chức vụ`,
-                },
-              ]}
-            >
+            </div>
+            <h4>{labels.position}</h4>
+            <div style={{ marginBottom: "15%" }}>
               <div className="PositionAdd">
-                <h4>{labels.position}</h4>
-                <Form.Item>
-                  <div className="positionCheckAdd">
+                <div>
+                  <div className="checkboxCont">
                     <FormControlLabel
-                      control={<Checkbox defaultChecked />}
+                      control={
+                        <Checkbox onChange={handleCheckbox} checked={role} />
+                      }
+                      name="employee"
                       label="Nhân viên"
                     />
                     <FormControlLabel
-                      control={<Checkbox defaultChecked />}
+                      control={
+                        <Checkbox onChange={handleCheckbox} checked={!role} />
+                      }
+                      name="manager"
                       label="Quản lý"
                     />
                   </div>
-                </Form.Item>
+                </div>
               </div>
-            </Form.Item>
+            </div>
           </div>
         </div>
         <div className="BtnAdd">
@@ -344,10 +467,11 @@ const ModalContent = () => {
               paddingRight: "15%",
               paddingTop: "2%",
               paddingBottom: "2%",
+              color: "#fff",
             }}
             onClick={handleOk}
           >
-            Lưu
+            {dataItem ? "Sửa" : "Lưu"}
           </Button>
           <Button
             size="Large"
@@ -358,7 +482,9 @@ const ModalContent = () => {
               paddingRight: "15%",
               paddingTop: "2%",
               paddingBottom: "2%",
+              color: "#fff",
             }}
+            onClick={handleCancel}
           >
             Hủy
           </Button>
@@ -377,14 +503,14 @@ const Employees = () => {
   const [value, setValue] = React.useState("still break" & null);
 
   const [postList, setPostList] = useState({ page: 1, per_page: 10 });
-  const checkOnload = useAppSelector((state) => state.employees.loadData);
+  const checkOnload = useAppSelector((state) => state.form.loadData);
 
   const loadData = useAppSelector((state) => state.form.loadData);
 
   const columns = [
     {
       title: "ID nhân viên",
-      dataIndex: "id_card",
+      dataIndex: "id",
       // render: (text) => <a>{text}</a>,
     },
     {
@@ -397,14 +523,6 @@ const Employees = () => {
       // dataIndex: 'sdt',
       // dataIndex: 'avatar',
       // dataIndex: 'age',
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-    },
-    {
-      title: "Password",
-      dataIndex: "password",
     },
     {
       title: "Tình trạng",
@@ -468,6 +586,7 @@ const Employees = () => {
               endIcon={<EditIcon />}
               style={{ marginRight: "7%" }}
               size="small"
+              onClick={() => handleEdit(item)}
             >
               Sửa
             </Button>
@@ -483,6 +602,7 @@ const Employees = () => {
                 variant="contained"
                 endIcon={<DeleteSweepIcon />}
                 size="small"
+                color="error"
               >
                 Xóa
               </Button>
@@ -492,21 +612,6 @@ const Employees = () => {
       },
     },
   ];
-
-  const handleUploadChange = (info) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
-
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (url) => {
-        setLoading(false);
-        setImageUrl(url);
-      });
-    }
-  };
 
   const fetchData = async (value) => {
     try {
@@ -527,7 +632,7 @@ const Employees = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData(postList);
-  }, [checkOnload]);
+  }, [checkOnload, postList]);
 
   useEffect(() => {
     fetchData(postList);
@@ -536,7 +641,7 @@ const Employees = () => {
   const data = showList
     ? dataList.map((item, index) => {
         return {
-          _id: item._id,
+          id: item._id,
           email: item.email,
           phone_number: item.phone_number,
           password: item.password,
@@ -561,15 +666,24 @@ const Employees = () => {
     dispatch(actions.employeesActions.setDetail(null));
     dispatch(actions.formActions.showForm());
   };
+  async function handleEdit(item) {
+    dispatch(actions.formActions.showForm());
+
+    dispatch(actions.employeesActions.setDetail(item.id));
+  }
   async function handleDelete(item) {
-    loading = true;
-    await collections.removeEmployee(item._id);
+    setLoading(true);
+    await collections.removeEmployee(item.id);
     dispatch(actions.formActions.changeLoad(!loadData));
-    loading = false;
+    setLoading(false);
   }
   function cancel(e) {
     // message.error('Click on No');
   }
+  useEffect(() => {
+    // test.current = 2;
+    fetchData(postList);
+  }, [checkOnload, loadData]);
 
   const onSearch = (value) => console.log(value);
   const onChangeSearch = async (value) => {
@@ -621,6 +735,7 @@ const Employees = () => {
             type: selectionType,
             ...rowSelection,
           }}
+          loading={loading}
           columns={columns}
           dataSource={data}
         />

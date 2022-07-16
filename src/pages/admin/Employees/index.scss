@@ -38,19 +38,16 @@
     overflow-y: scroll;
 
 }
-.still {
-    background-color: #4BB984;
-    border-radius: 12px;
-    margin-right: 2%;
-}
-.temporary {
-    background-color: #FFA726;
-    border-radius: 12px;
-    margin-right: 2%;
-}
-.vacation {
-    background-color: #B2431E;
-    border-radius: 12px;
+.radiogroupCont{
+    width: 100%;
+    display:inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-left: 15px;
+    .MuiTypography-root{
+        padding-right: 12px !important;
+        color:#fff;
+    }
 }
 .positionCheckAdd {
     display: flex;
@@ -167,4 +164,23 @@
     display: flex;
     justify-content: space-around;
     padding-bottom: 3%;
+}
+
+.checkboxCont{
+    width: 100%;
+    display:inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.avatarCont{
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center; 
+    .ant-upload-picture-card-wrapper{
+        width: 100%;
+        display:flex;
+            justify-content: center;
+        align-items: center; 
+    }
 }

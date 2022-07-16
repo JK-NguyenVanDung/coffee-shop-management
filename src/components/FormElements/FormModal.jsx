@@ -17,6 +17,7 @@ const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
   borderRadius: 4,
+  zIndex: 1,
   mt: 3,
   p: 4,
 };
@@ -24,6 +25,7 @@ const style = {
 const FormModal = ({ children }) => {
   const dispatch = useAppDispatch();
   const open = useAppSelector((state) => state.form.show);
+  const enabled = useAppSelector((state) => state.form.enabled);
 
   const handleClose = () => dispatch(actions.formActions.closeForm());
 
@@ -34,6 +36,7 @@ const FormModal = ({ children }) => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        bodyStyle={!enabled && { overflowY: "inherit", maxHeight: "90vh" }}
       >
         <Box sx={style}>{children}</Box>
       </Modal>
