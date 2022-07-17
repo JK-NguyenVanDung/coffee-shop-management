@@ -297,13 +297,6 @@ const ModalContent = () => {
   };
 
   const validatePhone = (value) => {
-    const reg = /^-?\d*(\.\d*)?$/;
-
-    if (reg.test(value) || value === "" || value === "-") {
-      return {
-        value: value,
-      };
-    }
     if (value.length < 10) {
       return {
         value: value,
@@ -470,7 +463,6 @@ const ModalContent = () => {
                 {
                   required: true,
                   message: `Không được để trống số điện thoại`,
-                  type: "number",
                 },
               ]}
               validateStatus={phone.validateStatus}
@@ -478,7 +470,7 @@ const ModalContent = () => {
             >
               <Input
                 min={9}
-                max={12}
+                max={11}
                 value={phone.value}
                 placeholder="Nhập số điện thoại"
                 onChange={(value) => handlePhone(value)}
