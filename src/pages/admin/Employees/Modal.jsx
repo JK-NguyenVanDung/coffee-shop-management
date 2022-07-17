@@ -300,7 +300,7 @@ const ModalContent = () => {
   };
 
   const validatePhone = (value) => {
-    if (value.length < 10) {
+    if (!value.length === 10) {
       return {
         value: value,
         validateStatus: "error",
