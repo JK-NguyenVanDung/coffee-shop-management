@@ -15,7 +15,9 @@ export const billText={
 }
 
 export const errorText={
-    password1: "Số điện thoại phải có ít nhất 10 số)",
-    password2: "Số điện thoại không phải là số điện thoại Việt Nam hợp lệ (+84)",
-
+    phone1: "Yêu cầu điền đủ 10 số",
+    phone2: "Số điện thoại không phải là số Việt Nam hợp lệ (+84)",
+    password: "Mật khẩu phải từ 6 - 20 ký tự, và bao gồm các ký tự chữ hoa, thường, số và ký tự đặc biệt",
+    id_card: "Phải bao gồm đủ 9-12 ký tự số",
+    email: "Sai cấu trúc email"
 }
