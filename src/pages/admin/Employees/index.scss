@@ -177,6 +177,7 @@
     display:flex;
     justify-content: center;
     align-items: center; 
+    margin-bottom: 4%;
     .ant-upload-picture-card-wrapper{
         width: 100%;
         display:flex;
@@ -186,11 +187,18 @@
             // width: 63%;
             // height: 63%;
             width: 320px;
-            height: 23.5vh;
+            height: 23vh;
         }
         .ant-upload-select-picture-card{
             width: 98%;
             height: 150%;
         }
     }
+}
+.ant-input, .ant-input-affix-wrapper{
+    max-width: 320px;
+}
+.ant-form-item-explain-error{
+    max-width: 320px;
+
 }
