@@ -21,22 +21,8 @@ import { GIRD12 } from "../../../helper/constant";
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
-
 import ModalContent from "./Modal";
-const data = [
-  {
-    id_card: "0123456789",
-    full_name: "Trần Văn A",
-    email: "spottran2001@gmail.com",
-    phone_number: "0567656521",
-    address: "123 Trần Phú",
-    date_of_birth: 25,
-    avatar: "Hình",
-    password: "sadasdasd",
-    status: "Còn làm",
-    position: "Nhân viên",
-  },
-];
+
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(

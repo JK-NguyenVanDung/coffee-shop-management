@@ -127,6 +127,7 @@ const ModalContent = () => {
           full_name: dataItem.full_name,
           id_card: dataItem.id_card,
         });
+        // nếu không có dữ liệu đặc biệt thì xoá
         setFileList([dataItem.avatar]);
         setRole(dataItem.role === 0 ? true : false);
         setStatus(dataItem.account_status);
@@ -189,9 +190,11 @@ const ModalContent = () => {
           await collections.editEmployee({
             _id: dataItem._id,
             body: {
-              email: values.email.replace(/\s/g, ""),
-              phone_number: values.phone_number.replace(/\s/g, ""),
-              password: values.password.replace(/\s/g, ""),
+              email: values.email.replace(/\s/g, "").replace(/ /g, ""),
+              phone_number: values.phone_number
+                .replace(/\s/g, "")
+                .replace(/ /g, ""),
+              password: values.password.replace(/\s/g, "").replace(/ /g, ""),
               address: values.address,
               account_status: Number(status),
               role: role ? 0 : 1,
@@ -262,7 +265,7 @@ const ModalContent = () => {
     };
   };
   const validateID_card = (value) => {
-    const reg = /^\d+.{8,12}$/;
+    const reg = /^[0-9]*$/;
     if (!reg.test(value)) {
       return {
         value: value,
@@ -419,8 +422,10 @@ const ModalContent = () => {
                   message: `Không được để trống CMND/CCCD`,
                 },
                 {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
+                  required: true,
+                  message: errorText.id_card,
+                  max: 12,
+                  min: 9,
                 },
               ]}
               validateStatus={ID_card.validateStatus}
@@ -441,10 +446,6 @@ const ModalContent = () => {
                 {
                   required: true,
                   message: `Không được để trống email`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
                 },
               ]}
               validateStatus={email.validateStatus}
@@ -483,10 +484,6 @@ const ModalContent = () => {
                 {
                   required: true,
                   message: `Không được để trống mật khẩu`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
                 },
               ]}
               validateStatus={password.validateStatus}
