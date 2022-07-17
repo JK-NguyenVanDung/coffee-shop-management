@@ -390,7 +390,7 @@ const ModalContent = () => {
                   message: `Không được để trống họ tên`,
                 },
                 {
-                  pattern: new RegExp(/^\\S.+$/),
+                  pattern: new RegExp(/^\w/),
                   message: errorText.space,
                 },
               ]}
@@ -426,7 +426,7 @@ const ModalContent = () => {
                   message: `Không được để trống CMND/CCCD`,
                 },
                 {
-                  pattern: new RegExp(/^\\S.+$/),
+                  pattern: new RegExp(/^\w/),
                   message: errorText.space,
                 },
               ]}
@@ -450,7 +450,7 @@ const ModalContent = () => {
                   message: `Không được để trống email`,
                 },
                 {
-                  pattern: new RegExp(/^\\S.+$/),
+                  pattern: new RegExp(/^\w/),
                   message: errorText.space,
                 },
               ]}
@@ -471,10 +471,6 @@ const ModalContent = () => {
                   required: true,
                   message: `Không được để trống số điện thoại`,
                   type: "number",
-                },
-                {
-                  pattern: new RegExp(/^\\S.+$/),
-                  message: errorText.space,
                 },
               ]}
               validateStatus={phone.validateStatus}
@@ -497,7 +493,7 @@ const ModalContent = () => {
                   message: `Không được để trống mật khẩu`,
                 },
                 {
-                  pattern: new RegExp(/^\\S.+$/),
+                  pattern: new RegExp(/^\w/),
                   message: errorText.space,
                 },
               ]}
@@ -542,7 +538,7 @@ const ModalContent = () => {
                   message: `Không được để trống Địa Chỉ`,
                 },
                 {
-                  pattern: new RegExp(/^\\S.+$/),
+                  pattern: new RegExp(/^\w/),
                   message: errorText.space,
                 },
               ]}
