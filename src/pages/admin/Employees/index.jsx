@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table, Form, Popconfirm, Upload, message } from "antd";
+import { Input, Table, Form, Popconfirm, Upload, message, Tooltip } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -35,6 +35,8 @@ import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { colors } from "../../../helper/Color";
 import { errorText } from "../../../helper/Text";
 import ImgCrop from "antd-img-crop";
+
+import NumberInput from "../../../components/FormElements/NumberInput";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -99,7 +101,22 @@ const ModalContent = () => {
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
 
+  const [email, setEmail] = useState({
+    value: "",
+    validateStatus: "",
+    errorMsg: "",
+  });
   const [phone, setPhone] = useState({
+    value: "",
+    validateStatus: "",
+    errorMsg: "",
+  });
+  const [password, setPassword] = useState({
+    value: "",
+    validateStatus: "",
+    errorMsg: "",
+  });
+  const [ID_card, setID_card] = useState({
     value: "",
     validateStatus: "",
     errorMsg: "",
@@ -107,7 +124,6 @@ const ModalContent = () => {
 
   const handleChange = (newValue) => {
     setDate(newValue);
-    console.log(date.getUTCDate());
   };
   const handleStatus = (e) => {
     setStatus(e.target.value);
@@ -120,7 +136,6 @@ const ModalContent = () => {
   const handleCheckbox = (event) => {
     if (event.target.name === "employee") setRole(true);
     else setRole(false);
-    console.log(role);
   };
 
   useEffect(() => {
@@ -141,7 +156,6 @@ const ModalContent = () => {
         setRole(dataItem.role === 0 ? true : false);
         setStatus(dataItem.account_status);
         setDate(new Date(dataItem.date_of_birth));
-        console.log(date);
       }
     };
 
@@ -202,9 +216,9 @@ const ModalContent = () => {
           await collections.editEmployee({
             _id: dataItem._id,
             body: {
-              email: values.email,
-              phone_number: values.phone_number,
-              password: values.password,
+              email: values.email.replace(/\s/g, ""),
+              phone_number: values.phone_number.replace(/\s/g, ""),
+              password: values.password.replace(/\s/g, ""),
               address: values.address,
               account_status: Number(status),
               role: role ? 0 : 1,
@@ -227,9 +241,9 @@ const ModalContent = () => {
           setLoading(false);
         } else {
           await collections.addEmployee({
-            email: values.email,
-            phone_number: values.phone_number,
-            password: values.password,
+            email: values.email.replace(/\s/g, ""),
+            phone_number: values.phone_number.replace(/\s/g, ""),
+            password: values.password.replace(/\s/g, ""),
             address: values.address,
             account_status: Number(status),
             role: role ? 0 : 1,
@@ -259,28 +273,91 @@ const ModalContent = () => {
   function isVietnamesePhoneNumberValid(number) {
     return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(number);
   }
-  const validatePhone = (value) => {
-    if (value.length < 10) {
+  function isEmail(email) {
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+  }
+  const validateEmail = (value) => {
+    if (!isEmail(value)) {
       return {
         value: value,
         validateStatus: "error",
-        errorMsg: errorText.password1,
-      };
-    }
-    if (isVietnamesePhoneNumberValid(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.password2,
+        errorMsg: errorText.email,
       };
     }
     return {
       value: value,
+    };
+  };
+  const validateID_card = (value) => {
+    const reg = /^\d+.{8,12}$/;
+    if (!reg.test(value)) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.id_card,
+      };
+    }
+    return {
+      value: value,
+    };
+  };
+  const handleID_card = (value) => {
+    setID_card(validateID_card(value.target.value));
+  };
+
+  const validatePassword = (value) => {
+    const reg =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$/;
+    if (!reg.test(value)) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.password,
+      };
+    }
+    return {
+      value: value,
+    };
+  };
+  const handlePassword = (value) => {
+    setPassword(validatePassword(value.target.value));
+  };
+
+  const validatePhone = (value) => {
+    const reg = /^-?\d*(\.\d*)?$/;
+
+    if (reg.test(value) || value === "" || value === "-") {
+      return {
+        value: value,
+      };
+    }
+    if (value.length < 10) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.phone1,
+      };
+    }
+    if (!isVietnamesePhoneNumberValid(value)) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.phone2,
+      };
+    }
+    return {
+      value: value,
+
       validateStatus: "success",
-      errorMsg: "Số điện thoại hợp lệ",
     };
   };
 
+  const handleEmail = (value) => {
+    setEmail(validateEmail(value.target.value));
+  };
+  const handlePhone = (value) => {
+    setPhone(validatePhone(value.target.value));
+  };
   function getHeaderTitle() {
     if (dataItem) {
       return "Sửa nhân viên";
@@ -374,8 +451,14 @@ const ModalContent = () => {
                   message: `Không được để trống CMND/CCCD`,
                 },
               ]}
+              validateStatus={ID_card.validateStatus}
+              help={ID_card.errorMsg}
             >
-              <Input placeholder="Nhập CMND" />
+              <Input
+                placeholder="Nhập CMND"
+                value={ID_card}
+                onChange={(e) => handleID_card(e)}
+              />
             </Form.Item>
           </div>
           <div>
@@ -388,8 +471,14 @@ const ModalContent = () => {
                   message: `Không được để trống email`,
                 },
               ]}
+              validateStatus={email.validateStatus}
+              help={email.errorMsg}
             >
-              <Input placeholder="Nhập email" />
+              <Input
+                placeholder="Nhập email"
+                value={email}
+                onChange={(e) => handleEmail(e)}
+              />
             </Form.Item>
             <h4>{labels.phone}</h4>
             <Form.Item
@@ -397,7 +486,8 @@ const ModalContent = () => {
               rules={[
                 {
                   required: true,
-                  message: `Không được để trống sdt`,
+                  message: `Không được để trống số điện thoại`,
+                  type: "number",
                 },
               ]}
               validateStatus={phone.validateStatus}
@@ -408,7 +498,7 @@ const ModalContent = () => {
                 max={12}
                 value={phone.value}
                 placeholder="Nhập số điện thoại"
-                onChange={validatePhone}
+                onChange={(value) => handlePhone(value)}
               />
             </Form.Item>
             <h4>{labels.password}</h4>
@@ -420,11 +510,15 @@ const ModalContent = () => {
                   message: `Không được để trống mật khẩu`,
                 },
               ]}
+              validateStatus={password.validateStatus}
+              help={password.errorMsg}
             >
               {dataItem ? (
                 <Input.Password
                   placeholder="Nhập mật khẩu"
                   disabled={disablePass}
+                  value={password.value}
+                  onChange={(value) => handlePassword(value)}
                   prefix={
                     <IconButton onClick={() => disablePassword()}>
                       {!disablePass ? (
@@ -440,7 +534,11 @@ const ModalContent = () => {
                   }
                 />
               ) : (
-                <Input.Password placeholder="Nhập mật khẩu" />
+                <Input.Password
+                  placeholder="Nhập mật khẩu"
+                  value={password.value}
+                  onChange={(value) => handlePassword(value)}
+                />
               )}
             </Form.Item>
 
@@ -652,7 +750,7 @@ const Employees = () => {
               Sửa
             </Button>
             <Popconfirm
-              title={`Bạn có muốn xoá ${item.name}`}
+              title={`Bạn có muốn xoá ${item.full_name}`}
               onConfirm={() => handleDelete(item)}
               onCancel={cancel}
               okText="Có"
