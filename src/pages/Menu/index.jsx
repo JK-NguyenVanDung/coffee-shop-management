@@ -15,6 +15,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 
+import BillPrint from "./MenuComponents/BillPrint";
 import { numbToCurrency } from "../../helper/currency";
 import {
   Button,
@@ -446,7 +447,6 @@ export const Category = () => {
 };
 const { Search } = Input;
 
-
 // chi tiết món
 
 const BillDetail = () => {
@@ -467,18 +467,28 @@ const BillDetail = () => {
   }
   function createOrder() {
     let order = {};
+    if (printBill) {
+      dispatch(actions.menuActions.closeDetail());
+    }
   }
   function cancelOrder() {
     dispatch(actions.menuActions.cancelOrder());
   }
   const billContent = [
     {
-      label: "Đơn giá: ",
+      label: "Ngày tạo",
+      content: currentDate(),
+    },
+    { label: "Người tạo", content: user ? user : "N/A" },
+    {
+      label: "Tổng đơn",
       content: numbToCurrency(total) ? numbToCurrency(total) : "N/A",
     },
-    { label: "Trạng thái: ", content: "Còn hàng" },
-    { label: "Thuế VAT: ", content: "10%" },
- 
+    { label: "Thuế VAT", content: "10%" },
+    {
+      label: "Tổng tiền",
+      content: numbToCurrency(totalBill) ? numbToCurrency(totalBill) : "N/A",
+    },
   ];
   return (
     <>
@@ -486,8 +496,12 @@ const BillDetail = () => {
         <div>
           <div className="backdrop" onClick={onRemove}></div>
           <div class="billDetailCont">
+            <img class="clipper" src={Clipper} />
             <div className="billBgCont">
-
+              <div className="billHeader">
+                <h2>Linh's Coffee</h2>
+                <h1>TẠO ĐƠN</h1>
+              </div>
               <div className="billListCont">
                 {orderList.map((item) => {
                   return (
@@ -497,18 +511,34 @@ const BillDetail = () => {
                   );
                 })}
               </div>
-
+              <div class="noteCont">
+                <TextField
+                  placeholder="Nhập ghi chú của khách hàng ở đây"
+                  label="Ghi chú"
+                  onChange={(e) => dispatch(actions.menuActions.setNote(e))}
+                  multiline
+                  rows={2}
+                  maxRows={4}
+                  fullWidth
+                />
+              </div>
               <div className="cardCont">
                 <Card sx={{ minWidth: "100%" }}>
-                  
-                   
+                  <CardContent>
+                    <Typography
+                      sx={{ fontSize: "1.2rem" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {billText.header1}
+                    </Typography>
                     <div className="billContentsCont">
                       {billContent.map((item) => {
                         return (
                           <>
                             <div className="billContentCont">
                               <Typography
-                                sx={{ fontSize: "0.8rem", fontWeight: "bold", paddingRight: "3%" }}
+                                sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
                                 color="text.secondary"
                                 gutterBottom
                               >
@@ -526,32 +556,76 @@ const BillDetail = () => {
                         );
                       })}
                     </div>
-                  
+                  </CardContent>
                   <CardContent>
-                    <div class="noteCont">
-                      <TextField
-                        placeholder="Nhập ghi chú của khách hàng ở đây"
-                        label="Ghi chú"
-                        onChange={(e) => dispatch(actions.menuActions.setNote(e))}
-                        multiline
-                        rows={2}
-                        maxRows={4}
-                        fullWidth
-                      />
-                    </div>
+                    <Typography
+                      sx={{ fontSize: "1.2rem" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {billText.header2}
+                    </Typography>
+                    <FormControl>
+                      <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                        value={paymentMethod}
+                        onChange={(value) =>
+                          dispatch(actions.menuActions.changePayment(value))
+                        }
+                      >
+                        <FormControlLabel
+                          value="cash"
+                          control={<Radio />}
+                          label="Tiền mặt"
+                        />
+                        <FormControlLabel
+                          value="momo"
+                          control={<Radio />}
+                          label="Momo"
+                        />
+                        <FormControlLabel
+                          value="vnpay"
+                          control={<Radio />}
+                          label="VNPay"
+                        />
+                      </RadioGroup>
+                    </FormControl>
                   </CardContent>
                 </Card>
               </div>
+              <div className="checkbox">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={printBill}
+                      onChange={() =>
+                        dispatch(actions.menuActions.changePrint())
+                      }
+                    />
+                  }
+                  label="In hoá đơn"
+                />
+              </div>
+
               <div className="buttonCont">
                 <Button
                   variant="contained"
                   size="large"
                   onClick={() => createOrder()}
-                  color="secondary"
+                  color="success"
                 >
-                  Đặt món
+                  Tạo đơn
                 </Button>
-
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="error"
+                  onClick={() => cancelOrder()}
+                >
+                  Huỷ đơn
+                </Button>
               </div>
             </div>
             <div
@@ -566,6 +640,7 @@ const BillDetail = () => {
           </div>
         </div>
       )}
+      {!open && printBill && <BillPrint />}
     </>
   );
 };
@@ -712,7 +787,6 @@ const BillDetail = () => {
 //     </>
 //   );
 // };
-
 
 // TẠO ĐƠN
 

@@ -22,6 +22,7 @@ let initialState = {
     total: 0,
     paymentMethod: "cash",
     printBill: true,
+    openPrint: false,
     menuGroup: "drink",
     openDetail: false,
     listCate:[],
@@ -38,6 +39,16 @@ const slice = createSlice({
 
         },
         closeDetail(state) {
+            state.openDetail = false;
+            state.show = true;
+
+        },
+        showPrintBill(state) {
+            state.openDetail = true;
+            state.show = false;
+
+        },
+        closePrintBill(state) {
             state.openDetail = false;
             state.show = true;
 
