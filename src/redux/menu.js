@@ -44,12 +44,12 @@ const slice = createSlice({
 
         },
         showPrintBill(state) {
-            state.openDetail = true;
+            state.openPrint = true;
             state.show = false;
 
         },
         closePrintBill(state) {
-            state.openDetail = false;
+            state.openPrint = false;
             state.show = true;
 
         },

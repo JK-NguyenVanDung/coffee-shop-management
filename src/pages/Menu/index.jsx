@@ -459,6 +459,7 @@ const BillDetail = () => {
   let printBill = useAppSelector((state) => state.menu.printBill);
   let paymentMethod = useAppSelector((state) => state.menu.paymentMethod);
   let note = useAppSelector((state) => state.menu.note);
+  let openPrint = useAppSelector((state) => state.menu.openPrint);
 
   let dispatch = useAppDispatch();
 
@@ -467,8 +468,10 @@ const BillDetail = () => {
   }
   function createOrder() {
     let order = {};
+    dispatch(actions.menuActions.closeDetail());
+
     if (printBill) {
-      dispatch(actions.menuActions.closeDetail());
+      dispatch(actions.menuActions.showPrintBill());
     }
   }
   function cancelOrder() {
@@ -640,7 +643,7 @@ const BillDetail = () => {
           </div>
         </div>
       )}
-      {!open && printBill && <BillPrint />}
+      {openPrint && <BillPrint />}
     </>
   );
 };
