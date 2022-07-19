@@ -183,9 +183,8 @@
     padding-top:4.5rem;
     padding-bottom:10px;
  
- 
     box-shadow: 24;
- 
+
     .clipper{
         position: absolute;
         left: 0;
@@ -197,11 +196,15 @@
         padding-top: 5px;
     }
 
-// TẠO ĐƠN
+
+
+
+// HÓA ĐƠN
 
     .billBgCont{
-        overflow-x: hidden;
-        overflow-y: scroll;        border: 20px solid #614A35;
+    
+        overflow: scroll;
+        border: 20px solid #614A35;
         background-color: rgb(255, 255, 255);
         width:100%;
         height: 89vh;
@@ -217,19 +220,27 @@
 
         background-position: center;
         background-repeat: no-repeat;
-        padding-left: 1rem;
-        padding-right:  1rem;
+        padding-left:2rem;
+        padding-right: 2rem;
 
         .billHeader{
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-
+            font-size: large;
+            
+        }
+        .locationCont {  
+            width: 100%;                                                         
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
         }
         .billListCont{
             margin-top: 1rem;
-
+        
             width:100%;
             height: auto;
             width: 100%;
@@ -258,16 +269,46 @@
             
         }
         .cardCont{
-            margin-top:1rem;
+
             display:flex;
-            width: 100%;    
-            .billListCont{       
+            flex-direction: column;
+            width: 100%; 
+            justify-content: center;
+            height: auto;
+            .billContentsCont{       
                 display: inline-flex;
                 width: 100%;
+                height: 100%;
                 flex-direction: column;
                 justify-content: space-between;
-                align-items: center;
-               
+                align-items:space-between;
+                .billContentCont{
+                    display: inline-flex;
+                    width: 100%;
+                    height: 100%;
+                    flex-direction: row;
+                    justify-content:space-between;
+                    align-items:center;
+                }
+                .billItemsCont{
+                    display: inline-flex;
+                    width: 100%;
+                    height: 100%;
+                    flex-direction: row;
+                    justify-content:space-between;
+                    align-items:center;    
+                    .rowCont{
+                        display: inline-flex;
+                        width: 50%;
+                        height: 100%;
+                        flex-direction: row;
+                        justify-content:space-between;
+                        align-items:center;     
+                    }
+                }
+                .MuiTypography-root{
+                    height: 3.2vh;
+                }
             }
             
         }
@@ -281,117 +322,14 @@
             width: 100%;
             margin: 1rem;
             justify-content: space-evenly;
+            .MuiButton-contained{
+                width: 40%;
+
+            }
         }
     }
+
 }
-.billContentCont{
-    display: inline-flex;
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
-
-
-// HÓA ĐƠN
-
-    // .billBgCont{
-    //     overflow: scroll;
-    //     border: 20px solid #614A35;
-    //     background-color: rgb(255, 255, 255);
-    //     width:100%;
-    //     height: 89vh;
-    //     border-radius: 20px;
-    //     padding: 10px;
-    //     padding-top: 1rem;
-    //     display: flex;
-    //     flex-direction: column;
-    //     align-items: center;
-    //     justify-content: flex-start;
-    //     -webkit-border-radius: 40px;
-    //     -moz-border-radius: 40px;
-
-    //     background-position: center;
-    //     background-repeat: no-repeat;
-    //     padding-left: 1rem;
-    //     padding-right:  1rem;
-
-    //     .billHeader{
-    //         display: flex;
-    //         flex-direction: column;
-    //         align-items: center;
-    //         justify-content: flex-start;
-    //         font-size: large;
-            
-    //     }
-    //     .locationCont {  
-    //         width: 100%;                                                         
-    //         display: flex;
-    //         flex-direction: column;
-    //         justify-content: flex-start;
-    //         align-items: flex-start;
-    //     }
-    //     .billListCont{
-    //         margin-top: 1rem;
-
-    //         width:100%;
-    //         height: auto;
-    //         width: 100%;
-    //         height: auto;
-    //         flex-wrap: wrap;            
-    //         display: inline-flex;
-    //         flex-direction: row;
-    //         justify-content:flex-start;
-    //         align-items: space-evenly;
-
-    //         .billItemCont{
-    //             .orderItemCont{
-               
-    //             }
-    //             span{
-    //                 color: #111;
-    //             }
-               
-             
-    //         }
-    //     }
-    //     .noteCont{
-    //         display:flex;
-    //         width: 100%;
-
-            
-    //     }
-    //     .cardCont{
-    //         display:flex;
-    //         flex-direction: column;
-    //         width: 100%; 
-    //         justify-content: center;
-
-    //         .billListCont{       
-    //             display: inline-flex;
-    //             width: 100%;
-    //             flex-direction: column;
-    //             justify-content: space-between;
-    //             align-items: center;
-               
-    //         }
-            
-    //     }
-    //     .checkbox{
-    //         display: flex;
-    //         width: 100%;
-    //         justify-content: flex-staet;
-    //     }
-    //     .buttonCont{
-    //         display:flex;
-    //         width: 100%;
-    //         margin: 1rem;
-    //         justify-content: space-evenly;
-    //     }
-    // }
-
-// }
 
 
 

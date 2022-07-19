@@ -22,6 +22,8 @@ let initialState = {
     total: 0,
     paymentMethod: "cash",
     printBill: true,
+    openPrint: false,
+    print: false,
     menuGroup: "drink",
     openDetail: false,
     listCate:[],
@@ -42,6 +44,27 @@ const slice = createSlice({
             state.show = true;
 
         },
+        printBill(state) {
+            state.openPrint = false;
+            state.show = false;
+         
+        },
+        createOrder(state){
+            // return initialState;
+
+        },
+        resetOrder(state){
+            return initialState;
+        },
+        showPrintBill(state) {
+            state.openPrint = true;
+            state.show = false;
+
+        },
+        closePrintBill(state) {
+            state.openPrint = false;
+
+        },
         showOrderBar(state) {
             state.show = true;
         },
@@ -59,6 +82,7 @@ const slice = createSlice({
         setGroup(state,actions){
           state.menuGroup = actions.payload
         },
+        cancelPrint(state){state.openPrint = false},
         addOrderItem(state,actions){
             let temp = actions.payload;
             let exist = false;

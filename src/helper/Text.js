@@ -11,8 +11,13 @@ export const menuText = {
 export const billText={
     header1: "Thông tin hoá đơn",
     header2: "Phương thức thanh toán",
+    header3: "Hóa đơn thanh toán"
 
 }
+
+export const shopPhone = "032154333222"
+export const shopAddress = "Shop"
+
 
 export const errorText={
     phone1: "Yêu cầu điền đủ 10 số",

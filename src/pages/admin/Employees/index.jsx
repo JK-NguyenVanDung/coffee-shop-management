@@ -23,6 +23,7 @@ import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
 
+
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(
@@ -288,3 +289,4 @@ const Employees = () => {
   );
 };
 export default Employees;
+
