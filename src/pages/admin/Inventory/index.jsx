@@ -4,4 +4,5 @@ import { useHistory } from "react-router-dom";
 function Inventory() {
   return <></>;
 }
+
 export default Inventory;

@@ -13,14 +13,14 @@ import {
   TeamOutlined,
   BookFilled,
   InfoCircleOutlined,
-  LineChartOutlined
+  LineChartOutlined,
 } from "@ant-design/icons";
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import React from "react";
 import HeaderProFile from "../../assets/scss/headerProfile";
 import { MENU } from "./navMenu";
-import "./index.scss"
+import "./index.scss";
 //import admin from "../../../../api/Collections/admin";
 
 import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
@@ -32,7 +32,9 @@ const { SubMenu } = Menu;
 export default function SiderDemos({ children, headerItem = null }) {
   const navigate = useNavigate();
 
-  const nameMenu = useAppSelector((state) => state.form.nameMenu ? state.form.nameMenu : "Menu");
+  const nameMenu = useAppSelector((state) =>
+    state.form.nameMenu ? state.form.nameMenu : "Menu"
+  );
   const dispatch = useAppDispatch();
   const { Header, Sider, Content } = Layout;
   const [collapsed, setCollapsed] = useState(false);
@@ -42,15 +44,37 @@ export default function SiderDemos({ children, headerItem = null }) {
   const toggle = () => {
     setCollapsed(!collapsed);
   };
+
   return (
-    <Layout> 
-      <Sider trigger={null} collapsible collapsed={collapsed} width="250"  style={{backgroundColor: "#fff"}}>
+    <Layout>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        width="250"
+        style={{ backgroundColor: "#fff" }}
+      >
         <div className="logo">
           <img src={logo} alt="" className="img-responsive" />
         </div>
-        <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}     style={{border:"none"}}>
-        <div className="centerCont">
-            {collapsed? <ChevronRightRoundedIcon className= "trigger" onClick={()=>toggle()}/> : <ChevronLeftRoundedIcon className= "trigger" onClick={()=>toggle()}/>}
+        <Menu
+          theme="light"
+          mode="inline"
+          defaultSelectedKeys={["1"]}
+          style={{ border: "none" }}
+        >
+          <div className="centerCont">
+            {collapsed ? (
+              <ChevronRightRoundedIcon
+                className="trigger"
+                onClick={() => toggle()}
+              />
+            ) : (
+              <ChevronLeftRoundedIcon
+                className="trigger"
+                onClick={() => toggle()}
+              />
+            )}
           </div>
           {menu.map((item) => {
             return (
@@ -63,7 +87,7 @@ export default function SiderDemos({ children, headerItem = null }) {
                       navigate(`${item.path}`);
                       dispatch(actions.formActions.setNameMenu(item.title));
                     }}
-                    disabled={( item.value) == 0} //role &
+                    disabled={item.value == 0} //role &
                   >
                     {item.title}
                   </Menu.Item>
@@ -102,8 +126,9 @@ export default function SiderDemos({ children, headerItem = null }) {
           className="site-layout-background header"
           style={{ padding: 0 }}
         >
-  
-          {nameMenu && <h4 style={{ fontSize: 35, paddingLeft: 20  }}>{nameMenu}</h4>}
+          {nameMenu && (
+            <h4 style={{ fontSize: 35, paddingLeft: 20 }}>{nameMenu}</h4>
+          )}
           {headerItem}
           <HeaderProFile />
         </Header>

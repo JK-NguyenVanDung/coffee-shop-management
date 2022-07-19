@@ -445,7 +445,6 @@ export const Category = () => {
     </Slider>
   );
 };
-const { Search } = Input;
 
 // chi tiết món
 

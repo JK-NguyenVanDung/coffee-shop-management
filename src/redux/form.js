@@ -9,11 +9,17 @@ const slice = createSlice({
         formAddCategory: false,
         nameMenu: null,
         formType: "",
+        enabled: true,
     },
     reducers: {
+        enableForm(state) {
+            state.enabled = true;
+        },
+        disableForm(state) {
+            state.enabled = false
+        },
         showForm(state) {
             state.show = true;
-            console.log(state.show);
         },
         closeForm(state) {
             state.show = false
@@ -29,6 +35,7 @@ const slice = createSlice({
         },
         changeLoad(state, actions) {
             state.loadData = actions.payload;
+            console.log(state.loadData);
         },
         changeLoadProduct(state, actions) {
             state.loadData1 = actions.payload;

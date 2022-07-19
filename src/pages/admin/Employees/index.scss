@@ -3,20 +3,14 @@
     display: flex;
     flex-direction: row;
     justify-content: end;
-
-    .dishSearch {
-        width: 30%;
-        .ant-input {
-            border-radius: 25px;
-            width: 100%;
-        }
-    }
+    padding: 10px;
 }
 
 // Thêm nhân viên
 
 .ModalCont {
     width: 100%;
+    height: 95vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -32,25 +26,28 @@
     padding-left: 4%;
     padding-right: 3%;
 }
+.form{
+    height: 90vh;
+    overflow-y: scroll;
+}
 .bodyCont {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-around;   
+    overflow-y: scroll;
+
 }
-.still {
-    background-color: #4BB984;
-    border-radius: 12px;
-    margin-right: 2%;
-}
-.temporary {
-    background-color: #FFA726;
-    border-radius: 12px;
-    margin-right: 2%;
-}
-.vacation {
-    background-color: #B2431E;
-    border-radius: 12px;
+.radiogroupCont{
+    width: 100%;
+    display:inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-left: 15px;
+    .MuiTypography-root{
+        padding-right: 12px !important;
+        color:#fff;
+    }
 }
 .positionCheckAdd {
     display: flex;
@@ -167,4 +164,41 @@
     display: flex;
     justify-content: space-around;
     padding-bottom: 3%;
+}
+
+.checkboxCont{
+    width: 100%;
+    display:inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.avatarCont{
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center; 
+    margin-bottom: 4%;
+    .ant-upload-picture-card-wrapper{
+        width: 100%;
+        display:flex;
+            justify-content: center;
+        align-items: center; 
+        .ant-upload-list-picture-card-container{
+            // width: 63%;
+            // height: 63%;
+            width: 320px;
+            height: 23vh;
+        }
+        .ant-upload-select-picture-card{
+            width: 98%;
+            height: 150%;
+        }
+    }
+}
+.ant-input, .ant-input-affix-wrapper{
+    max-width: 320px;
+}
+.ant-form-item-explain-error{
+    max-width: 320px;
+
 }
