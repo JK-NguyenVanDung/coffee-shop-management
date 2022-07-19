@@ -42,7 +42,7 @@ const BillPrint = () => {
   let dispatch = useAppDispatch();
 
   function onRemove() {
-    dispatch(actions.menuActions.closeDetail());
+    dispatch(actions.menuActions.cancelOrder());
   }
   function printOutBill() {
     dispatch(actions.menuActions.printBill());
@@ -228,7 +228,6 @@ const BillPrint = () => {
                   })}
                 </div>
               </div>
-              <hr width="100%" size="1%" align="center" />
 
               <div className="buttonCont">
                 <Button
