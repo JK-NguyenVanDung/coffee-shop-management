@@ -34,6 +34,7 @@ import { errorText } from "../../../helper/Text";
 import ImgCrop from "antd-img-crop";
 
 import NumberInput from "../../../components/FormElements/NumberInput";
+import moment from "moment";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -247,7 +248,7 @@ const ModalContent = () => {
       });
   };
   function isVietnamesePhoneNumberValid(number) {
-    return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(number);
+    return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{10,10})\b/.test(number);
   }
   function isEmail(email) {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
@@ -300,7 +301,7 @@ const ModalContent = () => {
   };
 
   const validatePhone = (value) => {
-    if (!value.length === 10) {
+    if (value.length < 10 || value.length > 10) {
       return {
         value: value,
         validateStatus: "error",
@@ -398,6 +399,8 @@ const ModalContent = () => {
               <h4>{labels.birthday}</h4>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
+                  // minDate={moment().subtract(100, "years")._d}
+                  // maxDate={moment().subtract(14, "years")._d}
                   inputFormat="dd/MM/yyyy"
                   value={date}
                   onChange={handleChange}
@@ -465,13 +468,17 @@ const ModalContent = () => {
                   required: true,
                   message: `Không được để trống số điện thoại`,
                 },
+                {
+                  required: true,
+                  min: 10,
+                  max: 10,
+                  message: errorText.phone1,
+                },
               ]}
               validateStatus={phone.validateStatus}
               help={phone.errorMsg}
             >
               <Input
-                min={9}
-                max={11}
                 value={phone.value}
                 placeholder="Nhập số điện thoại"
                 onChange={(value) => handlePhone(value)}
