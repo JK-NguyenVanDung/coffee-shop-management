@@ -244,11 +244,14 @@ const ModalContent = () => {
       })
       .catch((info) => {
         console.log("Validate Failed:", info);
+        message.error("Lỗi nhập");
         setLoading(false);
       });
   };
   function isVietnamesePhoneNumberValid(number) {
-    return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{10,10})\b/.test(number);
+    return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(
+      number
+    );
   }
   function isEmail(email) {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
@@ -266,7 +269,7 @@ const ModalContent = () => {
     };
   };
   const validateID_card = (value) => {
-    const reg = /^[0-9]*$/;
+    const reg = /^[0-9]{9}([0-9]{3})?$/;
     if (!reg.test(value)) {
       return {
         value: value,
@@ -283,8 +286,7 @@ const ModalContent = () => {
   };
 
   const validatePassword = (value) => {
-    const reg =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$/;
+    const reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8}$/;
     if (!reg.test(value)) {
       return {
         value: value,
@@ -301,13 +303,6 @@ const ModalContent = () => {
   };
 
   const validatePhone = (value) => {
-    if (value.length < 10 || value.length > 10) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.phone1,
-      };
-    }
     if (!isVietnamesePhoneNumberValid(value)) {
       return {
         value: value,
@@ -424,12 +419,12 @@ const ModalContent = () => {
                   required: true,
                   message: `Không được để trống CMND/CCCD`,
                 },
-                {
-                  required: true,
-                  message: errorText.id_card,
-                  max: 12,
-                  min: 9,
-                },
+                // {
+                //   required: true,
+                //   message: errorText.id_card,
+                //   max: 12,
+                //   min: 9,
+                // },
               ]}
               validateStatus={ID_card.validateStatus}
               help={ID_card.errorMsg}
@@ -467,12 +462,6 @@ const ModalContent = () => {
                 {
                   required: true,
                   message: `Không được để trống số điện thoại`,
-                },
-                {
-                  required: true,
-                  min: 10,
-                  max: 10,
-                  message: errorText.phone1,
                 },
               ]}
               validateStatus={phone.validateStatus}
