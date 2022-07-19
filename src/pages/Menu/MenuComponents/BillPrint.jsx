@@ -1,27 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Input, Carousel } from "antd";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import "./index.scss";
 import { billText } from "../../../helper/Text";
 
-import Slider from "react-slick";
-import { useDoubleTap } from "use-double-tap";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
-import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import { Button, Typography } from "@mui/material/";
 
 import { RemoveButton } from "./RemoveButton";
 import { numbToCurrency } from "../../../helper/currency";
 
-import WoodBoard from "../../../assets/img/wood.svg";
-import Clipboard from "../../../assets/img/clipboard.svg";
 import Clipper from "../../../assets/img/clipper.svg";
+
+import { shopPhone, shopAddress } from "../../../helper/Text";
 
 function currentDate() {
   let currentdate = new Date();
@@ -39,7 +30,7 @@ function currentDate() {
 }
 const BillPrint = () => {
   let orderList = useAppSelector((state) => state.menu.orderList);
-  let open = useAppSelector((state) => state.menu.openDetail);
+  let openPrint = useAppSelector((state) => state.menu.openPrint);
 
   let user = "test";
   let totalBill = useAppSelector((state) => state.menu.totalBill);
@@ -53,37 +44,56 @@ const BillPrint = () => {
   function onRemove() {
     dispatch(actions.menuActions.closeDetail());
   }
-  function createOrder() {
-    let order = {};
-  }
-  function cancelOrder() {
+  function printOutBill() {
+    dispatch(actions.menuActions.printBill());
     dispatch(actions.menuActions.cancelOrder());
   }
+  function cancelPrint() {
+    dispatch(actions.menuActions.cancelOrder());
+  }
+
+  const paymentText = [
+    { value: "cash", label: "Tiền mặt" },
+    { value: "momo", label: "Momo" },
+    { value: "vnpay", label: "VNPay" },
+  ];
   const billContent = [
-    { label: "ID đơn hàng", content2: "CFM872022" },
+    { label: "ID đơn hàng", content: "CFM872022" },
     {
-      label: "Ngày tạo",
-      content2: currentDate(),
+      label: "Ngày tạo:",
+      content: currentDate(),
     },
-    // { label: "Người tạo", content: user ? user : "N/A" },
-    { label: "Thu ngân", content2: user ? user : "N/A" },
-    { label: "Tên món", content1: "SL", content2: "Đơn giá" },
-    { label: "Cafe Đá", content1: "2", content2: "40.000 VNĐ" },
+    { label: "Thu ngân", content: user ? user : "N/A" },
+  ];
+  const billContent2 = {
+    label: "Tên món",
+    content1: "SL ",
+    content2: "Đơn giá",
+  };
+
+  const billContent3 = [
     {
-      label: "Tổng đơn",
+      label: "Tổng đơn:",
       content: numbToCurrency(total) ? numbToCurrency(total) : "N/A", // Phần này add đường ngang vào tui ko biết có gì chú copy phần đó dưới á
     },
-    { label: "Thuế VAT", content2: "10%" },
+    { label: "Thuế VAT", content: "10%" },
     {
-      label: "Tổng tiền",
-      content2: numbToCurrency(totalBill) ? numbToCurrency(totalBill) : "N/A",
+      label: "Tổng tiền:",
+      content: numbToCurrency(totalBill) ? numbToCurrency(totalBill) : "N/A",
     },
-    { label: "Phương thức thanh toán", content2: "Tiền mặt" },
-    { label: "Trạng thái", content2: "Đã thanh toán" },
+    {
+      label: "Phương thức thanh toán:",
+      content: paymentText.map((item) => {
+        if (item.value === paymentMethod) {
+          return item.label;
+        }
+      }),
+    },
+    { label: "Trạng thái:", content: "Đã thanh toán" },
   ];
   return (
     <>
-      {open && (
+      {openPrint && (
         <div>
           <div className="backdrop" onClick={onRemove}></div>
           <div class="billDetailCont">
@@ -93,8 +103,8 @@ const BillPrint = () => {
                 <h2>Linh's Coffee</h2>
               </div>
               <div className="locationCont">
-                <h4>Địa chỉ:*********</h4>
-                <h4>SĐT:********</h4>
+                <h4>Địa chỉ: {shopAddress}</h4>
+                <h4>SĐT: {shopPhone}</h4>
               </div>
               <hr width="100%" size="1%" align="center" />
 
@@ -124,8 +134,60 @@ const BillPrint = () => {
                             color="text.secondary"
                             gutterBottom
                           >
-                            {item.content1}
+                            {item.content}
                           </Typography>
+                        </div>
+                      </>
+                    );
+                  })}
+                  <hr width="100%" size="1%" align="center" />
+                  <div className="billItemsCont">
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {billContent2.label}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {billContent2.content1}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "0.8rem",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {billContent2.content2}
+                    </Typography>
+                  </div>
+                  {orderList.map((item) => {
+                    return (
+                      <>
+                        <div className="billItemsCont">
+                          <div className="rowCont">
+                            <Typography
+                              sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                              color="text.secondary"
+                              gutterBottom
+                            >
+                              {item.name}
+                            </Typography>
+                            <Typography
+                              sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                              color="text.secondary"
+                              gutterBottom
+                            >
+                              {item.amount}
+                            </Typography>
+                          </div>
                           <Typography
                             sx={{
                               fontSize: "0.8rem",
@@ -135,7 +197,30 @@ const BillPrint = () => {
                             color="text.secondary"
                             gutterBottom
                           >
-                            {item.content2}
+                            {numbToCurrency(item.price)}
+                          </Typography>
+                        </div>
+                      </>
+                    );
+                  })}
+                  <hr width="100%" size="1%" align="center" />
+                  {billContent3.map((item) => {
+                    return (
+                      <>
+                        <div className="billContentCont">
+                          <Typography
+                            sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                            color="text.secondary"
+                            gutterBottom
+                          >
+                            {item.label}
+                          </Typography>
+                          <Typography
+                            sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                            color="text.secondary"
+                            gutterBottom
+                          >
+                            {item.content}
                           </Typography>
                         </div>
                       </>
@@ -149,18 +234,18 @@ const BillPrint = () => {
                 <Button
                   variant="contained"
                   size="large"
-                  onClick={() => createOrder()}
+                  onClick={() => printOutBill()}
                   color="secondary"
                 >
-                  Tạo đơn
+                  In đơn
                 </Button>
                 <Button
                   variant="contained"
                   size="large"
                   color="error"
-                  onClick={() => cancelOrder()}
+                  onClick={() => cancelPrint()}
                 >
-                  Huỷ đơn
+                  Huỷ In
                 </Button>
               </div>
             </div>

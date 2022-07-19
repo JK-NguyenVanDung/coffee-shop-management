@@ -238,7 +238,7 @@ const OrderBar = () => {
                   onClick={openDetail}
                   color="secondary"
                 >
-                  Tạo đơn
+                  Chi tiết
                 </Button>
               </div>
             </div>
@@ -438,7 +438,7 @@ export const Category = () => {
               }
             >
               {item.name}
-            </div>{" "}
+            </div>
           </Button>
         );
       })}
@@ -468,10 +468,12 @@ const BillDetail = () => {
   }
   function createOrder() {
     let order = {};
-    dispatch(actions.menuActions.closeDetail());
+    dispatch(actions.menuActions.createOrder());
 
     if (printBill) {
       dispatch(actions.menuActions.showPrintBill());
+    } else {
+      dispatch(actions.menuActions.resetOrder());
     }
   }
   function cancelOrder() {
@@ -617,7 +619,7 @@ const BillDetail = () => {
                   variant="contained"
                   size="large"
                   onClick={() => createOrder()}
-                  color="success"
+                  color="secondary"
                 >
                   Tạo đơn
                 </Button>
@@ -643,7 +645,6 @@ const BillDetail = () => {
           </div>
         </div>
       )}
-      {openPrint && <BillPrint />}
     </>
   );
 };
@@ -990,6 +991,7 @@ export default function Menu() {
   const onChange = (currentSlide) => {
     console.log(currentSlide);
   };
+  let openPrint = useAppSelector((state) => state.menu.openPrint);
 
   return (
     <div className="container">
@@ -997,6 +999,7 @@ export default function Menu() {
       <MenuList categoryName={"Cà phê"} />
       <OrderBar />
       <BillDetail />
+      <BillPrint />
     </div>
   );
 }

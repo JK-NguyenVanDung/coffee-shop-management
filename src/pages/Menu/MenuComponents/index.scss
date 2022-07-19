@@ -183,9 +183,8 @@
     padding-top:4.5rem;
     padding-bottom:10px;
  
- 
     box-shadow: 24;
- 
+
     .clipper{
         position: absolute;
         left: 0;
@@ -203,6 +202,7 @@
 // HÓA ĐƠN
 
     .billBgCont{
+    
         overflow: scroll;
         border: 20px solid #614A35;
         background-color: rgb(255, 255, 255);
@@ -220,8 +220,8 @@
 
         background-position: center;
         background-repeat: no-repeat;
-        padding-left: 1rem;
-        padding-right:  1rem;
+        padding-left:2rem;
+        padding-right: 2rem;
 
         .billHeader{
             display: flex;
@@ -240,7 +240,7 @@
         }
         .billListCont{
             margin-top: 1rem;
-
+        
             width:100%;
             height: auto;
             width: 100%;
@@ -269,18 +269,46 @@
             
         }
         .cardCont{
+
             display:flex;
             flex-direction: column;
             width: 100%; 
             justify-content: center;
-
-            .billListCont{       
+            height: auto;
+            .billContentsCont{       
                 display: inline-flex;
                 width: 100%;
+                height: 100%;
                 flex-direction: column;
                 justify-content: space-between;
-                align-items: center;
-               
+                align-items:space-between;
+                .billContentCont{
+                    display: inline-flex;
+                    width: 100%;
+                    height: 100%;
+                    flex-direction: row;
+                    justify-content:space-between;
+                    align-items:center;
+                }
+                .billItemsCont{
+                    display: inline-flex;
+                    width: 100%;
+                    height: 100%;
+                    flex-direction: row;
+                    justify-content:space-between;
+                    align-items:center;    
+                    .rowCont{
+                        display: inline-flex;
+                        width: 50%;
+                        height: 100%;
+                        flex-direction: row;
+                        justify-content:space-between;
+                        align-items:center;     
+                    }
+                }
+                .MuiTypography-root{
+                    height: 3.2vh;
+                }
             }
             
         }
@@ -294,6 +322,10 @@
             width: 100%;
             margin: 1rem;
             justify-content: space-evenly;
+            .MuiButton-contained{
+                width: 40%;
+
+            }
         }
     }
 

@@ -12,3 +12,6 @@ export const billText={
     header2: "Phương thức thanh toán",
     header3: "Hóa đơn thanh toán"
 }
+
+export const shopPhone = "032154333222"
+export const shopAddress = "Shop"
