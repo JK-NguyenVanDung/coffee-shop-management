@@ -10,13 +10,20 @@ const slice = createSlice({
         nameMenu: null,
         formType: "",
         enabled: true,
+        modalError: false,
     },
     reducers: {
+        showError(state) {
+            state.modalError = true;
+        },
+        hideError(state) {
+            state.modalError = false;
+        },
         enableForm(state) {
             state.enabled = true;
         },
         disableForm(state) {
-            state.enabled = false
+            state.enabled = false;
         },
         showForm(state) {
             state.show = true;

@@ -25,5 +25,6 @@ export const errorText={
     password: "Mật khẩu phải từ 6 - 20 ký tự, và bao gồm các ký tự chữ hoa, thường, số và ký tự đặc biệt",
     id_card: "Phải bao gồm đủ 9 hoặc 12 ký tự số",
     email: "Sai cấu trúc email",
-    space: "Ký tự đầu tiên không được để dấu cách!"
+    space: "Ký tự đầu tiên không được để dấu cách!",
+    formValidation: "Thông tin điền chưa chính xác!"
 }
