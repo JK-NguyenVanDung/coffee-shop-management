@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
 import { Input, Table } from "antd";
-// import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
-// import { actions } from "../../../redux";
+import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
+import { actions } from "../../../redux";
 import "./index.scss";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,28 +18,33 @@ const { Search } = Input;
 const columns = [
   {
     title: "ID món ăn",
-    dataIndex: "id_dish",
+    dataIndex: "_id",
   },
   {
-    title: "Hình/Tên món",
-    dataIndex: "dish_name",
+    title: "Ảnh",
+    dataIndex: "avatar",
+  },
+  {
+    title: "Tên món",
+    dataIndex: "name",
   },
   {
     title: "Công thức",
-    dataIndex: "dish_recipes",
+    dataIndex: "recipe",
   },
   {
     title: "Đơn giá",
-    dataIndex: "unit_price",
+    dataIndex: "amount_sell",
   },
   {
     title: "Ẩn món",
-    render: () => {
+    dataIndex: "status",
+    render: (item) => {
       return (
         <>
           <FormGroup>
             <FormControlLabel
-              control={<Switch defaultChecked />}
+              control={<Switch defaultChecked checked={item.status}/>}
               label="Hiện"
               size="small"
             />
@@ -50,7 +55,7 @@ const columns = [
   },
   {
     title: "Hoạt động",
-    render: () => {
+    render: (item) => {
       return (
         <>
           <Button
@@ -61,68 +66,29 @@ const columns = [
           >
             Sửa
           </Button>
-          <Button
-            variant="contained"
-            endIcon={<DeleteSweepIcon />}
-            size="small"
-          >
-            Xóa
-          </Button>
+          <Popconfirm
+              // title={`Bạn có muốn xoá ${item.full_name}`}
+              // onConfirm={() => handleDelete(item)}
+              // onCancel={cancel}
+              okText="Có"
+              cancelText="Không"
+              placement="left"
+            >
+              <Button
+                variant="contained"
+                endIcon={<DeleteSweepIcon />}
+                size="small"
+                color="error"
+              >
+                Xóa
+              </Button>
+            </Popconfirm>
         </>
       );
     },
   },
 ];
-const data = [
-  {
-    key: "1",
-    id_dish: "0123456789",
-    dish_name: "Cafe Sữa",
-    dish_avatar: "Hình",
-    dish_recipes: "Rót cafe 2/3 ly  pha với 10ml sữa đặt và 2/3...",
-    unit_price: "25.000 VND",
-  },
-  {
-    key: "2",
-    id_dish: "0123456789",
-    dish_name: "Cafe Sữa",
-    dish_avatar: "Hình",
-    dish_recipes: "Rót cafe 2/3 ly  pha với 10ml sữa đặt và 2/3...",
-    unit_price: "25.000 VND",
-  },
-  {
-    key: "3",
-    id_dish: "0123456789",
-    dish_name: "Cafe Sữa",
-    dish_avatar: "Hình",
-    dish_recipes: "Rót cafe 2/3 ly  pha với 10ml sữa đặt và 2/3...",
-    unit_price: "25.000 VND",
-  },
-  {
-    key: "4",
-    id_dish: "0123456789",
-    dish_name: "Cafe Sữa",
-    dish_avatar: "Hình",
-    dish_recipes: "Rót cafe 2/3 ly  pha với 10ml sữa đặt và 2/3...",
-    unit_price: "25.000 VND",
-  },
-  {
-    key: "5",
-    id_dish: "0123456789",
-    dish_name: "Cafe Sữa",
-    dish_avatar: "Hình",
-    dish_recipes: "Rót cafe 2/3 ly  pha với 10ml sữa đặt và 2/3...",
-    unit_price: "25.000 VND",
-  },
-  {
-    key: "6",
-    id_dish: "0123456789",
-    dish_name: "Cafe Sữa",
-    dish_avatar: "Hình",
-    dish_recipes: "Rót cafe 2/3 ly  pha với 10ml sữa đặt và 2/3...",
-    unit_price: "25.000 VND",
-  },
-];
+
 // const rowSelection = {
 //     onChange: (selectedRowKeys, selectedRows) => {
 //         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -130,6 +96,49 @@ const data = [
 // };
 const FoodAndDrink = () => {
   // const [selectionType, setSelectionType] = useState('checkbox');
+  const [postList, setPostList] = useState({ page: 1, per_page: 10 });
+  const checkOnload = useAppSelector((state) => state.form.loadData);
+
+  const loadData = useAppSelector((state) => state.form.loadData);
+  const fetchData = async (value) => {
+    try {
+      setLoading(true);
+      const response = await collections.getEmployees();
+      dispatch(actions.employeesActions.setListAll(response));
+      setDataList(response);
+      setShowList(true);
+      setLoading(false);
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      //history.replace("/");
+    }
+  };
+
+  useEffect(() => {
+    // test.current = 2;
+    fetchData(postList);
+  }, [checkOnload, postList]);
+
+  useEffect(() => {
+    fetchData(postList);
+  }, []);
+
+  const data = showList
+    ? dataList.map((item, index) => {
+        return {
+          _id:item._id,
+          name:item.name,
+          amount:item.amount,
+          amount_sell:item.amount_sell,
+          recipe:item.recipe,
+          dish_type:item.dish_type,
+          status:item.status,
+          avatar:item.avatar
+        };
+      })
+    : [];
   return (
     <>
       <div className="dishSearchCont">
