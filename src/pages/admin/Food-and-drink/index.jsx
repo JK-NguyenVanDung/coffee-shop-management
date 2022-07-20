@@ -31,7 +31,7 @@ const columns = [
   },
   {
     title: "Công thức",
-    dataIndex: "recipe",
+    // dataIndex: "recipe",
   },
   {
     title: "Đơn giá",
@@ -45,7 +45,7 @@ const columns = [
         <>
           <FormGroup>
             <FormControlLabel
-              control={<Switch defaultChecked checked={item.status}/>}
+              control={<Switch defaultChecked checked={item.status} />}
               label="Hiện"
               size="small"
             />
@@ -68,22 +68,22 @@ const columns = [
             Sửa
           </Button>
           <Popconfirm
-              // title={`Bạn có muốn xoá ${item.full_name}`}
-              // onConfirm={() => handleDelete(item)}
-              // onCancel={cancel}
-              okText="Có"
-              cancelText="Không"
-              placement="left"
+            // title={`Bạn có muốn xoá ${item.full_name}`}
+            // onConfirm={() => handleDelete(item)}
+            // onCancel={cancel}
+            okText="Có"
+            cancelText="Không"
+            placement="left"
+          >
+            <Button
+              variant="contained"
+              endIcon={<DeleteSweepIcon />}
+              size="small"
+              color="error"
             >
-              <Button
-                variant="contained"
-                endIcon={<DeleteSweepIcon />}
-                size="small"
-                color="error"
-              >
-                Xóa
-              </Button>
-            </Popconfirm>
+              Xóa
+            </Button>
+          </Popconfirm>
         </>
       );
     },
@@ -110,7 +110,7 @@ const FoodAndDrink = () => {
     try {
       setLoading(true);
       const response = await collections.getDishes();
-      dispatch(actions.dishActions.setListAll(response));
+      dispatch(actions.dishesActions.setListAll(response));
       setDataList(response);
       setShowList(true);
       setLoading(false);
@@ -134,14 +134,13 @@ const FoodAndDrink = () => {
   const data = showList
     ? dataList.map((item, index) => {
         return {
-          _id:item._id,
-          name:item.name,
-          amount:item.amount,
-          amount_sell:item.amount_sell,
-          recipe:item.recipe,
-          dish_type:item.dish_type,
-          status:item.status,
-          avatar:item.avatar,
+          _id: item._id,
+          name: item.name,
+          amount: item.amount,
+          amount_sell: item.amount_sell,
+          recipe: item.recipe,
+          status: item.status,
+          avatar: item.avatar,
         };
       })
     : [];
@@ -166,6 +165,7 @@ const FoodAndDrink = () => {
           //     type: selectionType,
           //     rowSelection,
           // }}
+          loading={loading}
           columns={columns}
           dataSource={data}
         />
