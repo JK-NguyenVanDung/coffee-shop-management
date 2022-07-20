@@ -2,7 +2,7 @@ import { authActions, authReducers } from "./auth";
 import { menuActions, menuReducer } from "./menu";
 import { formActions, formReducer } from "./form";
 import { employeesActions, employeesReducer } from "./employees";
-// import { productActions, productReducer } from "./product";
+import { dishesActions, dishesReducer } from "./dishes";
 // import { bannerActions, bannerReducer } from "./banner";
 // import { orderActions, orderReducer } from "./order";
 // import { newsActions, newsReducer } from "./news";
@@ -14,7 +14,7 @@ const actions = {
   menuActions,
   formActions,
   employeesActions,
-  //   productActions,
+  dishesActions,
   //   bannerActions,
   //   orderActions,
   //   newsActions,
@@ -28,6 +28,7 @@ const reducers = {
   menuReducer,
   formReducer,
   employeesReducer,
+  dishesReducer,
   //   categoryReducer,
   //   productReducer,
   //   bannerReducer,

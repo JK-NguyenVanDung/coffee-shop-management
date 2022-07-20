@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table } from "antd";
+import { Input, Table, Form, Popconfirm, Upload, message, Tooltip } from "antd";
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import "./index.scss";
@@ -13,6 +13,7 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { menuText } from "../../../helper/Text";
+import * as collections from "../../../api/Collections/dish";
 
 const { Search } = Input;
 const columns = [
@@ -100,11 +101,16 @@ const FoodAndDrink = () => {
   const checkOnload = useAppSelector((state) => state.form.loadData);
 
   const loadData = useAppSelector((state) => state.form.loadData);
+  const [loading, setLoading] = useState(false);
+  const [dataList, setDataList] = useState({});
+  const [showList, setShowList] = useState(false);
+  const dispatch = useAppDispatch();
+
   const fetchData = async (value) => {
     try {
       setLoading(true);
-      const response = await collections.getEmployees();
-      dispatch(actions.employeesActions.setListAll(response));
+      const response = await collections.getDishes();
+      dispatch(actions.dishActions.setListAll(response));
       setDataList(response);
       setShowList(true);
       setLoading(false);
@@ -135,7 +141,7 @@ const FoodAndDrink = () => {
           recipe:item.recipe,
           dish_type:item.dish_type,
           status:item.status,
-          avatar:item.avatar
+          avatar:item.avatar,
         };
       })
     : [];
