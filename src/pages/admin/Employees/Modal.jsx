@@ -36,6 +36,8 @@ import ImgCrop from "antd-img-crop";
 import NumberInput from "../../../components/FormElements/NumberInput";
 import moment from "moment";
 
+import AlertModal from "../../../components/FormElements/AlertModal";
+
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
@@ -74,6 +76,8 @@ const ModalContent = () => {
   const [status, setStatus] = React.useState("1");
   let [role, setRole] = useState(true);
   const loadData = useAppSelector((state) => state.form.loadData);
+  const modalError = useAppSelector((state) => state.form.modalError);
+
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
 
@@ -81,21 +85,25 @@ const ModalContent = () => {
     value: "",
     validateStatus: "",
     errorMsg: "",
+    error: false,
   });
   const [phone, setPhone] = useState({
     value: "",
     validateStatus: "",
     errorMsg: "",
+    error: false,
   });
   const [password, setPassword] = useState({
     value: "",
     validateStatus: "",
     errorMsg: "",
+    error: false,
   });
   const [ID_card, setID_card] = useState({
     value: "",
     validateStatus: "",
     errorMsg: "",
+    error: false,
   });
 
   const handleChange = (newValue) => {
@@ -181,21 +189,61 @@ const ModalContent = () => {
   function disablePassword() {
     setDisablePass(!disablePass);
   }
+
+  function checkCustomValidation() {
+    if (
+      email.error ||
+      phone.error ||
+      password.error ||
+      ID_card.error ||
+      fileList.length < 1
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   const handleOk = async () => {
-    form
-      .validateFields()
-      .then(async (values) => {
-        setLoading(true);
-        const temp = [];
-        if (dataItem) {
-          await collections.editEmployee({
-            _id: dataItem._id,
-            body: {
-              email: values.email.replace(/\s/g, "").replace(/ /g, ""),
-              phone_number: values.phone_number
-                .replace(/\s/g, "")
-                .replace(/ /g, ""),
-              password: values.password.replace(/\s/g, "").replace(/ /g, ""),
+    if (checkCustomValidation()) {
+      form
+        .validateFields()
+        .then(async (values) => {
+          setLoading(true);
+          const temp = [];
+          if (dataItem) {
+            await collections.editEmployee({
+              _id: dataItem._id,
+              body: {
+                email: values.email.replace(/\s/g, "").replace(/ /g, ""),
+                phone_number: values.phone_number
+                  .replace(/\s/g, "")
+                  .replace(/ /g, ""),
+                password: values.password.replace(/\s/g, "").replace(/ /g, ""),
+                address: values.address,
+                account_status: Number(status),
+                role: role ? 0 : 1,
+                full_name: values.full_name,
+                id_card: values.id_card,
+                date_of_birth:
+                  date.getMonth() +
+                  1 +
+                  "/" +
+                  date.getDate() +
+                  "/" +
+                  date.getFullYear(),
+                avatar: fileList[0].name,
+              },
+            });
+            handleClose();
+            dispatch(actions.formActions.changeLoad(!loadData));
+            message.success("Thay đổi thành công");
+
+            setLoading(false);
+          } else {
+            await collections.addEmployee({
+              email: values.email.replace(/\s/g, ""),
+              phone_number: values.phone_number.replace(/\s/g, ""),
+              password: values.password.replace(/\s/g, ""),
               address: values.address,
               account_status: Number(status),
               role: role ? 0 : 1,
@@ -209,44 +257,24 @@ const ModalContent = () => {
                 "/" +
                 date.getFullYear(),
               avatar: fileList[0].name,
-            },
-          });
-          handleClose();
-          dispatch(actions.formActions.changeLoad(!loadData));
-          message.success("Thay đổi thành công");
+            });
+            handleClose();
+            dispatch(actions.formActions.changeLoad(!loadData));
+            message.success("Thêm thành công");
+
+            setLoading(false);
+          }
+        })
+
+        .catch((info) => {
+          dispatch(actions.formActions.showError());
 
           setLoading(false);
-        } else {
-          await collections.addEmployee({
-            email: values.email.replace(/\s/g, ""),
-            phone_number: values.phone_number.replace(/\s/g, ""),
-            password: values.password.replace(/\s/g, ""),
-            address: values.address,
-            account_status: Number(status),
-            role: role ? 0 : 1,
-            full_name: values.full_name,
-            id_card: values.id_card,
-            date_of_birth:
-              date.getMonth() +
-              1 +
-              "/" +
-              date.getDate() +
-              "/" +
-              date.getFullYear(),
-            avatar: fileList[0].name,
-          });
-          handleClose();
-          dispatch(actions.formActions.changeLoad(!loadData));
-          message.success("Thêm thành công");
-
-          setLoading(false);
-        }
-      })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
-        message.error("Lỗi nhập");
-        setLoading(false);
-      });
+        });
+    } else {
+      dispatch(actions.formActions.showError());
+      setLoading(false);
+    }
   };
   function isVietnamesePhoneNumberValid(number) {
     return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(
@@ -262,10 +290,12 @@ const ModalContent = () => {
         value: value,
         validateStatus: "error",
         errorMsg: errorText.email,
+        error: true,
       };
     }
     return {
       value: value,
+      error: false,
     };
   };
   const validateID_card = (value) => {
@@ -275,10 +305,12 @@ const ModalContent = () => {
         value: value,
         validateStatus: "error",
         errorMsg: errorText.id_card,
+        error: true,
       };
     }
     return {
       value: value,
+      error: false,
     };
   };
   const handleID_card = (value) => {
@@ -286,16 +318,19 @@ const ModalContent = () => {
   };
 
   const validatePassword = (value) => {
-    const reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8}$/;
+    const reg =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$/;
     if (!reg.test(value)) {
       return {
         value: value,
         validateStatus: "error",
         errorMsg: errorText.password,
+        error: true,
       };
     }
     return {
       value: value,
+      error: false,
     };
   };
   const handlePassword = (value) => {
@@ -308,10 +343,12 @@ const ModalContent = () => {
         value: value,
         validateStatus: "error",
         errorMsg: errorText.phone2,
+        error: true,
       };
     }
     return {
       value: value,
+      error: false,
 
       validateStatus: "success",
     };
@@ -346,6 +383,7 @@ const ModalContent = () => {
   };
   return (
     <div className="ModalCont">
+      {modalError && <AlertModal chilren={errorText.formValidation} />}
       <div className="headerCont">
         <h2>{getHeaderTitle()}</h2>
         <IconButton onClick={handleClose}>
@@ -359,6 +397,7 @@ const ModalContent = () => {
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
               <Upload
+                accept="image/*"
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 listType="picture-card"
                 fileList={fileList}
@@ -575,7 +614,7 @@ const ModalContent = () => {
               </div>
             </div>
             <h4>{labels.position}</h4>
-            <div style={{ marginBottom: "15%" }}>
+            <div style={{ marginBottom: "8%" }}>
               <div className="PositionAdd">
                 <div>
                   <div className="checkboxCont">
