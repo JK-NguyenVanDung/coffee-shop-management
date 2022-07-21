@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Input, Carousel } from "antd";
+import { Input, Carousel, message } from "antd";
 
 import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
 import { actions } from "../../redux";
@@ -474,6 +474,7 @@ const BillDetail = () => {
     } else {
       dispatch(actions.menuActions.resetOrder());
     }
+    message.success("Tạo đơn thành công");
   }
   function cancelOrder() {
     dispatch(actions.menuActions.cancelOrder());

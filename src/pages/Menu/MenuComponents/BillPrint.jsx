@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import "./index.scss";
 import { billText } from "../../../helper/Text";
-
+import { message } from "antd";
 import { Button, Typography } from "@mui/material/";
 
 import { RemoveButton } from "./RemoveButton";
@@ -47,6 +47,7 @@ const BillPrint = () => {
   function printOutBill() {
     dispatch(actions.menuActions.printBill());
     dispatch(actions.menuActions.cancelOrder());
+    message.success("In đơn thành công");
   }
   function cancelPrint() {
     dispatch(actions.menuActions.cancelOrder());
