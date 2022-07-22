@@ -23,7 +23,6 @@ const AlertDialog = (props) => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        color={props.color}
       >
         <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
         <DialogContent>
@@ -32,9 +31,11 @@ const AlertDialog = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Huỷ</Button>
-          <Button onClick={props.onAccept} autoFocus>
+          <Button onClick={props.onAccept} color="primary" autoFocus>
             Xác nhận
+          </Button>
+          <Button onClick={handleClose} color="error">
+            Huỷ
           </Button>
         </DialogActions>
       </Dialog>
