@@ -37,6 +37,7 @@ import NumberInput from "../../../components/FormElements/NumberInput";
 import moment from "moment";
 
 import AlertModal from "../../../components/FormElements/AlertModal";
+import AlertDialog from "../../../components/AlertDialog";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -77,10 +78,10 @@ const ModalContent = () => {
   let [role, setRole] = useState(true);
   const loadData = useAppSelector((state) => state.form.loadData);
   const modalError = useAppSelector((state) => state.form.modalError);
-
+  const isEdit = useAppSelector((state) => state.form.edit);
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
-
+  const openDialog = useAppSelector((state) => state.form.delete);
   const [email, setEmail] = useState({
     value: "",
     validateStatus: "",
@@ -121,7 +122,10 @@ const ModalContent = () => {
     if (event.target.name === "employee") setRole(true);
     else setRole(false);
   };
-
+  const deleteItem = () => {
+    dispatch(actions.formActions.showDelete());
+  };
+  const editItem = () => dispatch(actions.formActions.setEdit(true));
   useEffect(() => {
     form.resetFields();
     setFileList(null);
@@ -361,12 +365,23 @@ const ModalContent = () => {
     setPhone(validatePhone(value.target.value));
   };
   function getHeaderTitle() {
+    if (dataItem && !isEdit) {
+      return "Thông tin nhân viên";
+    }
     if (dataItem) {
       return "Sửa nhân viên";
     }
     return "Thêm nhân viên";
   }
-
+  const handleDelete = async () => {
+    setLoading(true);
+    await collections.removeEmployee(dataItem._id);
+    message.success("Xoá thành công");
+    setLoading(false);
+    dispatch(actions.formActions.hideDelete());
+    dispatch(actions.formActions.closeForm());
+    dispatch(actions.formActions.changeLoad(!loadData));
+  };
   const labels = {
     avatar: "Hình ảnh",
     fullname: "Họ tên",
@@ -405,6 +420,7 @@ const ModalContent = () => {
                 onChange={onChange}
                 onPreview={onPreview}
                 style={{ width: "500px", height: "100%" }}
+                disabled={!isEdit}
               >
                 <UploadButton />
               </Upload>
@@ -426,7 +442,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input placeholder="Nhập họ tên" />
+              <Input disabled={!isEdit} placeholder="Nhập họ tên" />
             </Form.Item>
 
             <div style={{ marginBottom: "10%" }}>
@@ -438,6 +454,7 @@ const ModalContent = () => {
                   inputFormat="dd/MM/yyyy"
                   value={date}
                   onChange={handleChange}
+                  disabled={!isEdit}
                   renderInput={(params) => (
                     <TextField
                       style={{ width: "100%" }}
@@ -469,6 +486,7 @@ const ModalContent = () => {
               help={ID_card.errorMsg}
             >
               <Input
+                disabled={!isEdit}
                 placeholder="Nhập CMND"
                 value={ID_card}
                 onChange={(e) => handleID_card(e)}
@@ -489,6 +507,7 @@ const ModalContent = () => {
               help={email.errorMsg}
             >
               <Input
+                disabled={!isEdit}
                 placeholder="Nhập email"
                 value={email}
                 onChange={(e) => handleEmail(e)}
@@ -507,6 +526,7 @@ const ModalContent = () => {
               help={phone.errorMsg}
             >
               <Input
+                disabled={!isEdit}
                 value={phone.value}
                 placeholder="Nhập số điện thoại"
                 onChange={(value) => handlePhone(value)}
@@ -527,7 +547,7 @@ const ModalContent = () => {
               {dataItem ? (
                 <Input.Password
                   placeholder="Nhập mật khẩu"
-                  disabled={disablePass}
+                  disabled={disablePass || !isEdit}
                   value={password.value}
                   onChange={(value) => handlePassword(value)}
                   prefix={
@@ -546,6 +566,7 @@ const ModalContent = () => {
                 />
               ) : (
                 <Input.Password
+                  disabled={!isEdit}
                   placeholder="Nhập mật khẩu"
                   value={password.value}
                   onChange={(value) => handlePassword(value)}
@@ -567,7 +588,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input placeholder="Nhập địa chỉ" />
+              <Input disabled={!isEdit} placeholder="Nhập địa chỉ" />
             </Form.Item>
             <h4>{labels.status}</h4>
             <div style={{ marginTop: "5%", marginBottom: "5%" }}>
@@ -581,6 +602,7 @@ const ModalContent = () => {
                 >
                   <div class="radiogroupCont">
                     <FormControlLabel
+                      disabled={!isEdit}
                       value="1"
                       control={<Radio size="small" color="info" />}
                       label="Còn làm"
@@ -591,6 +613,7 @@ const ModalContent = () => {
                     />
 
                     <FormControlLabel
+                      disabled={!isEdit}
                       value="2"
                       control={<Radio size="small" color="info" />}
                       label="Tạm nghỉ"
@@ -601,6 +624,7 @@ const ModalContent = () => {
                     />
 
                     <FormControlLabel
+                      disabled={!isEdit}
                       value="3"
                       control={<Radio size="small" color="info" />}
                       label="Đã nghỉ"
@@ -620,14 +644,22 @@ const ModalContent = () => {
                   <div className="checkboxCont">
                     <FormControlLabel
                       control={
-                        <Checkbox onChange={handleCheckbox} checked={role} />
+                        <Checkbox
+                          disabled={!isEdit}
+                          onChange={handleCheckbox}
+                          checked={role}
+                        />
                       }
                       name="employee"
                       label="Nhân viên"
                     />
                     <FormControlLabel
                       control={
-                        <Checkbox onChange={handleCheckbox} checked={!role} />
+                        <Checkbox
+                          disabled={!isEdit}
+                          onChange={handleCheckbox}
+                          checked={!role}
+                        />
                       }
                       name="manager"
                       label="Quản lý"
@@ -650,7 +682,7 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            onClick={handleOk}
+            onClick={dataItem && !isEdit ? editItem : handleOk}
           >
             {dataItem ? "Sửa" : "Lưu"}
           </Button>
@@ -665,12 +697,17 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            onClick={handleClose}
+            onClick={dataItem && isEdit === false ? deleteItem : handleClose}
           >
-            Hủy
+            {dataItem && isEdit === false ? "Xoá " : "Hủy"}
           </Button>
         </div>
       </Form>
+      <AlertDialog
+        children={`Xác nhận xoá ${dataItem.fullname} ?`}
+        title="Xoá nhân viên"
+        onAccept={handleDelete}
+      />
     </div>
   );
 };
