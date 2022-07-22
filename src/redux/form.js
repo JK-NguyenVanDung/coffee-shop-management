@@ -11,8 +11,18 @@ const slice = createSlice({
         formType: "",
         enabled: true,
         modalError: false,
+        edit: true,
+        delete: false,
     },
     reducers: {
+        showDelete(state) {
+            state.delete =true;
+        }, hideDelete(state) {
+            state.delete = false;
+        },
+        setEdit(state,actions) {
+            state.edit = actions.payload;
+        },
         showError(state) {
             state.modalError = true;
         },

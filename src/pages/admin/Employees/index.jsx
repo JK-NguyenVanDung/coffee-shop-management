@@ -23,7 +23,6 @@ import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
 
-
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(
@@ -155,7 +154,6 @@ const Employees = () => {
       },
     },
   ];
-
   const fetchData = async (value) => {
     try {
       setLoading(true);
@@ -204,6 +202,12 @@ const Employees = () => {
     setValue(event.target.value);
   };
   const dispatch = useAppDispatch();
+  const getDetail = (item) => {
+    dispatch(actions.formActions.showForm());
+    dispatch(actions.formActions.setEdit(false));
+
+    dispatch(actions.employeesActions.setDetail(item.id));
+  };
 
   const handleOpen = () => {
     dispatch(actions.employeesActions.setDetail(null));
@@ -283,10 +287,14 @@ const Employees = () => {
           loading={loading}
           columns={columns}
           dataSource={data}
+          onRow={(record, rowIndex) => {
+            return {
+              onDoubleClick: (event) => getDetail(record),
+            };
+          }}
         />
       </div>
     </>
   );
 };
 export default Employees;
-
