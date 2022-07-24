@@ -8,7 +8,7 @@ const config = combineReducers({
     menu: reducers.menuReducer,
     form: reducers.formReducer,
     employees: reducers.employeesReducer,
-    // product: reducers.productReducer,
+    dishes: reducers.dishesReducer,
     // brand: reducers.brandReducer,
     // banner: reducers.bannerReducer,
     // order: reducers.orderReducer,
