@@ -78,7 +78,7 @@ const ModalContent = () => {
   let [role, setRole] = useState(true);
   const loadData = useAppSelector((state) => state.form.loadData);
   const modalError = useAppSelector((state) => state.form.modalError);
-  const isEdit = useAppSelector((state) => state.form.edit);
+  const isDetail = useAppSelector((state) => state.form.detail);
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
@@ -125,27 +125,25 @@ const ModalContent = () => {
   const deleteItem = () => {
     dispatch(actions.formActions.showDelete());
   };
-  const editItem = () => dispatch(actions.formActions.setEdit(true));
+  const editItem = () => dispatch(actions.formActions.setDetail(false));
   useEffect(() => {
     form.resetFields();
     setFileList(null);
 
     const setForm = () => {
-      if (dataItem) {
-        form.setFieldsValue({
-          email: dataItem.email,
-          phone_number: dataItem.phone_number,
-          password: dataItem.password,
-          address: dataItem.address,
-          full_name: dataItem.full_name,
-          id_card: dataItem.id_card,
-        });
-        // nếu không có dữ liệu đặc biệt thì xoá
-        setFileList([dataItem.avatar]);
-        setRole(dataItem.role === 0 ? true : false);
-        setStatus(dataItem.account_status);
-        setDate(new Date(dataItem.date_of_birth));
-      }
+      form.setFieldsValue({
+        email: dataItem.email,
+        phone_number: dataItem.phone_number,
+        password: dataItem.password,
+        address: dataItem.address,
+        full_name: dataItem.full_name,
+        id_card: dataItem.id_card,
+      });
+      // nếu không có dữ liệu đặc biệt thì xoá
+      setFileList([dataItem.avatar]);
+      setRole(dataItem.role === 0 ? true : false);
+      setStatus(dataItem.account_status);
+      setDate(new Date(dataItem.date_of_birth));
     };
 
     if (dataItem) {
@@ -365,7 +363,7 @@ const ModalContent = () => {
     setPhone(validatePhone(value.target.value));
   };
   function getHeaderTitle() {
-    if (dataItem && !isEdit) {
+    if (dataItem && isDetail) {
       return "Thông tin nhân viên";
     }
     if (dataItem) {
@@ -420,7 +418,7 @@ const ModalContent = () => {
                 onChange={onChange}
                 onPreview={onPreview}
                 style={{ width: "500px", height: "100%" }}
-                disabled={!isEdit}
+                disabled={isDetail}
               >
                 <UploadButton />
               </Upload>
@@ -442,7 +440,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={!isEdit} placeholder="Nhập họ tên" />
+              <Input disabled={isDetail} placeholder="Nhập họ tên" />
             </Form.Item>
 
             <div style={{ marginBottom: "10%" }}>
@@ -454,7 +452,7 @@ const ModalContent = () => {
                   inputFormat="dd/MM/yyyy"
                   value={date}
                   onChange={handleChange}
-                  disabled={!isEdit}
+                  disabled={isDetail}
                   renderInput={(params) => (
                     <TextField
                       style={{ width: "100%" }}
@@ -486,7 +484,7 @@ const ModalContent = () => {
               help={ID_card.errorMsg}
             >
               <Input
-                disabled={!isEdit}
+                disabled={isDetail}
                 placeholder="Nhập CMND"
                 value={ID_card}
                 onChange={(e) => handleID_card(e)}
@@ -507,7 +505,7 @@ const ModalContent = () => {
               help={email.errorMsg}
             >
               <Input
-                disabled={!isEdit}
+                disabled={isDetail}
                 placeholder="Nhập email"
                 value={email}
                 onChange={(e) => handleEmail(e)}
@@ -526,7 +524,7 @@ const ModalContent = () => {
               help={phone.errorMsg}
             >
               <Input
-                disabled={!isEdit}
+                disabled={isDetail}
                 value={phone.value}
                 placeholder="Nhập số điện thoại"
                 onChange={(value) => handlePhone(value)}
@@ -547,12 +545,15 @@ const ModalContent = () => {
               {dataItem ? (
                 <Input.Password
                   placeholder="Nhập mật khẩu"
-                  disabled={disablePass || !isEdit}
+                  disabled={disablePass || isDetail}
                   value={password.value}
                   onChange={(value) => handlePassword(value)}
                   prefix={
-                    <IconButton onClick={() => disablePassword()}>
-                      {!disablePass ? (
+                    <IconButton
+                      disabled={isDetail}
+                      onClick={() => disablePassword()}
+                    >
+                      {!disablePass || isDetail ? (
                         <LockOpenRoundedIcon fontSize="small" color="primary" />
                       ) : (
                         <LockRoundedIcon
@@ -566,7 +567,7 @@ const ModalContent = () => {
                 />
               ) : (
                 <Input.Password
-                  disabled={!isEdit}
+                  disabled={isDetail}
                   placeholder="Nhập mật khẩu"
                   value={password.value}
                   onChange={(value) => handlePassword(value)}
@@ -588,7 +589,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={!isEdit} placeholder="Nhập địa chỉ" />
+              <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
             </Form.Item>
             <h4>{labels.status}</h4>
             <div style={{ marginTop: "5%", marginBottom: "5%" }}>
@@ -602,7 +603,7 @@ const ModalContent = () => {
                 >
                   <div class="radiogroupCont">
                     <FormControlLabel
-                      disabled={!isEdit}
+                      disabled={isDetail}
                       value="1"
                       control={<Radio size="small" color="info" />}
                       label="Còn làm"
@@ -613,7 +614,7 @@ const ModalContent = () => {
                     />
 
                     <FormControlLabel
-                      disabled={!isEdit}
+                      disabled={isDetail}
                       value="2"
                       control={<Radio size="small" color="info" />}
                       label="Tạm nghỉ"
@@ -624,7 +625,7 @@ const ModalContent = () => {
                     />
 
                     <FormControlLabel
-                      disabled={!isEdit}
+                      disabled={isDetail}
                       value="3"
                       control={<Radio size="small" color="info" />}
                       label="Đã nghỉ"
@@ -645,7 +646,7 @@ const ModalContent = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          disabled={!isEdit}
+                          disabled={isDetail}
                           onChange={handleCheckbox}
                           checked={role}
                         />
@@ -656,7 +657,7 @@ const ModalContent = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          disabled={!isEdit}
+                          disabled={isDetail}
                           onChange={handleCheckbox}
                           checked={!role}
                         />
@@ -682,7 +683,7 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            onClick={dataItem && !isEdit ? editItem : handleOk}
+            onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
             {dataItem ? "Sửa" : "Lưu"}
           </Button>
@@ -697,9 +698,9 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            onClick={dataItem && isEdit === false ? deleteItem : handleClose}
+            onClick={dataItem && isDetail === true ? deleteItem : handleClose}
           >
-            {dataItem && isEdit === false ? "Xoá " : "Hủy"}
+            {dataItem && isDetail === true ? "Xoá " : "Hủy"}
           </Button>
         </div>
       </Form>

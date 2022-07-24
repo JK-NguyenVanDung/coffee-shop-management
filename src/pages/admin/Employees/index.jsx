@@ -38,13 +38,16 @@ const Employees = () => {
   const [showList, setShowList] = useState(false);
 
   const [selectionType, setSelectionType] = useState("checkbox");
-  const [value, setValue] = React.useState("still break" & null);
+  const [search, setSearch] = useState("");
 
   const [postList, setPostList] = useState({ page: 1, per_page: 10 });
   const checkOnload = useAppSelector((state) => state.form.loadData);
 
   const loadData = useAppSelector((state) => state.form.loadData);
-
+  const onChangeSearch = async (value) => {
+    setSearch(value);
+    postList.name = value;
+  };
   const columns = [
     {
       title: "ID nhân viên",
@@ -198,13 +201,11 @@ const Employees = () => {
         };
       })
     : [];
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
+
   const dispatch = useAppDispatch();
   const getDetail = (item) => {
     dispatch(actions.formActions.showForm());
-    dispatch(actions.formActions.setEdit(false));
+    dispatch(actions.formActions.setDetail(true));
 
     dispatch(actions.employeesActions.setDetail(item.id));
   };
@@ -212,9 +213,11 @@ const Employees = () => {
   const handleOpen = () => {
     dispatch(actions.employeesActions.setDetail(null));
     dispatch(actions.formActions.showForm());
+    dispatch(actions.formActions.setDetail(false));
   };
   async function handleEdit(item) {
     dispatch(actions.formActions.showForm());
+    dispatch(actions.formActions.setDetail(false));
 
     dispatch(actions.employeesActions.setDetail(item.id));
   }
@@ -235,10 +238,6 @@ const Employees = () => {
   }, [checkOnload, loadData]);
 
   const onSearch = (value) => console.log(value);
-  const onChangeSearch = async (value) => {
-    // await setSearch(value);
-    // pagination.name = value;
-  };
 
   return (
     <>

@@ -11,7 +11,7 @@ const slice = createSlice({
         formType: "",
         enabled: true,
         modalError: false,
-        edit: true,
+        detail: false,
         delete: false,
     },
     reducers: {
@@ -20,8 +20,8 @@ const slice = createSlice({
         }, hideDelete(state) {
             state.delete = false;
         },
-        setEdit(state,actions) {
-            state.edit = actions.payload;
+        setDetail(state,actions) {
+            state.detail = actions.payload;
         },
         showError(state) {
             state.modalError = true;
@@ -40,6 +40,7 @@ const slice = createSlice({
         },
         closeForm(state) {
             state.show = false
+            state.detail=false
         },
         setNameMenu(state, actions) {
             state.nameMenu = actions.payload
