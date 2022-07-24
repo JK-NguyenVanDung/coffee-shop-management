@@ -14,81 +14,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { menuText } from "../../../helper/Text";
 import * as collections from "../../../api/Collections/dish";
+import SearchTable from "../../../components/Table/SearchTable";
 
 const { Search } = Input;
-const columns = [
-  {
-    title: "ID món ăn",
-    dataIndex: "_id",
-  },
-  {
-    title: "Ảnh",
-    dataIndex: "avatar",
-  },
-  {
-    title: "Tên món",
-    dataIndex: "name",
-  },
-  {
-    title: "Công thức",
-    // dataIndex: "recipe",
-  },
-  {
-    title: "Đơn giá",
-    dataIndex: "amount_sell",
-  },
-  {
-    title: "Ẩn món",
-    dataIndex: "status",
-    render: (item) => {
-      return (
-        <>
-          <FormGroup>
-            <FormControlLabel
-              control={<Switch defaultChecked checked={item.status} />}
-              label="Hiện"
-              size="small"
-            />
-          </FormGroup>
-        </>
-      );
-    },
-  },
-  {
-    title: "Hoạt động",
-    render: (item) => {
-      return (
-        <>
-          <Button
-            variant="contained"
-            endIcon={<EditIcon />}
-            style={{ marginRight: "20px" }}
-            size="small"
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            // title={`Bạn có muốn xoá ${item.full_name}`}
-            // onConfirm={() => handleDelete(item)}
-            // onCancel={cancel}
-            okText="Có"
-            cancelText="Không"
-            placement="left"
-          >
-            <Button
-              variant="contained"
-              endIcon={<DeleteSweepIcon />}
-              size="small"
-              color="error"
-            >
-              Xóa
-            </Button>
-          </Popconfirm>
-        </>
-      );
-    },
-  },
-];
 
 // const rowSelection = {
 //     onChange: (selectedRowKeys, selectedRows) => {
@@ -105,6 +33,96 @@ const FoodAndDrink = () => {
   const [dataList, setDataList] = useState({});
   const [showList, setShowList] = useState(false);
   const dispatch = useAppDispatch();
+  const onSearch = (value) => console.log(value);
+  const onChangeSearch = async (value) => {
+    // await setSearch(value);
+    // pagination.name = value;
+  };
+
+  async function handleDelete(item) {
+    setLoading(true);
+    await collections.removeDish(item.id);
+    dispatch(actions.formActions.changeLoad(!loadData));
+    message.success("Xoá thành công");
+
+    setLoading(false);
+  }
+  function cancel(e) {
+    // message.error('Click on No');
+  }
+  const columns = [
+    {
+      title: "ID món ăn",
+      dataIndex: "_id",
+    },
+    {
+      title: "Ảnh",
+      dataIndex: "avatar",
+    },
+    {
+      title: "Tên món",
+      dataIndex: "name",
+    },
+    {
+      title: "Công thức",
+      // dataIndex: "recipe",
+    },
+    {
+      title: "Đơn giá",
+      dataIndex: "amount_sell",
+    },
+    {
+      title: "Ẩn món",
+      dataIndex: "status",
+      render: (item) => {
+        return (
+          <>
+            <FormGroup>
+              <FormControlLabel
+                control={<Switch defaultChecked checked={item.status} />}
+                label="Hiện"
+                size="small"
+              />
+            </FormGroup>
+          </>
+        );
+      },
+    },
+    {
+      title: "Hoạt động",
+      render: (item) => {
+        return (
+          <>
+            <Button
+              variant="contained"
+              endIcon={<EditIcon />}
+              style={{ marginRight: "20px" }}
+              size="small"
+            >
+              Sửa
+            </Button>
+            <Popconfirm
+              title={`Bạn có muốn xoá ${item.name}`}
+              onConfirm={() => handleDelete(item)}
+              onCancel={cancel}
+              okText="Có"
+              cancelText="Không"
+              placement="left"
+            >
+              <Button
+                variant="contained"
+                endIcon={<DeleteSweepIcon />}
+                size="small"
+                color="error"
+              >
+                Xóa
+              </Button>
+            </Popconfirm>
+          </>
+        );
+      },
+    },
+  ];
 
   const fetchData = async (value) => {
     try {
@@ -156,7 +174,14 @@ const FoodAndDrink = () => {
           THÊM MÓN
         </Button>
         <div className="dishSearch">
-          <Search placeholder={menuText.searchMenu} allowClear size="default" />
+          <SearchTable
+            placeholder={menuText.searchEmployees}
+            allowClear
+            size="default"
+            onChange={(e) => onChangeSearch(e.target.value)}
+            onSearch={onSearch}
+            enterButton
+          />
         </div>
       </div>
       <div>
