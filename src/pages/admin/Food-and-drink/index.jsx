@@ -65,7 +65,7 @@ const FoodAndDrink = () => {
     },
     {
       title: "Công thức",
-      // dataIndex: "recipe",
+      dataIndex: "recipe",
     },
     {
       title: "Đơn giá",
