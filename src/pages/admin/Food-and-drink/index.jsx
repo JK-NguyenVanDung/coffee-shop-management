@@ -23,6 +23,7 @@ const { Search } = Input;
 //         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
 //     },
 // };
+
 const FoodAndDrink = () => {
   // const [selectionType, setSelectionType] = useState('checkbox');
   const [postList, setPostList] = useState({ page: 1, per_page: 10 });
@@ -39,6 +40,15 @@ const FoodAndDrink = () => {
     // pagination.name = value;
   };
 
+  const handleOpen = () => {
+    dispatch(actions.dishesActions.setDetail(null));
+    dispatch(actions.formActions.showForm());
+  };
+  async function handleEdit(item) {
+    dispatch(actions.formActions.showForm());
+
+    dispatch(actions.dishesActions.setDetail(item.id));
+  }
   async function handleDelete(item) {
     setLoading(true);
     await collections.removeDish(item.id);
@@ -96,7 +106,7 @@ const FoodAndDrink = () => {
             <Button
               variant="contained"
               endIcon={<EditIcon />}
-              style={{ marginRight: "20px" }}
+              style={{ marginRight: "20px", color: "#fff" }}
               size="small"
             >
               Sửa
@@ -151,24 +161,27 @@ const FoodAndDrink = () => {
 
   const data = showList
     ? dataList.map((item, index) => {
-        return {
-          _id: item._id,
-          name: item.name,
-          amount: item.amount,
-          amount_sell: item.amount_sell,
-          recipe: item.recipe,
-          status: item.status,
-          avatar: item.avatar,
-        };
-      })
+      return {
+        _id: item._id,
+        name: item.name,
+        price: item.price,
+        amount: item.amount,
+        amount_sell: item.amount_sell,
+        recipe: item.recipe,
+        dish_type: item.dish_type[0],
+        status: item.status,
+        avatar: item.avatar,
+      };
+    })
     : [];
   return (
     <>
       <div className="dishSearchCont">
         <Button
+          onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
-          style={{ marginRight: "10px" }}
+          style={{ marginRight: "10px", backgroundColor: "#4BB984", color: "#fff" }}
           size="small"
         >
           THÊM MÓN
