@@ -389,7 +389,6 @@ const ModalContent = () => {
     phone: "SĐT",
     password: "Mật khẩu",
     repeatPassword: "Nhập lại Mật khẩu",
-
     address: "Địa chỉ",
     status: "Tình trạng",
     position: "Chức vụ",
@@ -674,7 +673,7 @@ const ModalContent = () => {
         <div className="BtnAdd">
           <Button
             size="Large"
-            color={dataItem ? "primary" : "success"}
+            color={"success"}
             variant="contained"
             style={{
               paddingLeft: "15%",
@@ -685,7 +684,7 @@ const ModalContent = () => {
             }}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem ? "Sửa" : "Lưu"}
+            Lưu
           </Button>
           <Button
             size="Large"

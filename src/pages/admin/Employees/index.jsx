@@ -35,7 +35,7 @@ const rowSelection = {
 };
 const Employees = () => {
   const [loading, setLoading] = useState(false);
-  const [dataList, setDataList] = useState({});
+  const dataList = useAppSelector((state) => state.employees.listAll);
   const [showList, setShowList] = useState(false);
 
   const [selectionType, setSelectionType] = useState("checkbox");
@@ -68,10 +68,10 @@ const Employees = () => {
   // };
   const columns = [
     {
-      title: "ID nhân viên",
-      dataIndex: "id",
+      title: "Số điện thoại",
+      dataIndex: "phone_number",
       // render: (text) => <a>{text}</a>,
-      width: GIRD12.COL1,
+      width: GIRD12.COL2,
     },
     {
       title: "Họ tên",
@@ -179,7 +179,6 @@ const Employees = () => {
       setLoading(true);
       const response = await collections.getEmployees();
       dispatch(actions.employeesActions.setListAll(response));
-      setDataList(response);
       setShowList(true);
       setLoading(false);
       // setPagination({
@@ -192,8 +191,9 @@ const Employees = () => {
 
   useEffect(() => {
     // test.current = 2;
+    console.log("1");
     fetchData(postList);
-  }, [loadData, postList]);
+  }, [checkOnload, postList]);
 
   useEffect(() => {
     fetchData(postList);
@@ -221,7 +221,7 @@ const Employees = () => {
           })
         : []
     );
-  }, [showList]);
+  }, [showList, checkOnload, dataList]);
 
   const dispatch = useAppDispatch();
   const getDetail = (item) => {
@@ -254,7 +254,7 @@ const Employees = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData(postList);
-  }, [loadData]);
+  }, [loadData, checkOnload]);
 
   const onSearch = (value) => console.log(value);
 

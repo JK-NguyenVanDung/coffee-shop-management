@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-// import MyPagination from "../../../components/Pagination";
+import { map, includes, sortBy, uniqBy, each, result, get } from "lodash";
 import { Input, Table, Form, Popconfirm, Upload, message, Tooltip } from "antd";
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -12,9 +12,11 @@ import AddIcon from "@mui/icons-material/Add";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { menuText } from "../../../helper/Text";
+import { dishText } from "../../../helper/Text";
 import * as collections from "../../../api/Collections/dish";
 import SearchTable from "../../../components/Table/SearchTable";
+import ModalContent from "./Modal";
+import FormModal from "../../../components/FormElements/FormModal";
 
 const { Search } = Input;
 
@@ -31,14 +33,26 @@ const FoodAndDrink = () => {
 
   const loadData = useAppSelector((state) => state.form.loadData);
   const [loading, setLoading] = useState(false);
-  const [dataList, setDataList] = useState({});
+  const dataList = useAppSelector((state) => state.dishes.listAll);
   const [showList, setShowList] = useState(false);
   const dispatch = useAppDispatch();
   const onSearch = (value) => console.log(value);
+
   const [data, setData] = useState([]);
+
+  const [search, setSearch] = useState("");
   const onChangeSearch = async (value) => {
-    // await setSearch(value);
-    // pagination.name = value;
+    const reg = new RegExp(value, "gi");
+    const filteredData = map(dataList, (record) => {
+      const nameMatch = get(record, "name").match(reg);
+      if (!nameMatch) {
+        return null;
+      }
+      return record;
+    }).filter((record) => !!record);
+
+    setSearch(value);
+    setData(value ? filteredData : dataList);
   };
 
   const getDetail = (item) => {
@@ -55,12 +69,11 @@ const FoodAndDrink = () => {
   async function handleEdit(item) {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
-
     dispatch(actions.dishesActions.setDetail(item._id));
   }
   async function handleDelete(item) {
     setLoading(true);
-    await collections.removeDish(item.id);
+    await collections.removeDish(item._id);
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Xoá thành công");
     setLoading(false);
@@ -93,10 +106,6 @@ const FoodAndDrink = () => {
 
   const columns = [
     {
-      title: "ID món ăn",
-      dataIndex: "_id",
-    },
-    {
       title: "Ảnh",
       dataIndex: "avatar",
     },
@@ -113,14 +122,14 @@ const FoodAndDrink = () => {
       dataIndex: "amount_sell",
     },
     {
-      title: "Ẩn món",
+      title: "Ẩn/Hiện món",
       render: (item) => {
         return (
           <>
             <Switch
               checkedChildren="Hiện"
               unCheckedChildren="Ẩn"
-              defaultChecked={item.active}
+              defaultChecked={item.status}
               onChange={() => changeDisable(item._id)}
             />
           </>
@@ -169,7 +178,6 @@ const FoodAndDrink = () => {
       setLoading(true);
       const response = await collections.getDishes();
       dispatch(actions.dishesActions.setListAll(response));
-      setDataList(response);
       setShowList(true);
       setLoading(false);
       // setPagination({
@@ -205,7 +213,7 @@ const FoodAndDrink = () => {
           })
         : []
     );
-  }, [showList]);
+  }, [showList, dataList]);
 
   return (
     <>
@@ -223,9 +231,11 @@ const FoodAndDrink = () => {
         >
           THÊM MÓN
         </Button>
+        <FormModal children={<ModalContent />} />
+
         <div className="dishSearch">
           <SearchTable
-            placeholder={menuText.searchEmployees}
+            placeholder={dishText.search}
             allowClear
             size="default"
             onChange={(e) => onChangeSearch(e.target.value)}
