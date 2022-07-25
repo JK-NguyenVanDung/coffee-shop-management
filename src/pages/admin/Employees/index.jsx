@@ -11,6 +11,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import ConstructionIcon from "@mui/icons-material/Construction";
+import { map, includes, sortBy, uniqBy, each, result, get } from "lodash";
 
 import { menuText } from "../../../helper/Text";
 
@@ -44,10 +45,27 @@ const Employees = () => {
   const checkOnload = useAppSelector((state) => state.form.loadData);
 
   const loadData = useAppSelector((state) => state.form.loadData);
+  const [data, setData] = useState([]);
   const onChangeSearch = async (value) => {
+    const reg = new RegExp(value, "gi");
+    const filteredData = map(dataList, (record) => {
+      const nameMatch = get(record, "full_name").match(reg);
+      const addressMatch = get(record, "address").match(reg);
+      if (!nameMatch && !addressMatch) {
+        return null;
+      }
+      return record;
+    }).filter((record) => !!record);
+
     setSearch(value);
-    postList.name = value;
+    setData(value ? filteredData : dataList);
   };
+  // const emitEmpty = () => {
+  //   this.setState({
+  //     data: dataList,
+  //     search: "",
+  //   });
+  // };
   const columns = [
     {
       title: "ID nhân viên",
@@ -73,7 +91,7 @@ const Employees = () => {
       dataIndex: "account_status",
       render: (item) => {
         let status = " ";
-        switch (item.account_status) {
+        switch (item) {
           case 1:
             status = "Còn làm";
             break;
@@ -100,14 +118,13 @@ const Employees = () => {
       dataIndex: "role",
       render: (item) => {
         let role = " ";
-        switch (item.role) {
-          case 1:
+        switch (item) {
+          case 0:
             role = "Nhân viên";
             break;
-          case 2:
+          case 1:
             role = "Quản lý";
             break;
-
           default:
             role = "Nhân viên";
             break;
@@ -176,31 +193,35 @@ const Employees = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData(postList);
-  }, [checkOnload, postList]);
+  }, [loadData, postList]);
 
   useEffect(() => {
     fetchData(postList);
   }, []);
 
-  const data = showList
-    ? dataList.map((item, index) => {
-        return {
-          id: item._id,
-          email: item.email,
-          phone_number: item.phone_number,
-          password: item.password,
-          address: item.address,
-          account_status: item.account_status,
-          role: item.role,
-          full_name: item.full_name,
-          id_card: item.id_card,
-          date_of_birth: item.date_of_birth,
-          avatar: item.avatar,
-          createdAt: item.createdAt,
-          updatedAt: item.updatedAt,
-        };
-      })
-    : [];
+  useEffect(() => {
+    setData(
+      showList
+        ? dataList.map((item, index) => {
+            return {
+              id: item._id,
+              email: item.email,
+              phone_number: item.phone_number,
+              password: item.password,
+              address: item.address,
+              account_status: item.account_status,
+              role: item.role,
+              full_name: item.full_name,
+              id_card: item.id_card,
+              date_of_birth: item.date_of_birth,
+              avatar: item.avatar,
+              createdAt: item.createdAt,
+              updatedAt: item.updatedAt,
+            };
+          })
+        : []
+    );
+  }, [showList]);
 
   const dispatch = useAppDispatch();
   const getDetail = (item) => {
@@ -235,7 +256,7 @@ const Employees = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData(postList);
-  }, [checkOnload, loadData]);
+  }, [loadData]);
 
   const onSearch = (value) => console.log(value);
 
@@ -271,8 +292,9 @@ const Employees = () => {
             placeholder={menuText.searchEmployees}
             allowClear
             size="default"
+            value={search}
             onChange={(e) => onChangeSearch(e.target.value)}
-            onSearch={onSearch}
+            // onSearch={onSearch}
             enterButton
           />
         </div>
