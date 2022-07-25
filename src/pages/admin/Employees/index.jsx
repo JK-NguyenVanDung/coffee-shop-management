@@ -227,7 +227,6 @@ const Employees = () => {
   const getDetail = (item) => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(true));
-
     dispatch(actions.employeesActions.setDetail(item.id));
   };
 
@@ -247,7 +246,6 @@ const Employees = () => {
     await collections.removeEmployee(item.id);
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Xoá thành công");
-
     setLoading(false);
   }
   function cancel(e) {

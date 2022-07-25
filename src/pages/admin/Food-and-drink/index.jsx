@@ -35,31 +35,63 @@ const FoodAndDrink = () => {
   const [showList, setShowList] = useState(false);
   const dispatch = useAppDispatch();
   const onSearch = (value) => console.log(value);
+  const [data, setData] = useState([]);
   const onChangeSearch = async (value) => {
     // await setSearch(value);
     // pagination.name = value;
   };
 
+  const getDetail = (item) => {
+    dispatch(actions.formActions.showForm());
+    dispatch(actions.formActions.setDetail(true));
+    dispatch(actions.dishesActions.setDetail(item._id));
+  };
+
   const handleOpen = () => {
     dispatch(actions.dishesActions.setDetail(null));
     dispatch(actions.formActions.showForm());
+    dispatch(actions.formActions.setDetail(false));
   };
   async function handleEdit(item) {
     dispatch(actions.formActions.showForm());
+    dispatch(actions.formActions.setDetail(false));
 
-    dispatch(actions.dishesActions.setDetail(item.id));
+    dispatch(actions.dishesActions.setDetail(item._id));
+
   }
   async function handleDelete(item) {
     setLoading(true);
     await collections.removeDish(item.id);
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Xoá thành công");
-
     setLoading(false);
   }
   function cancel(e) {
     // message.error('Click on No');
   }
+  async function changeDisable(id) {
+    dataList.map((item) => {
+      if (item._id === id) {
+        setLoading(true);
+        collections.editDish({
+          _id: item._id,
+          body: {
+            name: item.name,
+            amount: item.amount,
+            amount_sell: item.amount_sell,
+            recipe: item.recipe,
+            status: !item.status,
+            avatar: item.avatar,
+          },
+        });
+        dispatch(actions.formActions.changeLoad(!loadData));
+        message.success("Chỉnh thành công");
+        setLoading(false);
+        return;
+      }
+    }, []);
+  }
+
   const columns = [
     {
       title: "ID món ăn",
@@ -83,17 +115,15 @@ const FoodAndDrink = () => {
     },
     {
       title: "Ẩn món",
-      dataIndex: "status",
       render: (item) => {
         return (
           <>
-            <FormGroup>
-              <FormControlLabel
-                control={<Switch defaultChecked checked={item.status} />}
-                label="Hiện"
-                size="small"
-              />
-            </FormGroup>
+            <Switch
+              checkedChildren="Hiện"
+              unCheckedChildren="Ẩn"
+              defaultChecked={item.active}
+              onChange={() => changeDisable(item._id)}
+            />
           </>
         );
       },
@@ -108,6 +138,7 @@ const FoodAndDrink = () => {
               endIcon={<EditIcon />}
               style={{ marginRight: "20px", color: "#fff" }}
               size="small"
+              onClick={() => handleEdit(item)}
             >
               Sửa
             </Button>
@@ -159,21 +190,25 @@ const FoodAndDrink = () => {
     fetchData(postList);
   }, []);
 
-  const data = showList
-    ? dataList.map((item, index) => {
-      return {
-        _id: item._id,
-        name: item.name,
-        price: item.price,
-        amount: item.amount,
-        amount_sell: item.amount_sell,
-        recipe: item.recipe,
-        dish_type: item.dish_type[0],
-        status: item.status,
-        avatar: item.avatar,
-      };
-    })
-    : [];
+  useEffect(() => {
+    setData(
+      showList
+        ? dataList.map((item, index) => {
+            return {
+              _id: item._id,
+              name: item.name,
+              amount: item.amount,
+              amount_sell: item.amount_sell,
+              recipe: item.recipe,
+              status: item.status,
+              avatar: item.avatar,
+            };
+          })
+        : []
+    );
+  }, [showList]);
+
+
   return (
     <>
       <div className="dishSearchCont">
@@ -183,6 +218,7 @@ const FoodAndDrink = () => {
           endIcon={<AddIcon />}
           style={{ marginRight: "10px", backgroundColor: "#4BB984", color: "#fff" }}
           size="small"
+          onClick={handleOpen}
         >
           THÊM MÓN
         </Button>
@@ -192,20 +228,21 @@ const FoodAndDrink = () => {
             allowClear
             size="default"
             onChange={(e) => onChangeSearch(e.target.value)}
-            onSearch={onSearch}
+            // onSearch={onSearch}
             enterButton
           />
         </div>
       </div>
       <div>
         <Table
-          // rowSelection={{
-          //     type: selectionType,
-          //     rowSelection,
-          // }}
           loading={loading}
           columns={columns}
           dataSource={data}
+          onRow={(record, rowIndex) => {
+            return {
+              onDoubleClick: (event) => getDetail(record),
+            };
+          }}
         />
       </div>
     </>
