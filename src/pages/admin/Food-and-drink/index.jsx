@@ -57,7 +57,6 @@ const FoodAndDrink = () => {
     dispatch(actions.formActions.setDetail(false));
 
     dispatch(actions.dishesActions.setDetail(item._id));
-
   }
   async function handleDelete(item) {
     setLoading(true);
@@ -208,7 +207,6 @@ const FoodAndDrink = () => {
     );
   }, [showList]);
 
-
   return (
     <>
       <div className="dishSearchCont">
@@ -216,9 +214,12 @@ const FoodAndDrink = () => {
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
-          style={{ marginRight: "10px", backgroundColor: "#4BB984", color: "#fff" }}
+          style={{
+            marginRight: "10px",
+            backgroundColor: "#4BB984",
+            color: "#fff",
+          }}
           size="small"
-          onClick={handleOpen}
         >
           THÊM MÓN
         </Button>
