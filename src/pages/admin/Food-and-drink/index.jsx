@@ -23,6 +23,7 @@ const { Search } = Input;
 //         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
 //     },
 // };
+
 const FoodAndDrink = () => {
   // const [selectionType, setSelectionType] = useState('checkbox');
   const [postList, setPostList] = useState({ page: 1, per_page: 10 });
@@ -56,6 +57,7 @@ const FoodAndDrink = () => {
     dispatch(actions.formActions.setDetail(false));
 
     dispatch(actions.dishesActions.setDetail(item._id));
+
   }
   async function handleDelete(item) {
     setLoading(true);
@@ -134,7 +136,7 @@ const FoodAndDrink = () => {
             <Button
               variant="contained"
               endIcon={<EditIcon />}
-              style={{ marginRight: "20px" }}
+              style={{ marginRight: "20px", color: "#fff" }}
               size="small"
               onClick={() => handleEdit(item)}
             >
@@ -206,13 +208,15 @@ const FoodAndDrink = () => {
     );
   }, [showList]);
 
+
   return (
     <>
       <div className="dishSearchCont">
         <Button
+          onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
-          style={{ marginRight: "10px" }}
+          style={{ marginRight: "10px", backgroundColor: "#4BB984", color: "#fff" }}
           size="small"
           onClick={handleOpen}
         >
