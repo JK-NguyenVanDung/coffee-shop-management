@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table, Form, Popconfirm, Upload, message, Tooltip } from "antd";
+import {
+  Input,
+  Table,
+  Form,
+  Popconfirm,
+  Upload,
+  message,
+  Tooltip,
+  Select,
+} from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -38,6 +47,7 @@ import moment from "moment";
 
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
+const { Option } = Select;
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -72,7 +82,7 @@ const radioBtnstyles = (theme) => ({
 
 const ModalContent = () => {
   const [loading, setLoading] = useState(false);
-  const dataItem = useAppSelector((state) => state.employees.detail);
+  const dataItem = useAppSelector((state) => state.dishes.detail);
   const [date, setDate] = React.useState(new Date("2001-08-18"));
   const [status, setStatus] = React.useState("1");
   let [role, setRole] = useState(true);
@@ -81,7 +91,7 @@ const ModalContent = () => {
   const isDetail = useAppSelector((state) => state.form.detail);
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
-
+  const [select, setSelect] = useState("");
   const handleChange = (newValue) => {
     setDate(newValue);
   };
@@ -99,6 +109,9 @@ const ModalContent = () => {
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
   useEffect(() => {
+    function getCategories() {}
+  }, []);
+  useEffect(() => {
     form.resetFields();
     setFileList(null);
 
@@ -108,11 +121,19 @@ const ModalContent = () => {
         name: dataItem.name,
         amount: dataItem.amount,
         amount_sell: dataItem.amount_sell,
+        price: dataItem.price,
         recipe: dataItem.recipe,
         status: dataItem.status,
         avatar: dataItem.avatar,
         dish_type: dataItem.dish_type[0],
+        createdAt: moment(new Date(dataItem.createdAt)).format(
+          "h:mma - DD/MM/YYYY"
+        ),
+        updatedAt: moment(new Date(dataItem.updatedAt)).format(
+          "h:mma - DD/MM/YYYY"
+        ),
       });
+
       // nếu không có dữ liệu đặc biệt thì xoá
       setFileList([dataItem.avatar]);
       setStatus(dataItem.account_status);
@@ -127,7 +148,7 @@ const ModalContent = () => {
   const error = [employee, manager].filter((v) => v).length !== 1;
   const UploadButton = () => {
     return (
-      <div style={fileList === null ? { width: "19.5rem", height: "50%" } : {}}>
+      <div style={fileList === null ? { width: 200, height: "50%" } : {}}>
         <div style={{ padding: 2 }}>
           {loading ? <LoadingOutlined /> : <PlusOutlined />}
           Upload
@@ -168,8 +189,8 @@ const ModalContent = () => {
           await collections.editDish({
             _id: dataItem._id,
             body: {
-              name: values.name.replace(/\s/g, "").replace(/ /g, ""),
-              recipe: values.recipe.replace(/\s/g, "").replace(/ /g, ""),
+              name: values.name.replace(/\s/g, ""),
+              recipe: values.recipe.replace(/\s/g, ""),
               price: values.price,
               active: values.active,
               avatar: fileList[0].name,
@@ -183,8 +204,8 @@ const ModalContent = () => {
           setLoading(false);
         } else {
           await collections.addDish({
-            name: values.name.replace(/\s/g, "").replace(/ /g, ""),
-            recipe: values.recipe.replace(/\s/g, "").replace(/ /g, ""),
+            name: values.name.replace(/\s/g, ""),
+            recipe: values.recipe.replace(/\s/g, ""),
             price: values.price,
             active: values.active,
             avatar: fileList[0].name,
@@ -205,6 +226,9 @@ const ModalContent = () => {
       });
   };
 
+  function handleSelect(e) {
+    setSelect(e.target.value);
+  }
   function getHeaderTitle() {
     if (dataItem && isDetail) {
       return "Thông tin món ăn";
@@ -231,6 +255,8 @@ const ModalContent = () => {
     // amount: "Số lượng",
     amount_sell: "Đã bán",
     dish_type: "Loại món",
+    create: "Ngày tạo",
+    update: "Ngày cập nhật",
   };
   return (
     <div className="ModalCont">
@@ -243,7 +269,7 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
-          <div style={{ width: "40%" }}>
+          <div style={{ width: "30%" }}>
             <h4>{labels.avatar}</h4>
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
@@ -262,6 +288,34 @@ const ModalContent = () => {
               </Upload>
               {/* </ImgCrop> */}
             </div>
+            {dataItem ? (
+              <>
+                <h4>{labels.create}</h4>
+                <Form.Item
+                  name="createdAt"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống`,
+                    },
+                  ]}
+                >
+                  <Input disabled={true} placeholder="Nhập" />
+                </Form.Item>
+                <h4>{labels.update}</h4>
+                <Form.Item
+                  name="updatedAt"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống`,
+                    },
+                  ]}
+                >
+                  <Input disabled={true} placeholder="Nhập" />
+                </Form.Item>
+              </>
+            ) : null}
           </div>
           <div>
             <h4>{labels.name}</h4>
@@ -292,12 +346,11 @@ const ModalContent = () => {
               <>
                 <h4>{labels.amount_sell}</h4>
                 <Form.Item
-                  disabled
                   name="amount_sell"
                   rules={[
                     {
                       required: true,
-                      message: `Không được để trống Địa Chỉ`,
+                      message: `Không được để trống Đã bán`,
                     },
                     {
                       pattern: new RegExp(/^\w/),
@@ -305,10 +358,35 @@ const ModalContent = () => {
                     },
                   ]}
                 >
-                  <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
+                  <Input disabled={true} placeholder="Nhập đã bán" />
                 </Form.Item>
               </>
             ) : null}
+            <h4>{labels.dish_type}</h4>
+            <Form.Item
+              name="dish_type"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống loại món`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Select
+                disabled={isDetail}
+                dropdownStyle={{ zIndex: 2000 }}
+                defaultValue={select === "" ? "coffee" : select}
+                placeholder="Nhập loại món"
+                onChange={handleSelect}
+              >
+                <Option value="coffee">Cà phê</Option>
+                <Option value="tea">Trà</Option>
+              </Select>
+            </Form.Item>
             <h4>{labels.recipe}</h4>
             <Form.Item
               name="recipe"
@@ -324,22 +402,6 @@ const ModalContent = () => {
               ]}
             >
               <Input disabled={isDetail} placeholder="Nhập công thức" />
-            </Form.Item>
-            <h4>{labels.dish_type}</h4>
-            <Form.Item
-              name="dish_type"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống loại món`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập loại món" />
             </Form.Item>
           </div>
         </div>

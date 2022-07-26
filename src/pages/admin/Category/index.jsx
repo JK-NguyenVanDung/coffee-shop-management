@@ -204,18 +204,7 @@ const Category = () => {
         ? dataList.map((item, index) => {
             return {
               id: item._id,
-              email: item.email,
-              phone_number: item.phone_number,
-              password: item.password,
-              address: item.address,
-              account_status: item.account_status,
-              role: item.role,
-              full_name: item.full_name,
-              id_card: item.id_card,
-              date_of_birth: item.date_of_birth,
-              avatar: item.avatar,
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt,
+              name: item.name,
             };
           })
         : []
