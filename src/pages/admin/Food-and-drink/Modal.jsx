@@ -96,7 +96,7 @@ const ModalContent = () => {
 
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
-  const [select, setSelect] = useState("");
+  const [, setSelect] = useState("");
   const handleChange = (newValue) => {
     setDate(newValue);
   };
@@ -119,6 +119,7 @@ const ModalContent = () => {
         setLoading(true);
         const response = await cateCollections.getCategories();
         dispatch(actions.dishesActions.setListCate(response));
+        setLoading(false);
       } catch (error) {
         //history.replace("/");
       }
@@ -205,7 +206,7 @@ const ModalContent = () => {
             body: {
               name: values.name,
               recipe: values.recipe,
-              price: values.price.replace(/\s/g, "").replace(/ /g, ""),
+              price: values.price,
               active: values.active,
               avatar: fileList[0].name,
               dish_type: values.dish_type,
@@ -220,7 +221,7 @@ const ModalContent = () => {
           await collections.addDish({
             name: values.name,
             recipe: values.recipe,
-            price: values.price.replace(/\s/g, "").replace(/ /g, ""),
+            price: values.price,
             active: values.active,
             avatar: fileList[0].name,
             dish_type: values.dish_type,
@@ -235,13 +236,13 @@ const ModalContent = () => {
 
       .catch((info) => {
         dispatch(actions.formActions.showError());
-
         setLoading(false);
+        console.log(info);
       });
   };
 
-  function handleSelect(e) {
-    setSelect(e.target.value);
+  function handleSelect(value) {
+    setSelect(value);
   }
   function getHeaderTitle() {
     if (dataItem && isDetail) {
