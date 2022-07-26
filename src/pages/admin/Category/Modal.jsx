@@ -12,24 +12,13 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { CloseOutlined } from "@ant-design/icons";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 
-import { TextField, FormControl } from "@mui/material/";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/category";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
-import LockOpenRoundedIcon from "@mui/icons-material/LockOpenRounded";
-import LockRoundedIcon from "@mui/icons-material/LockRounded";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { colors } from "../../../helper/Color";
+
 import { errorText } from "../../../helper/Text";
 import ImgCrop from "antd-img-crop";
 
@@ -38,28 +27,6 @@ import moment from "moment";
 
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
-
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-
-  const isLt2M = file.size / 1024 / 1024 < 2;
-
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-
-  return isJpgOrPng && isLt2M;
-};
 
 const radioBtnstyles = (theme) => ({
   radio: {
@@ -93,10 +60,7 @@ const ModalContent = () => {
 
   const handleOpen = () => dispatch(actions.formActions.showForm());
   const handleClose = () => dispatch(actions.formActions.closeForm());
-  const handleCheckbox = (event) => {
-    if (event.target.name === "Category") setRole(true);
-    else setRole(false);
-  };
+
   const deleteItem = () => {
     dispatch(actions.formActions.showDelete());
   };
@@ -106,9 +70,13 @@ const ModalContent = () => {
 
     const setForm = () => {
       form.setFieldsValue({
-        dish_type: dataItem.dish_type,
-        createdAt: dataItem.createdAt,
-        updatedAt: dataItem.updatedAt,
+        name: dataItem.name,
+        createdAt: moment(new Date(dataItem.createdAt)).format(
+          "h:mma - DD/MM/YYYY"
+        ),
+        updatedAt: moment(new Date(dataItem.updatedAt)).format(
+          "h:mma - DD/MM/YYYY"
+        ),
       });
     };
 
@@ -129,7 +97,7 @@ const ModalContent = () => {
           await collections.editCategory({
             _id: dataItem._id,
             body: {
-              dish_type: values.dish_type.replace(/\s/g, "").replace(/ /g, ""),
+              name: values.name,
             },
           });
           handleClose();
@@ -139,7 +107,7 @@ const ModalContent = () => {
           setLoading(false);
         } else {
           await collections.addCategory({
-            dish_type: values.dish_type.replace(/\s/g, "").replace(/ /g, ""),
+            name: values.name,
           });
           handleClose();
           dispatch(actions.formActions.changeLoad(!loadData));
@@ -175,8 +143,9 @@ const ModalContent = () => {
     dispatch(actions.formActions.changeLoad(!loadData));
   };
   const labels = {
-    id: "ID",
     name: "Tên nhóm món",
+    create: "Ngày tạo",
+    update: "Ngày cập nhật",
   };
   return (
     <div className="ModalCont">
@@ -190,13 +159,13 @@ const ModalContent = () => {
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
           <div style={{ width: "40%" }}>
-            <h4>{labels.fullname}</h4>
+            <h4>{labels.name}</h4>
             <Form.Item
-              name="full_name"
+              name="name"
               rules={[
                 {
                   required: true,
-                  message: `Không được để trống họ tên`,
+                  message: `Không được để trống tên nhóm món`,
                 },
                 {
                   pattern: new RegExp(/^\w/),
@@ -204,25 +173,36 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập họ tên" />
+              <Input disabled={isDetail} placeholder="Nhập tên nhóm món" />
             </Form.Item>
-
-            <h4>{labels.address}</h4>
-            <Form.Item
-              name="address"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống Địa Chỉ`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
-            </Form.Item>
+            {dataItem ? (
+              <>
+                <h4>{labels.create}</h4>
+                <Form.Item
+                  name="createdAt"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống`,
+                    },
+                  ]}
+                >
+                  <Input disabled={true} placeholder="Nhập" />
+                </Form.Item>
+                <h4>{labels.update}</h4>
+                <Form.Item
+                  name="updatedAt"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống`,
+                    },
+                  ]}
+                >
+                  <Input disabled={true} placeholder="Nhập" />
+                </Form.Item>
+              </>
+            ) : null}
           </div>
         </div>
         <div className="BtnAdd">
@@ -237,11 +217,13 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
+            disabled={loading}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
             {dataItem ? "Sửa" : "Lưu"}
           </Button>
           <Button
+            disabled={loading}
             size="Large"
             color="error"
             variant="contained"
@@ -259,8 +241,8 @@ const ModalContent = () => {
         </div>
       </Form>
       <AlertDialog
-        children={`Xác nhận xoá ${dataItem ? dataItem.full_name : null} ?`}
-        title="Xoá  nhóm món"
+        children={`Xác nhận xoá ${dataItem ? dataItem.name : null} ?`}
+        title="Xoá nhóm món"
         onAccept={handleDelete}
       />
     </div>

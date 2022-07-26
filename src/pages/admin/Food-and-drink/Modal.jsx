@@ -9,6 +9,7 @@ import {
   Upload,
   message,
   Tooltip,
+  InputNumber,
   Select,
 } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
@@ -32,6 +33,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/dish";
+import * as cateCollections from "../../../api/Collections/category";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -89,6 +91,9 @@ const ModalContent = () => {
   const loadData = useAppSelector((state) => state.form.loadData);
   const modalError = useAppSelector((state) => state.form.modalError);
   const isDetail = useAppSelector((state) => state.form.detail);
+
+  const listCate = useAppSelector((state) => state.dishes.listCate);
+
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
   const [select, setSelect] = useState("");
@@ -109,7 +114,16 @@ const ModalContent = () => {
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
   useEffect(() => {
-    function getCategories() {}
+    async function getCategories() {
+      try {
+        setLoading(true);
+        const response = await cateCollections.getCategories();
+        dispatch(actions.dishesActions.setListCate(response));
+      } catch (error) {
+        //history.replace("/");
+      }
+    }
+    getCategories();
   }, []);
   useEffect(() => {
     form.resetFields();
@@ -189,9 +203,9 @@ const ModalContent = () => {
           await collections.editDish({
             _id: dataItem._id,
             body: {
-              name: values.name.replace(/\s/g, ""),
-              recipe: values.recipe.replace(/\s/g, ""),
-              price: values.price,
+              name: values.name,
+              recipe: values.recipe,
+              price: values.price.replace(/\s/g, "").replace(/ /g, ""),
               active: values.active,
               avatar: fileList[0].name,
               dish_type: values.dish_type,
@@ -204,9 +218,9 @@ const ModalContent = () => {
           setLoading(false);
         } else {
           await collections.addDish({
-            name: values.name.replace(/\s/g, ""),
-            recipe: values.recipe.replace(/\s/g, ""),
-            price: values.price,
+            name: values.name,
+            recipe: values.recipe,
+            price: values.price.replace(/\s/g, "").replace(/ /g, ""),
             active: values.active,
             avatar: fileList[0].name,
             dish_type: values.dish_type,
@@ -338,9 +352,22 @@ const ModalContent = () => {
                   required: true,
                   message: `Không được để trống giá`,
                 },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập giá" />
+              <InputNumber
+                style={{ width: "100%" }}
+                formatter={(value) =>
+                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                min={0}
+                max={1000000000}
+                disabled={isDetail}
+                placeholder="Nhập giá"
+              />
             </Form.Item>
             {dataItem ? (
               <>
@@ -350,7 +377,7 @@ const ModalContent = () => {
                   rules={[
                     {
                       required: true,
-                      message: `Không được để trống Đã bán`,
+                      message: `Không được để trống đã bán`,
                     },
                     {
                       pattern: new RegExp(/^\w/),
@@ -379,12 +406,12 @@ const ModalContent = () => {
               <Select
                 disabled={isDetail}
                 dropdownStyle={{ zIndex: 2000 }}
-                defaultValue={select === "" ? "coffee" : select}
                 placeholder="Nhập loại món"
                 onChange={handleSelect}
               >
-                <Option value="coffee">Cà phê</Option>
-                <Option value="tea">Trà</Option>
+                {listCate.map((item) => {
+                  return <Option value={item._id}>{item.name}</Option>;
+                })}
               </Select>
             </Form.Item>
             <h4>{labels.recipe}</h4>
@@ -439,7 +466,7 @@ const ModalContent = () => {
         </div>
       </Form>
       <AlertDialog
-        children={`Xác nhận xoá ${dataItem ? dataItem.full_name : null} ?`}
+        children={`Xác nhận xoá ${dataItem ? dataItem.name : null} ?`}
         title="Xoá nhân viên"
         onAccept={handleDelete}
       />

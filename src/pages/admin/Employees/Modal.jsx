@@ -684,7 +684,7 @@ const ModalContent = () => {
             }}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            Lưu
+            {dataItem && isDetail === true ? "Sửa " : "Lưu"}
           </Button>
           <Button
             size="Large"
