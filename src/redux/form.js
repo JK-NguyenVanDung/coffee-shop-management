@@ -53,7 +53,6 @@ const slice = createSlice({
         },
         changeLoad(state, actions) {
             state.loadData = actions.payload;
-            console.log(state.loadData);
         },
         changeLoadProduct(state, actions) {
             state.loadData1 = actions.payload;

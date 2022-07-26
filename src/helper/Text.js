@@ -7,7 +7,11 @@ export const menuText = {
     switchOp2: "Đồ ăn",
 
 }
+export const dishText={
 
+    search: "Tìm kiếm món ăn..."
+
+}
 export const billText={
     header1: "Thông tin hoá đơn",
     header2: "Phương thức thanh toán",

@@ -22,7 +22,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { IconButton, Typography } from "@mui/material";
-import * as collections from "../../../api/Collections/employees";
+import * as collections from "../../../api/Collections/dish";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -81,31 +81,6 @@ const ModalContent = () => {
   const isDetail = useAppSelector((state) => state.form.detail);
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
-  const openDialog = useAppSelector((state) => state.form.delete);
-  const [email, setEmail] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [phone, setPhone] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [password, setPassword] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [ID_card, setID_card] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
 
   const handleChange = (newValue) => {
     setDate(newValue);
@@ -118,10 +93,7 @@ const ModalContent = () => {
 
   const handleOpen = () => dispatch(actions.formActions.showForm());
   const handleClose = () => dispatch(actions.formActions.closeForm());
-  const handleCheckbox = (event) => {
-    if (event.target.name === "employee") setRole(true);
-    else setRole(false);
-  };
+
   const deleteItem = () => {
     dispatch(actions.formActions.showDelete());
   };
@@ -139,6 +111,7 @@ const ModalContent = () => {
         recipe: dataItem.recipe,
         status: dataItem.status,
         avatar: dataItem.avatar,
+        dish_type: dataItem.dish_type[0],
       });
       // nếu không có dữ liệu đặc biệt thì xoá
       setFileList([dataItem.avatar]);
@@ -185,183 +158,65 @@ const ModalContent = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
-  function disablePassword() {
-    setDisablePass(!disablePass);
-  }
-
-  function checkCustomValidation() {
-    if (
-      email.error ||
-      phone.error ||
-      password.error ||
-      ID_card.error ||
-      fileList.length < 1
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
   const handleOk = async () => {
-    if (checkCustomValidation()) {
-      form
-        .validateFields()
-        .then(async (values) => {
-          setLoading(true);
-          const temp = [];
-          if (dataItem) {
-            await collections.editEmployee({
-              _id: dataItem._id,
-              body: {
-                email: values.email.replace(/\s/g, "").replace(/ /g, ""),
-                phone_number: values.phone_number
-                  .replace(/\s/g, "")
-                  .replace(/ /g, ""),
-                password: values.password.replace(/\s/g, "").replace(/ /g, ""),
-                address: values.address,
-                account_status: Number(status),
-
-                avatar: fileList[0].name,
-              },
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thay đổi thành công");
-
-            setLoading(false);
-          } else {
-            await collections.addEmployee({
-              email: values.email.replace(/\s/g, ""),
-              phone_number: values.phone_number.replace(/\s/g, ""),
-              password: values.password.replace(/\s/g, ""),
-              address: values.address,
-              account_status: Number(status),
-              role: role ? 0 : 1,
-              full_name: values.full_name,
-              id_card: values.id_card,
-              date_of_birth:
-                date.getMonth() +
-                1 +
-                "/" +
-                date.getDate() +
-                "/" +
-                date.getFullYear(),
+    form
+      .validateFields()
+      .then(async (values) => {
+        setLoading(true);
+        const temp = [];
+        if (dataItem) {
+          await collections.editDish({
+            _id: dataItem._id,
+            body: {
+              name: values.name.replace(/\s/g, "").replace(/ /g, ""),
+              recipe: values.recipe.replace(/\s/g, "").replace(/ /g, ""),
+              price: values.price,
+              active: values.active,
               avatar: fileList[0].name,
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thêm thành công");
-
-            setLoading(false);
-          }
-        })
-
-        .catch((info) => {
-          dispatch(actions.formActions.showError());
+              dish_type: values.dish_type,
+            },
+          });
+          handleClose();
+          dispatch(actions.formActions.changeLoad(!loadData));
+          message.success("Thay đổi thành công");
 
           setLoading(false);
-        });
-    } else {
-      dispatch(actions.formActions.showError());
-      setLoading(false);
-    }
-  };
-  function isVietnamesePhoneNumberValid(number) {
-    return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(
-      number
-    );
-  }
-  function isEmail(email) {
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-  }
-  const validateEmail = (value) => {
-    if (!isEmail(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.email,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const validateID_card = (value) => {
-    const reg = /^[0-9]{9}([0-9]{3})?$/;
-    if (!reg.test(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.id_card,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const handleID_card = (value) => {
-    setID_card(validateID_card(value.target.value));
+        } else {
+          await collections.addDish({
+            name: values.name.replace(/\s/g, "").replace(/ /g, ""),
+            recipe: values.recipe.replace(/\s/g, "").replace(/ /g, ""),
+            price: values.price,
+            active: values.active,
+            avatar: fileList[0].name,
+            dish_type: values.dish_type,
+          });
+          handleClose();
+          dispatch(actions.formActions.changeLoad(!loadData));
+          message.success("Thêm thành công");
+
+          setLoading(false);
+        }
+      })
+
+      .catch((info) => {
+        dispatch(actions.formActions.showError());
+
+        setLoading(false);
+      });
   };
 
-  const validatePassword = (value) => {
-    const reg =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$/;
-    if (!reg.test(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.password,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const handlePassword = (value) => {
-    setPassword(validatePassword(value.target.value));
-  };
-
-  const validatePhone = (value) => {
-    if (!isVietnamesePhoneNumberValid(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.phone2,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-
-      validateStatus: "success",
-    };
-  };
-
-  const handleEmail = (value) => {
-    setEmail(validateEmail(value.target.value));
-  };
-  const handlePhone = (value) => {
-    setPhone(validatePhone(value.target.value));
-  };
   function getHeaderTitle() {
     if (dataItem && isDetail) {
-      return "Thông tin nhân viên";
+      return "Thông tin món ăn";
     }
     if (dataItem) {
-      return "Sửa nhân viên";
+      return "Sửa món ăn";
     }
-    return "Thêm nhân viên";
+    return "Thêm món ăn";
   }
   const handleDelete = async () => {
     setLoading(true);
-    await collections.removeEmployee(dataItem._id);
+    await collections.removeDish(dataItem._id);
     message.success("Xoá thành công");
     setLoading(false);
     dispatch(actions.formActions.hideDelete());
@@ -370,17 +225,12 @@ const ModalContent = () => {
   };
   const labels = {
     avatar: "Hình ảnh",
-    fullname: "Họ tên",
-    birthday: "Ngày sinh",
-    idcard: "CMND/CCCD",
-    email: "Email",
-    phone: "SĐT",
-    password: "Mật khẩu",
-    repeatPassword: "Nhập lại Mật khẩu",
-
-    address: "Địa chỉ",
-    status: "Tình trạng",
-    position: "Chức vụ",
+    name: "Tên món",
+    recipe: "Công thức",
+    price: "Đơn giá",
+    // amount: "Số lượng",
+    amount_sell: "Đã bán",
+    dish_type: "Loại món",
   };
   return (
     <div className="ModalCont">
@@ -412,164 +262,60 @@ const ModalContent = () => {
               </Upload>
               {/* </ImgCrop> */}
             </div>
-            <h4 style={{ marginTop: fileList !== null ? "4.5%" : 0 }}>
-              {labels.fullname}
-            </h4>
-            <Form.Item
-              name="full_name"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống họ tên`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập họ tên" />
-            </Form.Item>
-
-            <div style={{ marginBottom: "10%" }}>
-              <h4>{labels.birthday}</h4>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DesktopDatePicker
-                  // minDate={moment().subtract(100, "years")._d}
-                  // maxDate={moment().subtract(14, "years")._d}
-                  inputFormat="dd/MM/yyyy"
-                  value={date}
-                  onChange={handleChange}
-                  disabled={isDetail}
-                  renderInput={(params) => (
-                    <TextField
-                      style={{ width: "100%" }}
-                      {...params}
-                      label=""
-                      variant="standard"
-                      InputLabelProps={{ shrink: false }}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-            </div>
-            <h4>{labels.idcard}</h4>
-            <Form.Item
-              name="id_card"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống CMND/CCCD`,
-                },
-                // {
-                //   required: true,
-                //   message: errorText.id_card,
-                //   max: 12,
-                //   min: 9,
-                // },
-              ]}
-              validateStatus={ID_card.validateStatus}
-              help={ID_card.errorMsg}
-            >
-              <Input
-                disabled={isDetail}
-                placeholder="Nhập CMND"
-                value={ID_card}
-                onChange={(e) => handleID_card(e)}
-              />
-            </Form.Item>
           </div>
           <div>
-            <h4>{labels.email}</h4>
+            <h4>{labels.name}</h4>
             <Form.Item
-              name="email"
+              name="name"
               rules={[
                 {
                   required: true,
-                  message: `Không được để trống email`,
+                  message: `Không được để trống tên món`,
                 },
               ]}
-              validateStatus={email.validateStatus}
-              help={email.errorMsg}
             >
-              <Input
-                disabled={isDetail}
-                placeholder="Nhập email"
-                value={email}
-                onChange={(e) => handleEmail(e)}
-              />
+              <Input disabled={isDetail} placeholder="Nhập tên món" />
             </Form.Item>
-            <h4>{labels.phone}</h4>
+            <h4>{labels.price}</h4>
             <Form.Item
-              name="phone_number"
+              name="price"
               rules={[
                 {
                   required: true,
-                  message: `Không được để trống số điện thoại`,
+                  message: `Không được để trống giá`,
                 },
               ]}
-              validateStatus={phone.validateStatus}
-              help={phone.errorMsg}
             >
-              <Input
-                disabled={isDetail}
-                value={phone.value}
-                placeholder="Nhập số điện thoại"
-                onChange={(value) => handlePhone(value)}
-              />
+              <Input disabled={isDetail} placeholder="Nhập giá" />
             </Form.Item>
-            <h4>{labels.password}</h4>
+            {dataItem ? (
+              <>
+                <h4>{labels.amount_sell}</h4>
+                <Form.Item
+                  disabled
+                  name="amount_sell"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống Địa Chỉ`,
+                    },
+                    {
+                      pattern: new RegExp(/^\w/),
+                      message: errorText.space,
+                    },
+                  ]}
+                >
+                  <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
+                </Form.Item>
+              </>
+            ) : null}
+            <h4>{labels.recipe}</h4>
             <Form.Item
-              name="password"
+              name="recipe"
               rules={[
                 {
                   required: true,
-                  message: `Không được để trống mật khẩu`,
-                },
-              ]}
-              validateStatus={password.validateStatus}
-              help={password.errorMsg}
-            >
-              {dataItem ? (
-                <Input.Password
-                  placeholder="Nhập mật khẩu"
-                  disabled={disablePass || isDetail}
-                  value={password.value}
-                  onChange={(value) => handlePassword(value)}
-                  prefix={
-                    <IconButton
-                      disabled={isDetail}
-                      onClick={() => disablePassword()}
-                    >
-                      {!disablePass || isDetail ? (
-                        <LockOpenRoundedIcon fontSize="small" color="primary" />
-                      ) : (
-                        <LockRoundedIcon
-                          fontSize="small"
-                          color="primary"
-                          style={{ backgrounColor: "#fff" }}
-                        />
-                      )}
-                    </IconButton>
-                  }
-                />
-              ) : (
-                <Input.Password
-                  disabled={isDetail}
-                  placeholder="Nhập mật khẩu"
-                  value={password.value}
-                  onChange={(value) => handlePassword(value)}
-                />
-              )}
-            </Form.Item>
-
-            <h4>{labels.address}</h4>
-            <Form.Item
-              name="address"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống Địa Chỉ`,
+                  message: `Không được để trống công thức`,
                 },
                 {
                   pattern: new RegExp(/^\w/),
@@ -577,92 +323,30 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
+              <Input disabled={isDetail} placeholder="Nhập công thức" />
             </Form.Item>
-            <h4>{labels.status}</h4>
-            <div style={{ marginTop: "5%", marginBottom: "5%" }}>
-              <div>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={status}
-                  onChange={handleStatus}
-                  name="radio-buttons-group"
-                >
-                  <div class="radiogroupCont">
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="1"
-                      control={<Radio size="small" color="info" />}
-                      label="Còn làm"
-                      style={{
-                        backgroundColor: colors.success,
-                        borderRadius: 12,
-                      }}
-                    />
-
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="2"
-                      control={<Radio size="small" color="info" />}
-                      label="Tạm nghỉ"
-                      style={{
-                        backgroundColor: colors.warning,
-                        borderRadius: 12,
-                      }}
-                    />
-
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="3"
-                      control={<Radio size="small" color="info" />}
-                      label="Đã nghỉ"
-                      style={{
-                        backgroundColor: colors.error,
-                        borderRadius: 12,
-                      }}
-                    />
-                  </div>
-                </RadioGroup>
-              </div>
-            </div>
-            <h4>{labels.position}</h4>
-            <div style={{ marginBottom: "8%" }}>
-              <div className="PositionAdd">
-                <div>
-                  <div className="checkboxCont">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={isDetail}
-                          onChange={handleCheckbox}
-                          checked={role}
-                        />
-                      }
-                      name="employee"
-                      label="Nhân viên"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={isDetail}
-                          onChange={handleCheckbox}
-                          checked={!role}
-                        />
-                      }
-                      name="manager"
-                      label="Quản lý"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <h4>{labels.dish_type}</h4>
+            <Form.Item
+              name="dish_type"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống loại món`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Input disabled={isDetail} placeholder="Nhập loại món" />
+            </Form.Item>
           </div>
         </div>
         <div className="BtnAdd">
           <Button
             size="Large"
-            color={dataItem ? "primary" : "success"}
+            color="success"
             variant="contained"
             style={{
               paddingLeft: "15%",
@@ -673,7 +357,7 @@ const ModalContent = () => {
             }}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem ? "Sửa" : "Lưu"}
+            Lưu
           </Button>
           <Button
             size="Large"
