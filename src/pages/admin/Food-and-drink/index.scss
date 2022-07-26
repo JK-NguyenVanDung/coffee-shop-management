@@ -13,3 +13,213 @@
     }
 }
 
+.dishSearchCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    padding: 10px;
+}
+
+// Thêm nhân viên
+
+.ModalCont {
+    width: 100%;
+    height: 95vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 12px ;
+  }
+
+.headerCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 4%;
+    padding-right: 3%;
+}
+.form{
+    height: 90vh;
+    overflow-y: scroll;
+}
+.bodyCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;   
+    overflow-y: scroll;
+
+}
+.radiogroupCont{
+    width: 100%;
+    display:inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-left: 15px;
+    .MuiTypography-root{
+        padding-right: 12px !important;
+        color:#fff;
+    }
+}
+.positionCheckAdd {
+    display: flex;
+    justify-content: space-between;
+}
+.BtnAdd {
+    display: flex;
+    justify-content: space-around;
+}
+
+// Thông tin nhân viên
+.Info {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 12px ;
+    padding: 0.5%;
+  }
+.totalContentInfo {
+    background-color: #fff;
+    border-radius: 12px;
+}
+.TitleInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 4.3%;
+    margin-right: 4.3%;
+}
+.ContInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.ItemCont {
+    padding-bottom: 3%;
+}  
+
+
+.positionCheckInfo {
+    display: flex;
+    justify-content: space-between;
+}
+.BtnInfo {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 3%;
+}
+
+
+// Sửa thông tin nhân viên
+.Edit {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 12px ;
+    padding: 0.5%;
+  }
+.totalContentEdit {
+    background-color: #fff;
+    border-radius: 12px;
+}
+.TitleEdit {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 4.3%;
+    margin-right: 4.3%;
+}
+.ContEdit {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.NameEdit {
+    padding-bottom: 3%;
+}  
+.AgeEdit {
+    padding-bottom: 3%;
+}
+.identityCardEdit {
+    padding-bottom: 3%;
+}
+.IDEdit {
+    padding-bottom: 3%;
+}
+.EmailEdit {
+    padding-bottom: 3%;
+}
+.PhoneEdit {
+    padding-bottom: 3%;
+}
+.PassEdit {
+    padding-bottom: 3%;
+}
+.AddressEdit {
+    padding-bottom: 3%;
+}
+.StatusEdit {
+    padding-bottom: 3%;
+}
+.PositionEdit {
+    padding-bottom: 3%;
+}
+.positionCheckEdit {
+    display: flex;
+    justify-content: space-between;
+}
+.BtnEdit {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 3%;
+}
+
+.checkboxCont{
+    width: 100%;
+    display:inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.avatarCont{
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center; 
+    margin-bottom: 4%;
+    .ant-upload-picture-card-wrapper{
+        width: 100%;
+        display:flex;
+            justify-content: center;
+        align-items: center; 
+        .ant-upload-list-picture-card-container{
+            // width: 63%;
+            // height: 63%;
+            width: 320px;
+            height: 23vh;
+        }
+        .ant-upload-select-picture-card{
+            width: 98%;
+            height: 150%;
+        }
+    }
+}
+.ant-input, .ant-input-affix-wrapper{
+    max-width: 360px;
+}
+.ant-form-item-explain-error{
+    max-width: 360px;
+}
+.ant-select-focused{
+    z-index: 100 !important;
+}
+.ant-select-item-option{
+    z-index: 300 !important;
+
+}

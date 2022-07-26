@@ -17,6 +17,7 @@ import * as collections from "../../../api/Collections/dish";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
 import FormModal from "../../../components/FormElements/FormModal";
+import { numbToCurrency } from "../../../helper/currency";
 
 const { Search } = Input;
 
@@ -37,7 +38,7 @@ const FoodAndDrink = () => {
   const [showList, setShowList] = useState(false);
   const dispatch = useAppDispatch();
   const onSearch = (value) => console.log(value);
-
+  const [switchStatus, setSwitchStatus] = useState(true);
   const [data, setData] = useState([]);
 
   const [search, setSearch] = useState("");
@@ -82,6 +83,7 @@ const FoodAndDrink = () => {
     // message.error('Click on No');
   }
   async function changeDisable(id) {
+    setSwitchStatus(!switchStatus);
     dataList.map((item) => {
       if (item._id === id) {
         setLoading(true);
@@ -99,6 +101,8 @@ const FoodAndDrink = () => {
         dispatch(actions.formActions.changeLoad(!loadData));
         message.success("Chỉnh thành công");
         setLoading(false);
+        dispatch(actions.formActions.changeLoad(!loadData));
+
         return;
       }
     }, []);
@@ -119,19 +123,24 @@ const FoodAndDrink = () => {
     },
     {
       title: "Đơn giá",
-      dataIndex: "amount_sell",
+      dataIndex: "price",
     },
     {
       title: "Ẩn/Hiện món",
       render: (item) => {
         return (
           <>
-            <Switch
-              checkedChildren="Hiện"
-              unCheckedChildren="Ẩn"
-              defaultChecked={item.status}
-              onChange={() => changeDisable(item._id)}
-            />
+            <FormGroup>
+              <FormControlLabel
+                label={item.status === false ? "Hiện" : "Ẩn"}
+                control={
+                  <Switch
+                    defaultChecked={item.status}
+                    onChange={() => changeDisable(item._id)}
+                  />
+                }
+              />
+            </FormGroup>
           </>
         );
       },
@@ -205,7 +214,7 @@ const FoodAndDrink = () => {
               _id: item._id,
               name: item.name,
               amount: item.amount,
-              amount_sell: item.amount_sell,
+              price: numbToCurrency(item.price),
               recipe: item.recipe,
               status: item.status,
               avatar: item.avatar,
@@ -213,7 +222,7 @@ const FoodAndDrink = () => {
           })
         : []
     );
-  }, [showList, dataList]);
+  }, [showList, dataList, loadData]);
 
   return (
     <>
