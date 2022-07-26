@@ -6,11 +6,17 @@ const slice = createSlice({
     initialState: {
         detail: null,
         listAll: [],
+        listCate: [],
+
         loadData: false,
 
     },
     reducers: {
+        setListCate(state,actions){
+            console.log(actions.payload);
 
+            state.listCate = actions.payload;
+        },
         setDetail(state, actions) {
             let data = [...state.listAll];
             let index = data.findIndex((item)=> item._id === actions.payload)

@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { map, includes, sortBy, uniqBy, each, result, get } from "lodash";
+import moment from "moment";
 
 import { menuText } from "../../../helper/Text";
 
@@ -35,7 +36,7 @@ const rowSelection = {
 };
 const Category = () => {
   const [loading, setLoading] = useState(false);
-  const [dataList, setDataList] = useState({});
+  const dataList = useAppSelector((state) => state.categories.listAll);
   const [showList, setShowList] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -48,9 +49,8 @@ const Category = () => {
   const onChangeSearch = async (value) => {
     const reg = new RegExp(value, "gi");
     const filteredData = map(dataList, (record) => {
-      const nameMatch = get(record, "full_name").match(reg);
-      const addressMatch = get(record, "address").match(reg);
-      if (!nameMatch && !addressMatch) {
+      const nameMatch = get(record, "name").match(reg);
+      if (!nameMatch) {
         return null;
       }
       return record;
@@ -67,76 +67,27 @@ const Category = () => {
   // };
   const columns = [
     {
-      title: "ID nhân viên",
-      dataIndex: "id",
+      title: "Tên nhóm món",
+      dataIndex: "name",
+      width: GIRD12.COL3,
+    },
+
+    {
+      title: "Tạo vào",
+      dataIndex: "createdAt",
+      // render: (text) => <a>{text}</a>,
+      width: GIRD12.COL1,
+    },
+
+    {
+      title: "Cập nhật vào",
+      dataIndex: "updatedAt",
       // render: (text) => <a>{text}</a>,
       width: GIRD12.COL1,
     },
     {
-      title: "Họ tên",
-      dataIndex: "full_name",
       width: GIRD12.COL2,
-    },
-    {
-      title: "Thông tin liên lạc",
-      dataIndex: "address",
-      // dataIndex: 'sdt',
-      // dataIndex: 'avatar',
-      // dataIndex: 'age',
-      width: GIRD12.COL3,
-    },
-    {
-      title: "Tình trạng",
-      dataIndex: "account_status",
-      render: (item) => {
-        let status = " ";
-        switch (item) {
-          case 1:
-            status = "Còn làm";
-            break;
-          case 2:
-            status = "Tạm nghỉ";
-            break;
-          case 3:
-            status = "Đã nghỉ";
-            break;
-          default:
-            status = "Còn làm";
-            break;
-        }
 
-        return (
-          <>
-            <p>{status}</p>
-          </>
-        );
-      },
-    },
-    {
-      title: "Chức vụ",
-      dataIndex: "role",
-      render: (item) => {
-        let role = " ";
-        switch (item) {
-          case 0:
-            role = "Nhân viên";
-            break;
-          case 1:
-            role = "Quản lý";
-            break;
-          default:
-            role = "Nhân viên";
-            break;
-        }
-
-        return (
-          <>
-            <p>{role}</p>
-          </>
-        );
-      },
-    },
-    {
       title: "Hoạt động",
       render: (item) => {
         return (
@@ -152,7 +103,7 @@ const Category = () => {
               Sửa
             </Button>
             <Popconfirm
-              title={`Bạn có muốn xoá ${item.full_name}`}
+              title={`Bạn có muốn xoá ${item.name}`}
               onConfirm={() => handleDelete(item)}
               onCancel={cancel}
               okText="Có"
@@ -178,7 +129,6 @@ const Category = () => {
       setLoading(true);
       const response = await collections.getCategories();
       dispatch(actions.categoriesActions.setListAll(response));
-      setDataList(response);
       setShowList(true);
       setLoading(false);
       // setPagination({
@@ -205,11 +155,17 @@ const Category = () => {
             return {
               id: item._id,
               name: item.name,
+              createdAt: moment(new Date(item.createdAt)).format(
+                "h:mma - DD/MM/YYYY"
+              ),
+              updatedAt: moment(new Date(item.updatedAt)).format(
+                "h:mma - DD/MM/YYYY"
+              ),
             };
           })
         : []
     );
-  }, [showList]);
+  }, [showList, dataList]);
 
   const dispatch = useAppDispatch();
   const getDetail = (item) => {
@@ -252,15 +208,6 @@ const Category = () => {
     <>
       <div className="dishSearchCont">
         <Button
-          variant="contained"
-          endIcon={<ConstructionIcon />}
-          style={{ marginRight: "1%", backgroundColor: "#111", color: "#fff" }}
-          size="small"
-        >
-          QUẢN LÝ
-        </Button>
-
-        <Button
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
@@ -271,7 +218,7 @@ const Category = () => {
           }}
           size="small"
         >
-          THÊM NHÂN VIÊN
+          THÊM NHÓM MÓN
         </Button>
         <FormModal children={<ModalContent />} />
 
