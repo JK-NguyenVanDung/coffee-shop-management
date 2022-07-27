@@ -269,7 +269,7 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
-          <div style={{ width: "30%" }}>
+          <div style={{ width: "50%", display: "flex", flexDirection: "column", justifyContent: "start" }}>
             <h4>{labels.avatar}</h4>
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
@@ -281,7 +281,7 @@ const ModalContent = () => {
                 maxCount={1}
                 onChange={onChange}
                 onPreview={onPreview}
-                style={{ width: "500px", height: "100%" }}
+                style={{ width: "400px", height: "100%" }}
                 disabled={isDetail}
               >
                 <UploadButton />
@@ -317,7 +317,7 @@ const ModalContent = () => {
               </>
             ) : null}
           </div>
-          <div>
+          <div className="dishCont">
             <h4>{labels.name}</h4>
             <Form.Item
               name="name"
@@ -374,10 +374,11 @@ const ModalContent = () => {
                   pattern: new RegExp(/^\w/),
                   message: errorText.space,
                 },
-              ]}
+              ]}  
             >
               <Select
                 disabled={isDetail}
+                style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "center" }}
                 dropdownStyle={{ zIndex: 2000 }}
                 defaultValue={select === "" ? "coffee" : select}
                 placeholder="Nhập loại món"
@@ -405,7 +406,7 @@ const ModalContent = () => {
             </Form.Item>
           </div>
         </div>
-        <div className="BtnAdd">
+        <div className="btnAdd">
           <Button
             size="Large"
             color="success"
