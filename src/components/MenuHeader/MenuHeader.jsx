@@ -6,25 +6,58 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { Switch, Input, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { IconButton } from "@mui/material/";
-const { Search } = Input;
+import { map, includes, sortBy, uniqBy, each, result, get } from "lodash";
+import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
+import { actions } from "../../redux";
+import { useNavigate } from "react-router-dom";
 
-const MenuHeader = () => {
-  function onSearch() {}
+const MenuHeader = (props) => {
+  const dispatch = useAppDispatch();
+
+  const { Search } = Input;
+  const [search, setSearch] = useState("");
+  const dataList = useAppSelector((state) => state.menu.listAll);
+
+  const navigate = useNavigate();
+  const onChangeSearch = async (value) => {
+    setSearch(value);
+    // console.log(value);
+  };
+  const onSearch = async () => {
+    const reg = new RegExp(search, "gi");
+    const filteredData = map(dataList, (record) => {
+      const name = get(record, "name").match(reg);
+      if (!name) {
+        return null;
+      }
+      return record;
+    }).filter((record) => !!record);
+    dispatch(actions.formActions.setNameMenu(`Tìm kiếm: ${search}`));
+    navigate(`../menu/search`);
+    dispatch(
+      actions.menuActions.setListSearch(search ? filteredData : dataList)
+    );
+  };
   return (
-    <div className="centeredCont">
-      <Switch
-        checkedChildren={menuText.switchOp1}
-        unCheckedChildren={menuText.switchOp2}
-        defaultChecked
-        style={{ minHeight: "2rem", width: "7rem" }}
-      />
+    <div className={props.switch === true ? "centeredCont" : "rightCont"}>
+      {props.switch && (
+        <Switch
+          checkedChildren={menuText.switchOp1}
+          unCheckedChildren={menuText.switchOp2}
+          defaultChecked
+          style={{ minHeight: "2rem", width: "7rem" }}
+        />
+      )}
       <Input
         placeholder={menuText.searchMenu}
         allowClear
         size="large"
         className="menuSearch"
+        value={search}
+        onChange={(e) => onChangeSearch(e.target.value)}
+        enterButton={onSearch}
         addonBefore={
-          <IconButton>
+          <IconButton onClick={onSearch}>
             <SearchRoundedIcon />
           </IconButton>
         }

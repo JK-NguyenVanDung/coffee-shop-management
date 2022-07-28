@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { Input, Carousel, message } from "antd";
 
@@ -245,13 +245,7 @@ export const MenuItem = ({ item }) => {
     </div>
   );
 };
-export const MenuList = (props) => {
-  return (
-    <div className="">
-      <MenuItem item={props.item} />
-    </div>
-  );
-};
+
 export const MenuLists = ({ dataList, category }) => {
   let settings = {
     infinite: false,
@@ -296,6 +290,7 @@ export const MenuLists = ({ dataList, category }) => {
       },
     ],
   };
+  const myRef = useRef(null);
 
   // <MenuItem item={props.item} />
   // const listCate = useAppSelector((state) => state.menu.listCate);
@@ -320,15 +315,17 @@ export const MenuLists = ({ dataList, category }) => {
       record.dish_type[0] === category._id
   );
   const [data, setData] = useState(filteredList);
+
+  const executeScroll = () => myRef.current.scrollIntoView();
+  // run this function from an event handler or an effect to execute scroll
+
   return (
-    <div className="menuCont">
-      <h2> {category.name}</h2>
+    <div className="menuCont" ref={myRef}>
+      <h2 onClick={executeScroll}> {category.name}</h2>
       <div className="menuItemCont">
         <Slider {...settings}>
           {data.map((item) => {
-            return (
-              <MenuList key={item._id} category={item.dish_type} item={item} />
-            );
+            return <MenuItem key={item._id} item={item} />;
           })}
         </Slider>
       </div>
@@ -673,9 +670,7 @@ export default function Menu() {
       <Loading loading={loading} />
       <Category />
       {cateList.map((item) => {
-        return (
-          <MenuLists refs={item._id} dataList={dataList} category={item} />
-        );
+        return <MenuLists dataList={dataList} category={item} />;
       })}
       <div style={{ width: "100%", height: "30vh" }}></div>
       <OrderBar />

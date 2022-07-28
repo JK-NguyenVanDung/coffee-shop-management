@@ -43,6 +43,8 @@ const slice = createSlice({
             state.detail=false
         },
         setNameMenu(state, actions) {
+            console.log(actions.payload);
+
             state.nameMenu = actions.payload
         },
         showFormAddCategory(state) {

@@ -2,6 +2,8 @@ import { Layout, Menu } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { Button } from "@mui/material/";
 
 import logo from "../../../src/assets/img/logo.svg";
 import {
@@ -31,6 +33,7 @@ const { SubMenu } = Menu;
 // }
 export default function SiderDemos({ children, headerItem = null }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const nameMenu = useAppSelector((state) =>
     state.form.nameMenu ? state.form.nameMenu : "Menu"
@@ -127,7 +130,25 @@ export default function SiderDemos({ children, headerItem = null }) {
           style={{ padding: 0 }}
         >
           {nameMenu && (
-            <h4 style={{ fontSize: 35, paddingLeft: 20 }}>{nameMenu}</h4>
+            <a
+              onClick={() =>
+                location.pathname === "/menu/search" ? navigate(`../menu`) : {}
+              }
+            >
+              <h4
+                style={{
+                  cursor: "pointer",
+                  fontSize: 35,
+                  paddingLeft: 20,
+                  width: location.pathname === "/menu" ? "7rem" : "10 0%",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {nameMenu}
+              </h4>
+            </a>
           )}
           {headerItem}
           <HeaderProFile />
