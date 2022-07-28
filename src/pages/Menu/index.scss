@@ -463,18 +463,14 @@
 //             }
 //         }
 //     }
-//     .billContentsCont {
-//         width: 120%;
-//         display: flex;
-//         flex-direction: row;
-//         justify-content: space-between;
-//     }
+
 //     .billContentCont{
 //         display: inline-flex;
 //         width: 100%;
 //         flex-direction: row;
 //     }
 //--------------------------------------------------------
+
 
 .drop-shadow{
     -webkit-box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
@@ -483,7 +479,7 @@
 
 
 .itemCont{
-    margin-right:2rem;
+    margin: 1rem;
     width:12rem;
     height: 12rem;
 
@@ -495,12 +491,30 @@
     background-size: cover;
     background-repeat: no-repeat;
     cursor:pointer;
+    flex-direction: column;
+    .itemContent{
+        width:12rem;
+
+        display:inline-flex;
+        justify-content:space-between; 
+        flex-direction: row;
+        align-items:flex-end;
+
+    }
     span{
         margin-left: 10px;
         margin-right: 10px;
         margin-bottom: 5px;
         font-size: 0.9rem;
+        max-width: 5rem;
+        height: 3rem;
+        padding-top: 10%;
+        text-overflow: ellipsis;
         color: #fff;
+        overflow: hidden; 
+        white-space: nowrap;
+
+
     }
 
  
@@ -512,4 +526,49 @@
 }
 .changeAmountCont{
     padding-right: 10%;
+}
+
+.menuCont{
+    width: 100%;
+    h2{
+        color: #111;
+    }
+
+}
+
+.billContentsCont{       
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column !important;
+    padding-left: 0px !important;
+    justify-content: space-between;
+    align-items:space-between;
+    .billContentCont{
+        display: inline-flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: row;
+        justify-content:space-between;
+        align-items:center;
+    }
+    .billItemsCont{
+        display: inline-flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: row;
+        justify-content:space-between;
+        align-items:center;    
+        .rowCont{
+            display: inline-flex;
+            width: 50%;
+            height: 100%;
+            flex-direction: row;
+            justify-content:space-between;
+            align-items:center;     
+        }
+    }
+    .MuiTypography-root{
+        height: 3.2vh;
+    }
 }

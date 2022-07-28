@@ -13,7 +13,6 @@ const slice = createSlice({
     },
     reducers: {
         setListCate(state,actions){
-            console.log(actions.payload);
 
             state.listCate = actions.payload;
         },

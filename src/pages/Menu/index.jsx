@@ -16,7 +16,12 @@ import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 
 import BillPrint from "./MenuComponents/BillPrint";
+import MenuItemDetail from "./MenuComponents/MenuItemDetail";
 import { numbToCurrency } from "../../helper/currency";
+
+import * as collections from "../../api/Collections/dish";
+import * as cateCollections from "../../api/Collections/category";
+import Loading from "../../components/Loading";
 import {
   Button,
   TextField,
@@ -31,6 +36,7 @@ import {
   Checkbox,
 } from "@mui/material/";
 import Coffee from "../../assets/img/coffee_test.png";
+import PlaceHolder from "../../assets/img/placeholder.png";
 
 import WoodBoard from "../../assets/img/wood.svg";
 import Clipboard from "../../assets/img/clipboard.svg";
@@ -45,59 +51,6 @@ let orderItem = {
   amount: 1,
   total_sales: 12,
   type: "Đồ uống",
-};
-let menuItem = {
-  id: 1,
-  name: "Cafe sữa",
-  url: "https://www.acouplecooks.com/wp-content/uploads/2021/09/Almond-Milk-Coffee-001.jpg",
-  recipe:
-    "110g bột cà phê + 100ml nước nóng pha phin, sau đó thêm vào 10ml nước đường và 15ml sữa đặc",
-  price: 21000,
-  amount: 1,
-  total_sales: 12,
-  type: "Đồ uống",
-  create_date: "30/06/2022",
-  update_by: "dung001",
-};
-
-let menuItem2 = {
-  id: 2,
-  name: "Cafe sữa đá",
-  url: "https://www.acouplecooks.com/wp-content/uploads/2021/09/Almond-Milk-Coffee-001.jpg",
-  recipe:
-    "110g bột cà phê + 100ml nước nóng pha phin, sau đó thêm vào 10ml nước đường và 15ml sữa đặc",
-  price: 21000,
-  amount: 1,
-  total_sales: 12,
-  type: "Đồ uống",
-  create_date: "30/06/2022",
-  update_by: "dung001",
-};
-let menuItem3 = {
-  id: 3,
-  name: "Cafe sữa đá",
-  url: "https://www.acouplecooks.com/wp-content/uploads/2021/09/Almond-Milk-Coffee-001.jpg",
-  recipe:
-    "110g bột cà phê + 100ml nước nóng pha phin, sau đó thêm vào 10ml nước đường và 15ml sữa đặc",
-  price: 21000,
-  amount: 1,
-  total_sales: 12,
-  type: "Đồ uống",
-  create_date: "30/06/2022",
-  update_by: "dung001",
-};
-let menuItem42 = {
-  id: 42,
-  name: "Cafe sữa đá",
-  url: "https://www.acouplecooks.com/wp-content/uploads/2021/09/Almond-Milk-Coffee-001.jpg",
-  recipe:
-    "110g bột cà phê + 100ml nước nóng pha phin, sau đó thêm vào 10ml nước đường và 15ml sữa đặc",
-  price: 21000,
-  amount: 1,
-  total_sales: 12,
-  type: "Đồ uống",
-  create_date: "30/06/2022",
-  update_by: "dung001",
 };
 
 const OrderItem = ({ item, changeAmount = false }) => {
@@ -119,7 +72,9 @@ const OrderItem = ({ item, changeAmount = false }) => {
       <div
         className="orderItemImage "
         style={{
-          backgroundImage: `linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 30%),url(${item.url})`,
+          backgroundImage: `linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 30%),url(${
+            item.url ? item.url : PlaceHolder
+          })`,
         }}
       />
       <div className="infoCont">
@@ -128,7 +83,7 @@ const OrderItem = ({ item, changeAmount = false }) => {
       </div>
       {changeAmount && (
         <div
-          class="changeAmountCont"
+          className="changeAmountCont"
           style={{
             display: "flex",
             width: "80%",
@@ -255,24 +210,49 @@ const OrderBar = () => {
 export const MenuItem = ({ item }) => {
   const dispatch = useAppDispatch();
   let orderList = useAppSelector((state) => state.menu.orderList);
-
-  const bind = useDoubleTap((event) => {
+  const [hover, setHover] = useState(false);
+  const bindTap = useDoubleTap((event) => {
     dispatch(actions.menuActions.addOrderItem(item));
   });
+  function openDetail() {
+    dispatch(actions.menuActions.showInfo(item));
+  }
   return (
     <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
       className="itemCont  drop-shadow"
       style={{
-        backgroundImage: `linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 30%),url(${item.url})`,
+        backgroundImage: `linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 30%),url(${
+          item.url ? item.url : PlaceHolder
+        })`,
       }}
-      {...bind}
+      {...bindTap}
     >
-      <span>{item.name}</span>
-      <span>{numbToCurrency(item.price)}</span>
+      <div>
+        <Button
+          color={!item.url ? "secondary" : "info"}
+          style={{ visibility: !hover ? "hidden" : "visible" }}
+          onClick={() => openDetail()}
+        >
+          Chi tiết
+        </Button>
+      </div>
+      <div className="itemContent">
+        <span>{item.name}</span>
+        <span>{numbToCurrency(item.price)}</span>
+      </div>
     </div>
   );
 };
-export const MenuList = ({ categoryName }) => {
+export const MenuList = (props) => {
+  return (
+    <div className="">
+      <MenuItem item={props.item} />
+    </div>
+  );
+};
+export const MenuLists = ({ dataList, category }) => {
   let settings = {
     infinite: false,
     speed: 500,
@@ -317,43 +297,44 @@ export const MenuList = ({ categoryName }) => {
     ],
   };
 
+  // <MenuItem item={props.item} />
+  // const listCate = useAppSelector((state) => state.menu.listCate);
+  // function getCategoryName() {
+  //   let name = "";
+  //   for (let i = 0; i < listCate.length; i++) {
+  //     if (
+  //       listCate[i]._id === dataList[0].dish_type[0] ||
+  //       listCate[i].name === dataList[0].dish_type[0]
+  //     ) {
+  //       return listCate[i].name;
+  //     } else {
+  //       console.log(dataList[0].dish_type[0]);
+  //     }
+  //   }
+
+  //   return name;
+  // }
+  let filteredList = dataList.filter(
+    (record) =>
+      record.dish_type[0] === category.name ||
+      record.dish_type[0] === category._id
+  );
+  const [data, setData] = useState(filteredList);
   return (
-    <div class="menuCont">
-      <h2> {categoryName}</h2>
-      <div className="meunItemCont">
+    <div className="menuCont">
+      <h2> {category.name}</h2>
+      <div className="menuItemCont">
         <Slider {...settings}>
-          <div className="meunItemsCont ">
-            <MenuItem item={menuItem} />
-          </div>
-          <div className="meunItemsCont ">
-            <MenuItem item={menuItem2} />
-          </div>
-          <div className="meunItemsCont ">
-            <MenuItem item={menuItem3} />
-          </div>
-
-          <div className="meunItemsCont ">
-            <MenuItem item={menuItem42} />
-          </div>
-          <div className="meunItemsCont ">
-            <MenuItem item={menuItem} />
-          </div>
-          <div className="meunItemsCont ">
-            <MenuItem item={menuItem2} />
-          </div>
-          <div className="meunItemsCont ">
-            <MenuItem item={menuItem3} />
-          </div>
-
-          <div className="meunItemsCont ">
-            <MenuItem item={menuItem42} />
-          </div>
+          {data.map((item) => {
+            return (
+              <MenuList key={item._id} category={item.dish_type} item={item} />
+            );
+          })}
         </Slider>
       </div>
     </div>
   );
 };
-
 export const Category = () => {
   let selected = useAppSelector((state) => state.menu.selectedCate);
   const dispatch = useAppDispatch();
@@ -403,16 +384,13 @@ export const Category = () => {
   const selectCategory = (cate) => {
     dispatch(actions.menuActions.changeCategory(cate));
   };
-  let listCate = [
+  let listCate = useAppSelector((state) => state.menu.listCate);
+  useEffect(() => {
     {
-      id: "CT01",
-      name: "Cà phê đá",
-    },
-    {
-      id: "CT02",
-      name: "Cà phê sữa",
-    },
-  ];
+      listCate[0] && selectCategory(listCate[0]._id);
+    }
+  }, [listCate]);
+
   return (
     <Slider {...settings}>
       {listCate.map((item) => {
@@ -420,9 +398,9 @@ export const Category = () => {
           <Button
             disableElevation
             disableRipple
-            key={item.id}
+            key={item._id}
             className="categoryCont"
-            onClick={() => selectCategory(item.id)}
+            onClick={() => selectCategory(item._id)}
             size="small"
             sx={{
               ml: 1,
@@ -434,7 +412,7 @@ export const Category = () => {
           >
             <div
               className={
-                selected === item.id ? "cateItem selected" : "cateItem "
+                selected === item._id ? "cateItem selected" : "cateItem "
               }
             >
               {item.name}
@@ -500,8 +478,8 @@ const BillDetail = () => {
       {open && (
         <div>
           <div className="backdrop" onClick={onRemove}></div>
-          <div class="billDetailCont">
-            <img class="clipper" src={Clipper} />
+          <div className="billDetailCont">
+            <img className="clipper" src={Clipper} />
             <div className="billBgCont">
               <div className="billHeader">
                 <h2>Linh's Coffee</h2>
@@ -516,7 +494,7 @@ const BillDetail = () => {
                   );
                 })}
               </div>
-              <div class="noteCont">
+              <div className="noteCont">
                 <TextField
                   placeholder="Nhập ghi chú của khách hàng ở đây"
                   label="Ghi chú"
@@ -649,357 +627,61 @@ const BillDetail = () => {
   );
 };
 
-// HÓA ĐƠN
-
-// const BillDetail = () => {
-//   let orderList = useAppSelector((state) => state.menu.orderList);
-//   let open = useAppSelector((state) => state.menu.openDetail);
-
-//   let user = "test";
-//   let totalBill = useAppSelector((state) => state.menu.totalBill);
-//   let total = useAppSelector((state) => state.menu.total);
-//   let printBill = useAppSelector((state) => state.menu.printBill);
-//   let paymentMethod = useAppSelector((state) => state.menu.paymentMethod);
-//   let note = useAppSelector((state) => state.menu.note);
-
-//   let dispatch = useAppDispatch();
-
-//   function onRemove() {
-//     dispatch(actions.menuActions.closeDetail());
-//   }
-//   function createOrder() {
-//     let order = {};
-//   }
-//   function cancelOrder() {
-//     dispatch(actions.menuActions.cancelOrder());
-//   }
-//   const billContent = [
-//     { label: "ID đơn hàng", content2: "CFM872022" },
-//     {
-//       label: "Ngày tạo",
-//       content2: currentDate(),
-//     },
-//     // { label: "Người tạo", content: user ? user : "N/A" },
-//     { label: "Thu ngân", content2: user ? user : "N/A" },
-//     { label: "Tên món", content1: "SL",  content2: "Đơn giá" },
-//     { label: "Cafe Đá", content1: "2", content2: "40.000 VNĐ" },
-//     {
-//       label: "Tổng đơn",
-//       content: numbToCurrency(total) ? numbToCurrency(total) : "N/A",               // Phần này add đường ngang vào tui ko biết có gì chú copy phần đó dưới á
-//     },
-//     { label: "Thuế VAT", content2: "10%" },
-//     {
-//       label: "Tổng tiền",
-//       content2: numbToCurrency(totalBill) ? numbToCurrency(totalBill) : "N/A",
-//     },
-//     { label: "Phương thức thanh toán", content2: "Tiền mặt" },
-//     { label: "Trạng thái", content2: "Đã thanh toán" },
-//   ];
-//   return (
-//     <>
-//       {open && (
-//         <div>
-//           <div className="backdrop" onClick={onRemove}></div>
-//           <div class="billDetailCont">
-//             <img class="clipper" src={Clipper} />
-//             <div className="billBgCont">
-//               <div className="billHeader">
-//                 <h2>Linh's Coffee</h2>
-//               </div>
-//               <div className="locationCont">
-//                   <h4>Địa chỉ:*********</h4>
-//                   <h4>SĐT:********</h4>
-//               </div>
-//               <hr  width="100%" size="1%" align="center" />
-
-//               <div className="cardCont">
-
-//                     <Typography
-//                       sx={{ fontSize: "1.5rem" }}
-//                       color="text.secondary"
-//                       gutterBottom
-//                       textAlign= "center"
-//                     >
-//                       {billText.header3}
-//                     </Typography>
-//                     <div className="billContentsCont">
-//                       {billContent.map((item) => {
-//                         return (
-//                           <>
-//                             <div className="billContentCont">
-//                               <Typography
-//                                 sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-//                                 color="text.secondary"
-//                                 gutterBottom
-//                               >
-//                                 {item.label}
-//                               </Typography>
-//                               <Typography
-//                                 sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-//                                 color="text.secondary"
-//                                 gutterBottom
-//                               >
-//                                 {item.content1}
-//                               </Typography>
-//                               <Typography
-//                                 sx={{ fontSize: "0.8rem", fontWeight: "bold", textAlign: "center" }}
-//                                 color="text.secondary"
-//                                 gutterBottom
-//                               >
-//                                 {item.content2}
-//                               </Typography>
-//                             </div>
-//                           </>
-//                         );
-//                       })}
-//                     </div>
-
-//               </div>
-//               <hr  width="100%" size="1%" align="center" />
-
-//               <div className="buttonCont">
-//                 <Button
-//                   variant="contained"
-//                   size="large"
-//                   onClick={() => createOrder()}
-//                   color="secondary"
-//                 >
-//                   Tạo đơn
-//                 </Button>
-//                 <Button
-//                   variant="contained"
-//                   size="large"
-//                   color="error"
-//                   onClick={() => cancelOrder()}
-//                 >
-//                   Huỷ đơn
-//                 </Button>
-//               </div>
-//             </div>
-//             <div
-//               className="removeBtnCont"
-//               style={{
-//                 top: "3.5rem",
-//                 right: "-1rem",
-//               }}
-//             >
-//               <RemoveButton action={onRemove} size="large" />
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </>
-//   );
-// };
-
-// TẠO ĐƠN
-
-// const BillDetail = () => {
-//   let orderList = useAppSelector((state) => state.menu.orderList);
-//   let open = useAppSelector((state) => state.menu.openDetail);
-
-//   let user = "test";
-//   let totalBill = useAppSelector((state) => state.menu.totalBill);
-//   let total = useAppSelector((state) => state.menu.total);
-//   let printBill = useAppSelector((state) => state.menu.printBill);
-//   let paymentMethod = useAppSelector((state) => state.menu.paymentMethod);
-//   let note = useAppSelector((state) => state.menu.note);
-
-//   let dispatch = useAppDispatch();
-
-//   function onRemove() {
-//     dispatch(actions.menuActions.closeDetail());
-//   }
-//   function createOrder() {
-//     let order = {};
-//   }
-//   function cancelOrder() {
-//     dispatch(actions.menuActions.cancelOrder());
-//   }
-//   const billContent = [
-//     {
-//       label: "Ngày tạo",
-//       content: currentDate(),
-//     },
-//     { label: "Người tạo", content: user ? user : "N/A" },
-//     {
-//       label: "Tổng đơn",
-//       content: numbToCurrency(total) ? numbToCurrency(total) : "N/A",
-//     },
-//     { label: "Thuế VAT", content: "10%" },
-//     {
-//       label: "Tổng tiền",
-//       content: numbToCurrency(totalBill) ? numbToCurrency(totalBill) : "N/A",
-//     },
-//   ];
-//   return (
-//     <>
-//       {open && (
-//         <div>
-//           <div className="backdrop" onClick={onRemove}></div>
-//           <div class="billDetailCont">
-//             <img class="clipper" src={Clipper} />
-//             <div className="billBgCont">
-//               <div className="billHeader">
-//                 <h2>Linh's Coffee</h2>
-//                 <h1>TẠO ĐƠN</h1>
-//               </div>
-//               <div className="billListCont">
-//                 {orderList.map((item) => {
-//                   return (
-//                     <div className="billItemCont">
-//                       <OrderItem item={item} changeAmount={true} />
-//                     </div>
-//                   );
-//                 })}
-//               </div>
-//               <div class="noteCont">
-//                 <TextField
-//                   placeholder="Nhập ghi chú của khách hàng ở đây"
-//                   label="Ghi chú"
-//                   onChange={(e) => dispatch(actions.menuActions.setNote(e))}
-//                   multiline
-//                   rows={2}
-//                   maxRows={4}
-//                   fullWidth
-//                 />
-//               </div>
-//               <div className="cardCont">
-//                 <Card sx={{ minWidth: "100%" }}>
-//                   <CardContent>
-//                     <Typography
-//                       sx={{ fontSize: "1.2rem" }}
-//                       color="text.secondary"
-//                       gutterBottom
-//                     >
-//                       {billText.header1}
-//                     </Typography>
-//                     <div className="billContentsCont">
-//                       {billContent.map((item) => {
-//                         return (
-//                           <>
-//                             <div className="billContentCont">
-//                               <Typography
-//                                 sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-//                                 color="text.secondary"
-//                                 gutterBottom
-//                               >
-//                                 {item.label}
-//                               </Typography>
-//                               <Typography
-//                                 sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-//                                 color="text.secondary"
-//                                 gutterBottom
-//                               >
-//                                 {item.content}
-//                               </Typography>
-//                             </div>
-//                           </>
-//                         );
-//                       })}
-//                     </div>
-//                   </CardContent>
-//                   <CardContent>
-//                     <Typography
-//                       sx={{ fontSize: "1.2rem" }}
-//                       color="text.secondary"
-//                       gutterBottom
-//                     >
-//                       {billText.header2}
-//                     </Typography>
-//                     <FormControl>
-//                       <RadioGroup
-//                         row
-//                         aria-labelledby="demo-row-radio-buttons-group-label"
-//                         name="row-radio-buttons-group"
-//                         value={paymentMethod}
-//                         onChange={(value) =>
-//                           dispatch(actions.menuActions.changePayment(value))
-//                         }
-//                       >
-//                         <FormControlLabel
-//                           value="cash"
-//                           control={<Radio />}
-//                           label="Tiền mặt"
-//                         />
-//                         <FormControlLabel
-//                           value="momo"
-//                           control={<Radio />}
-//                           label="Momo"
-//                         />
-//                         <FormControlLabel
-//                           value="vnpay"
-//                           control={<Radio />}
-//                           label="VNPay"
-//                         />
-//                       </RadioGroup>
-//                     </FormControl>
-//                   </CardContent>
-//                 </Card>
-//               </div>
-//               <div className="checkbox">
-//                 <FormControlLabel
-//                   control={
-//                     <Checkbox
-//                       checked={printBill}
-//                       onChange={() =>
-//                         dispatch(actions.menuActions.changePrint())
-//                       }
-//                     />
-//                   }
-//                   label="In hoá đơn"
-//                 />
-//               </div>
-
-//               <div className="buttonCont">
-//                 <Button
-//                   variant="contained"
-//                   size="large"
-//                   onClick={() => createOrder()}
-//                   color="success"
-//                 >
-//                   Tạo đơn
-//                 </Button>
-//                 <Button
-//                   variant="contained"
-//                   size="large"
-//                   color="error"
-//                   onClick={() => cancelOrder()}
-//                 >
-//                   Huỷ đơn
-//                 </Button>
-//               </div>
-//             </div>
-//             <div
-//               className="removeBtnCont"
-//               style={{
-//                 top: "3.5rem",
-//                 right: "-1rem",
-//               }}
-//             >
-//               <RemoveButton action={onRemove} size="large" />
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </>
-//   );
-// };
 export default function Menu() {
   let dispatch = useAppDispatch();
+  const checkOnload = useAppSelector((state) => state.menu.loadData);
 
-  const onChange = (currentSlide) => {
-    console.log(currentSlide);
-  };
+  const [loading, setLoading] = useState(false);
+  const dataList = useAppSelector((state) => state.menu.listAll);
+  const cateList = useAppSelector((state) => state.menu.listCate);
+
   let openPrint = useAppSelector((state) => state.menu.openPrint);
+  const fetchData = async (value) => {
+    try {
+      setLoading(true);
+      if (dataList.length === 0) {
+        const response = await collections.getDishes();
+        // let temp = response.map((item =>{
+
+        // }))
+        dispatch(actions.menuActions.setListAll(response));
+        const categories = await cateCollections.getCategories();
+
+        dispatch(actions.menuActions.setListCate(categories));
+      }
+
+      setLoading(false);
+
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      //history.replace("/");
+    }
+  };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, [dataList]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="container">
+      <Loading loading={loading} />
       <Category />
-      <MenuList categoryName={"Cà phê"} />
+      {cateList.map((item) => {
+        return (
+          <MenuLists refs={item._id} dataList={dataList} category={item} />
+        );
+      })}
+      <div style={{ width: "100%", height: "30vh" }}></div>
       <OrderBar />
       <BillDetail />
       <BillPrint />
+      <MenuItemDetail />
     </div>
   );
 }
