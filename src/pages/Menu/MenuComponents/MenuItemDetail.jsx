@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Input, Carousel } from "antd";
 
-import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
-import { actions } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
+import { actions } from "../../../redux";
 import "./index.scss";
-import { billText } from "../../helper/Text";
+import { billText } from "../../../helper/Text";
 
 import Slider from "react-slick";
 import { useDoubleTap } from "use-double-tap";
@@ -15,8 +15,10 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+import PlaceHolder from "../../../assets/img/placeholder.png";
 
-import { numbToCurrency } from "../../helper/currency";
+import { RemoveButton } from "./RemoveButton";
+import { numbToCurrency } from "../../../helper/currency";
 import {
   Button,
   TextField,
@@ -30,15 +32,15 @@ import {
   RadioGroup,
   Checkbox,
 } from "@mui/material/";
-import Coffee from "../../assets/img/coffee_test.png";
+import Coffee from "../../../assets/img/coffee_test.png";
 
-import WoodBoard from "../../assets/img/wood.svg";
-import Clipboard from "../../assets/img/clipboard.svg";
-import Clipper from "../../assets/img/clipper.svg";
+import WoodBoard from "../../../assets/img/wood.svg";
+import Clipboard from "../../../assets/img/clipboard.svg";
+import Clipper from "../../../assets/img/clipper.svg";
 
 const MenuItemDetail = () => {
-  let orderList = useAppSelector((state) => state.menu.orderList);
-  let open = useAppSelector((state) => state.menu.openDetail);
+  let info = useAppSelector((state) => state.menu.info);
+  let open = useAppSelector((state) => state.menu.showInfo);
 
   let user = "test";
   let totalBill = useAppSelector((state) => state.menu.totalBill);
@@ -50,10 +52,11 @@ const MenuItemDetail = () => {
   let dispatch = useAppDispatch();
 
   function onRemove() {
-    dispatch(actions.menuActions.closeDetail());
+    dispatch(actions.menuActions.hideInfo());
   }
   function createOrder() {
-    let order = {};
+    dispatch(actions.menuActions.addOrderItem(info));
+    dispatch(actions.menuActions.hideInfo());
   }
   function cancelOrder() {
     dispatch(actions.menuActions.cancelOrder());
@@ -61,26 +64,23 @@ const MenuItemDetail = () => {
   const billContent = [
     {
       label: "Đơn giá: ",
-      content: numbToCurrency(total) ? numbToCurrency(total) : "N/A",
+      content: numbToCurrency(info.price) ? numbToCurrency(info.price) : "N/A",
     },
     { label: "Trạng thái: ", content: "Còn hàng" },
-    { label: "Thuế VAT: ", content: "10%" },
+    // { label: "Thuế VAT: ", content: "10%" },
   ];
   return (
     <>
       {open && (
         <div>
           <div className="backdrop" onClick={onRemove}></div>
-          <div class="billDetailCont">
-            <div className="billBgCont">
-              <div className="billListCont">
-                {orderList.map((item) => {
-                  return (
-                    <div className="billItemCont">
-                      <OrderItem item={item} changeAmount={true} />
-                    </div>
-                  );
-                })}
+          <div class="orderItemDetailCont">
+            <div className="orderItemBgCont">
+              <div className="infoImageCont">
+                <img
+                  className="infoImage"
+                  src={info.url ? info.url : PlaceHolder}
+                />
               </div>
 
               <div className="cardCont">
@@ -145,8 +145,8 @@ const MenuItemDetail = () => {
             <div
               className="removeBtnCont"
               style={{
-                top: "3.5rem",
-                right: "-1rem",
+                top: "1.5rem",
+                right: "-1.3rem",
               }}
             >
               <RemoveButton action={onRemove} size="large" />

@@ -1,17 +1,6 @@
 import { createSlice,current } from "@reduxjs/toolkit";
 
 
-let orderItem = {
-    id: '01',
-    name: "Cafe sữa",
-    url: "https://www.acouplecooks.com/wp-content/uploads/2021/09/Almond-Milk-Coffee-001.jpg",
-    recipe: "110g bột cà phê + 100ml nước nóng pha phin, sau đó thêm vào 10ml nước đường và 15ml sữa đặc",
-    price: 21000,
-    amount: 1,
-    total_sales: 12,
-    type: "Đồ uống",
-    VAT: 0.1
-  };
 let initialState = {
     show: false,
     loadData: false,
@@ -25,8 +14,12 @@ let initialState = {
     openPrint: false,
     print: false,
     menuGroup: "drink",
+    info: {},
+    showInfo: false,
     openDetail: false,
     listCate:[],
+    listAll:[],
+    loadData: false,
     dishType: "drink",
     selectedCate: "CT01",
 }
@@ -34,10 +27,28 @@ const slice = createSlice({
     name: 'menu',
     initialState,
     reducers: {
+        setListCate(state, actions) {
+            state.listCate = actions.payload;
+
+        }, 
+        setListAll(state, actions) {
+            state.listAll = actions.payload;
+
+        },      
+        changeLoad(state, actions) {
+            state.loadData = actions.payload;
+        },
+        showInfo(state,actions){
+            state.showInfo = true;
+            state.info = actions.payload;
+        },
+        hideInfo(state) {
+            state.showInfo = false;
+
+        },
         showDetail(state) {
             state.openDetail = true;
             state.show = false;
-
         },
         closeDetail(state) {
             state.openDetail = false;
@@ -54,7 +65,21 @@ const slice = createSlice({
 
         },
         resetOrder(state){
-            return initialState;
+            state.show= false;
+            state.loadData= false;
+            state.note= "";
+            state.amount= 0;
+            state.totalBill=0;
+            state.total= 0;
+            state.paymentMethod= "cash";
+            state.printBill= true;
+            state.openPrint= false;
+            state.print= false;
+            state.info= {};
+            state.showInfo= false;
+            state.openDetail= false;
+            state.orderList = [];
+            state.loadData= false ;
         },
         showPrintBill(state) {
             state.openPrint = true;
@@ -68,8 +93,22 @@ const slice = createSlice({
         showOrderBar(state) {
             state.show = true;
         },
-        closeOrderBar() {
-            return initialState;       
+        closeOrderBar(state) {
+            state.show= false;
+            state.loadData= false;
+            state.note= "";
+            state.amount= 0;
+            state.totalBill=0;
+            state.total= 0;
+            state.paymentMethod= "cash";
+            state.printBill= true;
+            state.openPrint= false;
+            state.print= false;
+            state.info= {};
+            state.showInfo= false;
+            state.openDetail= false;
+            state.orderList = [];
+            state.loadData= false ;     
          },
         resetOrderBar(state){
             if(state.orderList.length === 0){
@@ -84,7 +123,8 @@ const slice = createSlice({
         },
         cancelPrint(state){state.openPrint = false},
         addOrderItem(state,actions){
-            let temp = actions.payload;
+
+            let temp = JSON.parse(JSON.stringify(actions.payload));
             let exist = false;
             if(state.orderList.length > 0){
                 state.orderList.map((item)=>{
@@ -96,9 +136,7 @@ const slice = createSlice({
                                  
             }
             if(!exist){
-                Object.defineProperty(temp, 'amount', {
-                    value: 1
-                })
+                temp.amount = 1;
                 state.orderList.push(temp); 
             }
             console.log(12)
@@ -118,7 +156,6 @@ const slice = createSlice({
             let count = 0;
             let total = 0;
             let totalBill = 0;
-            console.log(current(list));
 
             list.map(item => {
                 count += item.amount
@@ -160,13 +197,25 @@ const slice = createSlice({
 
         },
         cancelOrder(state){
-            return initialState;
-
+            state.show= false;
+            state.loadData= false;
+            state.note= "";
+            state.amount= 0;
+            state.totalBill=0;
+            state.total= 0;
+            state.paymentMethod= "cash";
+            state.printBill= true;
+            state.openPrint= false;
+            state.print= false;
+            state.info= {};
+            state.showInfo= false;
+            state.openDetail= false;
+            state.orderList = [];
+            state.loadData= false ;
         },
         changeCategory(state,actions){
             let temp = actions.payload;
             state.selectedCate = temp;
-            console.log(state.selectedCate);
         }
 
 
