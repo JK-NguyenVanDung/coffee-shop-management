@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { map, includes, sortBy, uniqBy, each, result, get } from "lodash";
-import { Input, Table, Form, Popconfirm, Upload, message, Tooltip } from "antd";
+import {
+  Input,
+  Table,
+  Form,
+  Popconfirm,
+  Upload,
+  message,
+  Tooltip,
+  Switch,
+} from "antd";
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import "./index.scss";
@@ -11,7 +20,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+// import Switch from "@mui/material/Switch";
 import { dishText } from "../../../helper/Text";
 import * as collections from "../../../api/Collections/dish";
 import SearchTable from "../../../components/Table/SearchTable";
@@ -101,7 +110,6 @@ const FoodAndDrink = () => {
         dispatch(actions.formActions.changeLoad(!loadData));
         message.success("Chỉnh thành công");
         setLoading(false);
-        dispatch(actions.formActions.changeLoad(!loadData));
 
         return;
       }
@@ -129,19 +137,20 @@ const FoodAndDrink = () => {
       title: "Ẩn/Hiện món",
       render: (item) => {
         return (
-          <>
-            <FormGroup>
-              <FormControlLabel
-                label={item.status === false ? "Hiện" : "Ẩn"}
-                control={
-                  <Switch
-                    defaultChecked={item.status}
-                    onChange={() => changeDisable(item._id)}
-                  />
-                }
-              />
-            </FormGroup>
-          </>
+          <div className="dishSwitchCont">
+            {/* <Switch
+              defaultChecked={item.status}
+              onChange={() => changeDisable(item._id)}
+            /> */}
+            <Switch
+              checkedChildren={"Ẩn"}
+              unCheckedChildren={"Hiện"}
+              defaultChecked={item.status}
+              onChange={() => changeDisable(item._id)}
+              // style={{ minHeight: "2rem", width: "7rem" }}
+            />
+            {/* {item.status === false ? "Hiện" : "Ẩn"} */}
+          </div>
         );
       },
     },
