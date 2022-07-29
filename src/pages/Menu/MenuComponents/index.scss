@@ -53,6 +53,8 @@
     flex-direction: column;
     position: relative;
     bottom: 1.2rem;
+    max-width: 800px;
+
     .orderItemImage{
         margin-right:2rem;
         width: 7rem;
@@ -66,10 +68,12 @@
         background-repeat: no-repeat;
         cursor:pointer;
     }
+   
     .infoCont{               
         width:auto;
 
         position:relative;
+
 
         span{
             width:80%;
@@ -80,6 +84,11 @@
             align-items: center;
             color: #fff;
             font-size: 0.9rem;
+
+        }
+        .title{
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 }
@@ -100,6 +109,8 @@
         position: relative;         
         width: 11rem;
         height: 200px;
+        max-width: 100%;
+
         .divider{
             margin-top: 0.5rem;
             height: 8rem;
@@ -457,3 +468,5 @@
     font-size: 2rem;
     }
 }
+
+

@@ -17,6 +17,9 @@ import {
   InfoCircleOutlined,
   LineChartOutlined,
 } from "@ant-design/icons";
+import { IconButton } from "@mui/material/";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import React from "react";
@@ -47,7 +50,11 @@ export default function SiderDemos({ children, headerItem = null }) {
   const toggle = () => {
     setCollapsed(!collapsed);
   };
+  function goBack() {
+    dispatch(actions.formActions.setNameMenu(`Menu`));
 
+    navigate(`../menu`);
+  }
   return (
     <Layout>
       <Sider
@@ -130,26 +137,35 @@ export default function SiderDemos({ children, headerItem = null }) {
           style={{ padding: 0 }}
         >
           {nameMenu && (
-            <a
-              onClick={() =>
-                location.pathname === "/menu/search" ? navigate(`../menu`) : {}
-              }
-            >
+            <>
+              {location.pathname === "/menu/search" ? (
+                <IconButton
+                  style={{ marginLeft: 40, width: 60 }}
+                  onClick={() =>
+                    location.pathname === "/menu/search" ? goBack() : {}
+                  }
+                >
+                  <ArrowBackIcon />
+                </IconButton>
+              ) : null}
               <h4
                 style={{
                   cursor: "pointer",
                   fontSize: 35,
                   paddingLeft: 20,
-                  width: location.pathname === "/menu" ? "7rem" : "100%",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
+                  width: location.pathname === "/menu" ? "5rem" : "100%",
+                  height: "10rem",
+                  whiteSpace: location.pathname === "/menu" ? null : "nowrap",
+                  overflow: location.pathname === "/menu" ? null : "hidden",
+                  textOverflow:
+                    location.pathname === "/menu" ? null : "ellipsis",
                 }}
               >
                 {nameMenu}
               </h4>
-            </a>
+            </>
           )}
+
           {headerItem}
           <HeaderProFile />
         </Header>

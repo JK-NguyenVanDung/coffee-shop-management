@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Input, Carousel } from "antd";
+import { Input, Carousel, message } from "antd";
 
-import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
-import { actions } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
+import { actions } from "../../../redux";
 import "./index.scss";
-import { billText } from "../../helper/Text";
+import { billText } from "../../../helper/Text";
 
 import Slider from "react-slick";
 import { useDoubleTap } from "use-double-tap";
@@ -14,6 +14,12 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+
+import { numbToCurrency } from "../../../helper/currency";
+
+import * as collections from "../../../api/Collections/dish";
+import * as cateCollections from "../../../api/Collections/category";
+import Loading from "../../../components/Loading";
 import {
   Button,
   TextField,
@@ -27,12 +33,14 @@ import {
   RadioGroup,
   Checkbox,
 } from "@mui/material/";
-import numbToCurrency from "../../../helper/currency";
+import Coffee from "../../../assets/img/coffee_test.png";
+import PlaceHolder from "../../../assets/img/placeholder.png";
 
-import WoodBoard from "../../assets/img/wood.svg";
-import Clipboard from "../../assets/img/clipboard.svg";
-import Clipper from "../../assets/img/clipper.svg";
-
+import WoodBoard from "../../../assets/img/wood.svg";
+import Clipboard from "../../../assets/img/clipboard.svg";
+import Clipper from "../../../assets/img/clipper.svg";
+import OrderItem from "./OrderItem";
+import { RemoveButton } from "./RemoveButton";
 function currentDate() {
   let currentdate = new Date();
   let datetime =
@@ -58,6 +66,7 @@ const BillDetail = () => {
   let printBill = useAppSelector((state) => state.menu.printBill);
   let paymentMethod = useAppSelector((state) => state.menu.paymentMethod);
   let note = useAppSelector((state) => state.menu.note);
+  let openPrint = useAppSelector((state) => state.menu.openPrint);
 
   let dispatch = useAppDispatch();
 
@@ -66,6 +75,14 @@ const BillDetail = () => {
   }
   function createOrder() {
     let order = {};
+    dispatch(actions.menuActions.createOrder());
+
+    if (printBill) {
+      dispatch(actions.menuActions.showPrintBill());
+    } else {
+      dispatch(actions.menuActions.resetOrder());
+    }
+    message.success("Tạo đơn thành công");
   }
   function cancelOrder() {
     dispatch(actions.menuActions.cancelOrder());
@@ -91,8 +108,8 @@ const BillDetail = () => {
       {open && (
         <div>
           <div className="backdrop" onClick={onRemove}></div>
-          <div class="billDetailCont">
-            <img class="clipper" src={Clipper} />
+          <div className="billDetailCont">
+            <img className="clipper" src={Clipper} />
             <div className="billBgCont">
               <div className="billHeader">
                 <h2>Linh's Coffee</h2>
@@ -107,7 +124,7 @@ const BillDetail = () => {
                   );
                 })}
               </div>
-              <div class="noteCont">
+              <div className="noteCont">
                 <TextField
                   placeholder="Nhập ghi chú của khách hàng ở đây"
                   label="Ghi chú"
@@ -210,7 +227,7 @@ const BillDetail = () => {
                   variant="contained"
                   size="large"
                   onClick={() => createOrder()}
-                  color="success"
+                  color="secondary"
                 >
                   Tạo đơn
                 </Button>
