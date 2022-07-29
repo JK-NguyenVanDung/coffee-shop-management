@@ -42,15 +42,17 @@ const MenuHeader = (props) => {
   };
   return (
     <div className={props.switch === true ? "centeredCont" : "rightCont"}>
-      {props.switch && (
-        <Switch
-          checkedChildren={menuText.switchOp1}
-          unCheckedChildren={menuText.switchOp2}
-          defaultChecked
-          onChange={() => dispatch(actions.menuActions.setGroup(!menuGroup))}
-          style={{ minHeight: "2rem", width: "7rem" }}
-        />
-      )}
+      <div class="switchCont">
+        {props.switch && (
+          <Switch
+            checkedChildren={menuText.switchOp1}
+            unCheckedChildren={menuText.switchOp2}
+            defaultChecked
+            onChange={() => dispatch(actions.menuActions.setGroup(!menuGroup))}
+            style={{ minHeight: "2rem", width: "7rem" }}
+          />
+        )}
+      </div>
       <Input
         placeholder={menuText.searchMenu}
         allowClear
