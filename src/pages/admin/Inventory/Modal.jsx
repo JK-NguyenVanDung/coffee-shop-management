@@ -277,7 +277,7 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
-          <div style={{ width: "30%" }}>
+          <div style={{ width: "40%", display: "flex", flexDirection: "column", justifyContent: "flex-start"  }}>
             <h4>{labels.avatar}</h4>
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
@@ -325,7 +325,7 @@ const ModalContent = () => {
               </>
             ) : null}
           </div>
-          <div>
+          <div className="commoditieCont">
             <h4>{labels.name}</h4>
             <Form.Item
               name="name"
@@ -407,7 +407,7 @@ const ModalContent = () => {
             </Select>
           </div>
         </div>
-        <div className="BtnAdd">
+        <div className="btnAdd">
           <Button
             size="Large"
             color="success"
