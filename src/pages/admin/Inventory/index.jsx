@@ -235,7 +235,7 @@ const Inventory = () => {
 
         <div className="dishSearch">
           <SearchTable
-            placeholder={menuText.searchinventories}
+            placeholder={menuText.searchInventories}
             allowClear
             size="default"
             value={search}

@@ -134,8 +134,6 @@ const ModalContent = () => {
         amount: dataItem.amount,
         price: dataItem.price,
         payment_type: dataItem.payment_type,
-
-        avatar: fileList[0].name,
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
@@ -146,7 +144,6 @@ const ModalContent = () => {
 
       // nếu không có dữ liệu đặc biệt thì xoá
       setFileList([dataItem.avatar]);
-      setStatus(dataItem.account_status);
       // setDate(new Date(dataItem.date_of_birth));
     };
 
@@ -313,6 +310,18 @@ const ModalContent = () => {
                 >
                   <Input disabled={true} placeholder="Nhập" />
                 </Form.Item>
+                <h4>{labels.update}</h4>
+                <Form.Item
+                  name="updatedAt"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống`,
+                    },
+                  ]}
+                >
+                  <Input disabled={true} placeholder="Nhập" />
+                </Form.Item>
               </>
             ) : null}
           </div>
@@ -396,22 +405,6 @@ const ModalContent = () => {
                 return <Option value={item}>{item}</Option>;
               })}
             </Select>
-            {dataItem ? (
-              <>
-                <h4>{labels.update}</h4>
-                <Form.Item
-                  name="updatedAt"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={true} placeholder="Nhập" />
-                </Form.Item>
-              </>
-            ) : null}
           </div>
         </div>
         <div className="BtnAdd">
