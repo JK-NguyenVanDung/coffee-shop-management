@@ -35,10 +35,10 @@ const MenuHeader = (props) => {
       return record;
     }).filter((record) => !!record);
     dispatch(actions.formActions.setNameMenu(`Tìm kiếm: ${search}`));
-    navigate(`../menu/search`);
     dispatch(
       actions.menuActions.setListSearch(search ? filteredData : dataList)
     );
+    navigate(`../menu/search`);
   };
   return (
     <div className={props.switch === true ? "centeredCont" : "rightCont"}>

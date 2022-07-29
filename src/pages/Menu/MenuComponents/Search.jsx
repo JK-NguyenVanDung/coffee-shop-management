@@ -6,7 +6,10 @@ import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import "./index.scss";
 import { MenuItem } from "./MenuItem";
-
+import BillPrint from "./BillPrint";
+import MenuItemDetail from "./MenuItemDetail";
+import OrderBar from "./OrderBar";
+import BillDetail from "./BillDetail";
 const SearchResult = (item) => {
   let list = useAppSelector((state) => state.menu.orderList);
   const dispatch = useAppDispatch();
@@ -31,6 +34,11 @@ export default function Search() {
           </p>
         </div>
       )}
+      <div style={{ width: "100%", height: "30vh" }}></div>
+      <OrderBar />
+      <BillDetail />
+      <BillPrint />
+      <MenuItemDetail />
     </div>
   );
 }

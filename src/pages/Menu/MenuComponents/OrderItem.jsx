@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Input, Carousel } from "antd";
+import { Input, Carousel, message } from "antd";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -14,6 +14,12 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+
+import { numbToCurrency } from "../../../helper/currency";
+
+import * as collections from "../../../api/Collections/dish";
+import * as cateCollections from "../../../api/Collections/category";
+import Loading from "../../../components/Loading";
 import {
   Button,
   TextField,
@@ -27,8 +33,12 @@ import {
   RadioGroup,
   Checkbox,
 } from "@mui/material/";
+import Coffee from "../../../assets/img/coffee_test.png";
+import PlaceHolder from "../../../assets/img/placeholder.png";
 
-import { numbToCurrency } from "../../../helper/currency";
+import WoodBoard from "../../../assets/img/wood.svg";
+import Clipboard from "../../../assets/img/clipboard.svg";
+import Clipper from "../../../assets/img/clipper.svg";
 import { RemoveButton } from "./RemoveButton";
 const OrderItem = ({ item, changeAmount = false }) => {
   let list = useAppSelector((state) => state.menu.orderList);
@@ -49,16 +59,19 @@ const OrderItem = ({ item, changeAmount = false }) => {
       <div
         className="orderItemImage "
         style={{
-          backgroundImage: `linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 30%),url(${item.url})`,
+          backgroundImage: `linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 30%),url(${
+            item.url ? item.url : PlaceHolder
+          })`,
         }}
       />
+
       <div className="infoCont">
-        <span>{item.name + " x " + item.amount}</span>
+        <span className="title">{item.name + " x " + item.amount}</span>
         <span>{numbToCurrency(item.price)}</span>
       </div>
       {changeAmount && (
         <div
-          class="changeAmountCont"
+          className="changeAmountCont"
           style={{
             display: "flex",
             width: "80%",
