@@ -7,46 +7,45 @@ import Food_and_drink from "../pages/admin/Food-and-drink";
 import Category from "../pages/admin/Category";
 // import KeyData from "../pages/admin/Keyword";
 import Inventory from "../pages/admin/Inventory";
-import Recipes from "../pages/admin/Recipes";
+import Search from "../pages/Menu/MenuComponents/Search";
 import SiderDemo from "../pages/admin";
-import MenuHeader from "../components/MenuHeader/MenuHeader"
+import MenuHeader from "../components/MenuHeader/MenuHeader";
 
 export const AdminRouter = {
   // ADMIN: {
   //   path: "/admin",
   // },
   MENU: {
-    path: "/menu"
+    path: "/menu",
   },
   ANALYSIS: {
-    path: "/analysis"
+    path: "/analysis",
   },
   BILLS: {
-    path: "/bills"
+    path: "/bills",
   },
   EMPLOYEES: {
-    path: "/employees"
+    path: "/employees",
   },
   FOOD_AND_DRINK: {
-    path: "/food-and-drink"
+    path: "/food-and-drink",
   },
   INVENTORY: {
-    path: "/inventory"
+    path: "/inventory",
   },
-  RECIPES: {
-    path: "/recipes"
+  SEARCH: {
+    path: "/menu/search",
   },
   CATEGORY: {
-    path: "/category"
+    path: "/category",
   },
 };
-
 
 const routes = [
   {
     path: AdminRouter.MENU.path,
     exact: false,
-    headerItem: <MenuHeader/>,
+    headerItem: <MenuHeader switch={true} />,
     element: <Menu />,
   },
   {
@@ -60,12 +59,14 @@ const routes = [
     exact: false,
     headerItem: null,
     element: <Bills />,
-  }, {
+  },
+  {
     path: AdminRouter.EMPLOYEES.path,
     exact: false,
     headerItem: null,
     element: <Employees />,
-  }, {
+  },
+  {
     path: AdminRouter.FOOD_AND_DRINK.path,
     exact: false,
     headerItem: null,
@@ -76,36 +77,39 @@ const routes = [
     exact: false,
     headerItem: null,
     element: <Inventory />,
-  }, {
-    path: AdminRouter.RECIPES.path,
-    exact: false,
-    headerItem: null,
-    element: <Recipes />,
-  }, {
+  },
+  {
     path: AdminRouter.CATEGORY.path,
     exact: false,
     headerItem: null,
     element: <Category />,
+  },
+  {
+    path: AdminRouter.SEARCH.path,
+    exact: false,
+    headerItem: <MenuHeader switch={false} />,
+    element: <Search />,
   },
 ];
 
 const MakeRoutes = () => {
   return (
     <Routes>
-
       {routes.map((route, index) => {
         return (
           <Route
             key={index}
             exact={route.exact}
             path={route.path}
-            element={<SiderDemo headerItem={route.headerItem}>
-              {route.element}
-            </SiderDemo>}
+            element={
+              <SiderDemo headerItem={route.headerItem}>
+                {route.element}
+              </SiderDemo>
+            }
           />
         );
-      })}    </Routes>
-
+      })}
+    </Routes>
   );
 };
 

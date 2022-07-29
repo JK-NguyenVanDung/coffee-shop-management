@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-
-import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
-import { actions } from "../../redux";
-import "../index.scss";
-
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { Input, Carousel } from "antd";
 
-import { useAppDispatch, useAppSelector } from "../../hook/useRedux";
-import { actions } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
+import { actions } from "../../../redux";
 import "./index.scss";
-import { billText } from "../../helper/Text";
+import { billText } from "../../../helper/Text";
 
 import Slider from "react-slick";
 import { useDoubleTap } from "use-double-tap";
@@ -34,13 +27,9 @@ import {
   RadioGroup,
   Checkbox,
 } from "@mui/material/";
-import Coffee from "../../assets/img/coffee_test.png";
 
-import WoodBoard from "../../assets/img/wood.svg";
-import Clipboard from "../../assets/img/clipboard.svg";
-import Clipper from "../../assets/img/clipper.svg";
 import { numbToCurrency } from "../../../helper/currency";
-
+import { RemoveButton } from "./RemoveButton";
 const OrderItem = ({ item, changeAmount = false }) => {
   let list = useAppSelector((state) => state.menu.orderList);
   const dispatch = useAppDispatch();

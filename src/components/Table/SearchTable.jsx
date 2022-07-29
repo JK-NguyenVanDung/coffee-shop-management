@@ -14,7 +14,7 @@ const SearchTable = (props) => {
       <Input
         {...props}
         size="large"
-        className="menuSearch"
+        className="tableSearch"
         addonBefore={
           <IconButton>
             <SearchRoundedIcon />

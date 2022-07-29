@@ -13,7 +13,7 @@ let initialState = {
     printBill: true,
     openPrint: false,
     print: false,
-    menuGroup: "drink",
+    menuGroup: true,
     info: {},
     showInfo: false,
     openDetail: false,
@@ -21,7 +21,8 @@ let initialState = {
     listAll:[],
     loadData: false,
     dishType: "drink",
-    selectedCate: "CT01",
+    selectedCate: "",
+    searchList: [],
 }
 const slice = createSlice({
     name: 'menu',
@@ -214,10 +215,11 @@ const slice = createSlice({
             state.loadData= false ;
         },
         changeCategory(state,actions){
-            let temp = actions.payload;
-            state.selectedCate = temp;
-        }
-
+            state.selectedCate =actions.payload;
+        },
+        setListSearch(state,actions){
+            state.searchList =actions.payload;
+        },
 
     }
 })

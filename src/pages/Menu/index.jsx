@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { Input, Carousel, message } from "antd";
 
@@ -245,13 +245,7 @@ export const MenuItem = ({ item }) => {
     </div>
   );
 };
-export const MenuList = (props) => {
-  return (
-    <div className="">
-      <MenuItem item={props.item} />
-    </div>
-  );
-};
+
 export const MenuLists = ({ dataList, category }) => {
   let settings = {
     infinite: false,
@@ -296,39 +290,37 @@ export const MenuLists = ({ dataList, category }) => {
       },
     ],
   };
+  const myRef = useRef(null);
+  const menuGroup = useAppSelector((state) => state.menu.menuGroup);
 
-  // <MenuItem item={props.item} />
-  // const listCate = useAppSelector((state) => state.menu.listCate);
-  // function getCategoryName() {
-  //   let name = "";
-  //   for (let i = 0; i < listCate.length; i++) {
-  //     if (
-  //       listCate[i]._id === dataList[0].dish_type[0] ||
-  //       listCate[i].name === dataList[0].dish_type[0]
-  //     ) {
-  //       return listCate[i].name;
-  //     } else {
-  //       console.log(dataList[0].dish_type[0]);
-  //     }
-  //   }
+  const [data, setData] = useState([]);
 
-  //   return name;
-  // }
-  let filteredList = dataList.filter(
-    (record) =>
-      record.dish_type[0] === category.name ||
-      record.dish_type[0] === category._id
-  );
-  const [data, setData] = useState(filteredList);
+  function refreshData() {
+    setData(
+      dataList.filter(
+        (record) =>
+          record.category_type === menuGroup &&
+          (record.dish_type[0] === category.name ||
+            record.dish_type[0] === category._id) &&
+          record.status === true
+      )
+    );
+  }
+  useEffect(() => {
+    refreshData();
+  }, [menuGroup]);
+
+  const executeScroll = () => myRef.current.scrollIntoView();
+
   return (
-    <div className="menuCont">
-      <h2> {category.name}</h2>
+    <div className="menuCont" ref={myRef}>
+      <h2 onClick={executeScroll}>
+        {data.length > 0 ? category.name : category.name + ": Hết hàng"}
+      </h2>
       <div className="menuItemCont">
         <Slider {...settings}>
           {data.map((item) => {
-            return (
-              <MenuList key={item._id} category={item.dish_type} item={item} />
-            );
+            return <MenuItem key={item._id} item={item} />;
           })}
         </Slider>
       </div>
@@ -634,7 +626,7 @@ export default function Menu() {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.menu.listAll);
   const cateList = useAppSelector((state) => state.menu.listCate);
-
+  const menuGroup = useAppSelector((state) => state.menu.menuGroup);
   let openPrint = useAppSelector((state) => state.menu.openPrint);
   const fetchData = async (value) => {
     try {
@@ -660,10 +652,6 @@ export default function Menu() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, [dataList]);
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -673,9 +661,7 @@ export default function Menu() {
       <Loading loading={loading} />
       <Category />
       {cateList.map((item) => {
-        return (
-          <MenuLists refs={item._id} dataList={dataList} category={item} />
-        );
+        return <MenuLists dataList={dataList} category={item} />;
       })}
       <div style={{ width: "100%", height: "30vh" }}></div>
       <OrderBar />

@@ -1,4 +1,13 @@
+.rightCont{
+  width: 100%;
+  height: auto;
+  display:flex;
+  justify-content:flex-end;
+  align-items: center;
+  padding-left: 5%;
+  padding-right: 2%;
 
+}
 .centeredCont{
     width: 100%;
     height: auto;
@@ -8,15 +17,17 @@
     padding-left: 5%;
     padding-right: 2%;
 
+  }
+
 
   .menuSearch{
-    width: 50%;
+    width: 40%;
     .ant-input-affix-wrapper{
       border-radius: 8px !important; 
       width: 100%;
       border:none !important;
-      padding-left: 3.5rem;
-      height: 5vh; 
+      padding-left: 3.1rem;
+      height: 6vh; 
       -webkit-box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
       box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
 
@@ -44,7 +55,6 @@
       .ant-input-affix-wrapper:hover{
         z-index:0 !important; 
       }
-  }
   }
   .ant-switch-handle{
     height: 2rem;
