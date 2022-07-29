@@ -11,7 +11,7 @@ const config = combineReducers({
     dishes: reducers.dishesReducer,
     categories: reducers.categoriesReducer,
     // banner: reducers.bannerReducer,
-    // order: reducers.orderReducer,
+    bills: reducers.billsReducer,
     // news: reducers.newsReducer,
     // keyword: reducers.keyWordReducer,
     // vouchers:reducers.vouchersReducer
