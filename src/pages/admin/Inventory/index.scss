@@ -49,129 +49,6 @@
         color:#fff;
     }
 }
-.positionCheckAdd {
-    display: flex;
-    justify-content: space-between;
-}
-.BtnAdd {
-    display: flex;
-    justify-content: space-around;
-}
-
-// Thông tin nhân viên
-.Info {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-
-    border-radius: 12px ;
-    padding: 0.5%;
-  }
-.totalContentInfo {
-    background-color: #fff;
-    border-radius: 12px;
-}
-.TitleInfo {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-left: 4.3%;
-    margin-right: 4.3%;
-}
-.ContInfo {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
-.ItemCont {
-    padding-bottom: 3%;
-}  
-
-
-.positionCheckInfo {
-    display: flex;
-    justify-content: space-between;
-}
-.BtnInfo {
-    display: flex;
-    justify-content: space-around;
-    padding-bottom: 3%;
-}
-
-
-// Sửa thông tin nhân viên
-.Edit {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-
-    border-radius: 12px ;
-    padding: 0.5%;
-  }
-.totalContentEdit {
-    background-color: #fff;
-    border-radius: 12px;
-}
-.TitleEdit {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-left: 4.3%;
-    margin-right: 4.3%;
-}
-.ContEdit {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
-.NameEdit {
-    padding-bottom: 3%;
-}  
-.AgeEdit {
-    padding-bottom: 3%;
-}
-.identityCardEdit {
-    padding-bottom: 3%;
-}
-.IDEdit {
-    padding-bottom: 3%;
-}
-.EmailEdit {
-    padding-bottom: 3%;
-}
-.PhoneEdit {
-    padding-bottom: 3%;
-}
-.PassEdit {
-    padding-bottom: 3%;
-}
-.AddressEdit {
-    padding-bottom: 3%;
-}
-.StatusEdit {
-    padding-bottom: 3%;
-}
-.PositionEdit {
-    padding-bottom: 3%;
-}
-.positionCheckEdit {
-    display: flex;
-    justify-content: space-between;
-}
-.BtnEdit {
-    display: flex;
-    justify-content: space-around;
-    padding-bottom: 3%;
-}
-
-.checkboxCont{
-    width: 100%;
-    display:inline-flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
 .avatarCont{
     width: 100%;
     display:flex;
@@ -227,8 +104,9 @@
     cursor:pointer;
 }
 
-.ant-select{
-    width: 100%;
+.ant-select {
+  width: 100%;
+  margin-bottom:  7%;
 }
 .btnAdd{
     width: 94%;

@@ -398,7 +398,7 @@ const ModalContent = () => {
               name="payment_type"
               disabled={isDetail}
               dropdownStyle={{ zIndex: 2000 }}
-              placeholder="Nhập đơn vị"
+              placeholder="Lựa chọn phương thức"
               onChange={handleSelect}
             >
               {listPayments.map((item) => {

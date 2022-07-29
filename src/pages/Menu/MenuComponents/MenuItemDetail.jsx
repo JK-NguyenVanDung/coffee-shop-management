@@ -98,7 +98,7 @@ const MenuItemDetail = () => {
                           gutterBottom
                         >
                           {item.label}
-                        </Typography>
+                        </Typography>                    
                         <Typography
                           sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
                           color="text.secondary"
