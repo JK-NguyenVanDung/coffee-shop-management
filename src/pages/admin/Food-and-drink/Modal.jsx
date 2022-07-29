@@ -96,7 +96,7 @@ const ModalContent = () => {
 
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
-  const [, setSelect] = useState("");
+  const [select, setSelect] = useState("");
   const handleChange = (newValue) => {
     setDate(newValue);
   };
@@ -147,6 +147,7 @@ const ModalContent = () => {
         updatedAt: moment(new Date(dataItem.updatedAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
+        category_type: dataItem.category_type,
       });
 
       // nếu không có dữ liệu đặc biệt thì xoá
@@ -210,6 +211,7 @@ const ModalContent = () => {
               active: values.active,
               avatar: fileList[0].name,
               dish_type: values.dish_type,
+              category_type: values.category_type,
             },
           });
           handleClose();
@@ -225,6 +227,7 @@ const ModalContent = () => {
             active: values.active,
             avatar: fileList[0].name,
             dish_type: values.dish_type,
+            category_type: values.category_type,
           });
           handleClose();
           dispatch(actions.formActions.changeLoad(!loadData));
@@ -413,6 +416,29 @@ const ModalContent = () => {
                 {listCate.map((item) => {
                   return <Option value={item._id}>{item.name}</Option>;
                 })}
+              </Select>
+            </Form.Item>
+            <h4>{labels.dish_type}</h4>
+            <Form.Item
+              name="category_type"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống loại menu`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Select
+                disabled={isDetail}
+                dropdownStyle={{ zIndex: 2000 }}
+                placeholder="Nhập loại menu"
+              >
+                <Option value={true}>Đồ uống</Option>
+                <Option value={false}>Đồ ăn</Option>
               </Select>
             </Form.Item>
             <h4>{labels.recipe}</h4>

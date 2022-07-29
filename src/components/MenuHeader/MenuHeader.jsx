@@ -18,6 +18,8 @@ const MenuHeader = (props) => {
   const [search, setSearch] = useState("");
   const dataList = useAppSelector((state) => state.menu.listAll);
 
+  let menuGroup = useAppSelector((state) => state.menu.menuGroup);
+
   const navigate = useNavigate();
   const onChangeSearch = async (value) => {
     setSearch(value);
@@ -45,6 +47,7 @@ const MenuHeader = (props) => {
           checkedChildren={menuText.switchOp1}
           unCheckedChildren={menuText.switchOp2}
           defaultChecked
+          onChange={() => dispatch(actions.menuActions.setGroup(!menuGroup))}
           style={{ minHeight: "2rem", width: "7rem" }}
         />
       )}

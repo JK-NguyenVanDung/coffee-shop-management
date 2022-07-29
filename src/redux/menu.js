@@ -13,7 +13,7 @@ let initialState = {
     printBill: true,
     openPrint: false,
     print: false,
-    menuGroup: "drink",
+    menuGroup: true,
     info: {},
     showInfo: false,
     openDetail: false,

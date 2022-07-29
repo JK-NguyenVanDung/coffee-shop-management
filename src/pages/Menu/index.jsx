@@ -291,37 +291,32 @@ export const MenuLists = ({ dataList, category }) => {
     ],
   };
   const myRef = useRef(null);
+  const menuGroup = useAppSelector((state) => state.menu.menuGroup);
 
-  // <MenuItem item={props.item} />
-  // const listCate = useAppSelector((state) => state.menu.listCate);
-  // function getCategoryName() {
-  //   let name = "";
-  //   for (let i = 0; i < listCate.length; i++) {
-  //     if (
-  //       listCate[i]._id === dataList[0].dish_type[0] ||
-  //       listCate[i].name === dataList[0].dish_type[0]
-  //     ) {
-  //       return listCate[i].name;
-  //     } else {
-  //       console.log(dataList[0].dish_type[0]);
-  //     }
-  //   }
+  const [data, setData] = useState([]);
 
-  //   return name;
-  // }
-  let filteredList = dataList.filter(
-    (record) =>
-      record.dish_type[0] === category.name ||
-      record.dish_type[0] === category._id
-  );
-  const [data, setData] = useState(filteredList);
+  function refreshData() {
+    setData(
+      dataList.filter(
+        (record) =>
+          record.category_type === menuGroup &&
+          (record.dish_type[0] === category.name ||
+            record.dish_type[0] === category._id) &&
+          record.status === true
+      )
+    );
+  }
+  useEffect(() => {
+    refreshData();
+  }, [menuGroup]);
 
   const executeScroll = () => myRef.current.scrollIntoView();
-  // run this function from an event handler or an effect to execute scroll
 
   return (
     <div className="menuCont" ref={myRef}>
-      <h2 onClick={executeScroll}> {category.name}</h2>
+      <h2 onClick={executeScroll}>
+        {data.length > 0 ? category.name : category.name + ": Hết hàng"}
+      </h2>
       <div className="menuItemCont">
         <Slider {...settings}>
           {data.map((item) => {
@@ -631,7 +626,7 @@ export default function Menu() {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.menu.listAll);
   const cateList = useAppSelector((state) => state.menu.listCate);
-
+  const menuGroup = useAppSelector((state) => state.menu.menuGroup);
   let openPrint = useAppSelector((state) => state.menu.openPrint);
   const fetchData = async (value) => {
     try {
@@ -656,10 +651,6 @@ export default function Menu() {
       //history.replace("/");
     }
   };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [dataList]);
 
   useEffect(() => {
     fetchData();
