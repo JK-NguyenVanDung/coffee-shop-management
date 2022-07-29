@@ -109,7 +109,7 @@ const ModalContent = () => {
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
   useEffect(() => {
-    function getCategories() {}
+    function getCategories() { }
   }, []);
   useEffect(() => {
     form.resetFields();
@@ -258,7 +258,44 @@ const ModalContent = () => {
     create: "Ngày tạo",
     update: "Ngày cập nhật",
   };
+
+  //                                                             BẢNG XẾP LỊCH 
+  // const columns = [
+  //   {
+  //     title: "Thứ 2",
+  //     dataIndex: "monday",
+  //     width: GIRD12.COL2,
+  //   },
+  //   {
+  //     title: "Thứ 3",
+  //     dataIndex: "tuesday",
+  //     width: GIRD12.COL2,
+  //   },
+  //   {
+  //     title: "Thứ 4",
+  //     dataIndex: "wednesday",
+  //   },
+  //   {
+  //     title: "Thứ 5",
+  //     dataIndex: "thursday",
+  //   },
+  //   {
+  //     title: "Thứ 6",
+  //     dataIndex: "friday",
+  //   },
+  //   {
+  //     title: "Thứ 7",
+  //     dataIndex: "satuday",
+  //   },
+  //   {
+  //     title: "Chủ nhật",
+  //     dataIndex: "sunday",
+  //   },
+  // ];
   return (
+    //                                                              ADD-EDIT-DETAIL-FOOD-AND-DRINK
+
+
     <div className="ModalCont">
       {modalError && <AlertModal chilren={errorText.formValidation} />}
       <div className="headerCont">
@@ -445,6 +482,168 @@ const ModalContent = () => {
         onAccept={handleDelete}
       />
     </div>
+
+    //                                                    BẢNG XẾP LỊCH
+    
+    
+
+    //                                                    BẢNG CHẤM CÔNG
+    // <div className="modalCont">
+    //   <div className="bodyCont">
+    //     <div className="leftBody">
+    //       <h4>Tên nhân viên</h4>
+    //       <Form.Item
+    //         name="name"
+    //       // rules={[
+    //       //   {
+    //       //     required: true,
+    //       //     message: `Không được để trống tên món`,
+    //       //   },
+    //       // ]}
+    //       >
+    //         <Input disabled={isDetail} /*placeholder="Nhập tên món"*/ />
+    //       </Form.Item>
+    //       <h4>Thông tin liên lạc</h4>
+    //       <Form.Item
+    //         name="infomation"
+    //       // rules={[
+    //       //   {
+    //       //     required: true,
+    //       //     message: `Không được để trống tên món`,
+    //       //   },
+    //       // ]}
+    //       >
+    //         <Input disabled={isDetail} /*placeholder="Nhập tên món"*/ />
+    //       </Form.Item>
+    //       <h4>Chức vụ</h4>
+    //       <Form.Item
+    //         name="position"
+    //       // rules={[
+    //       //   {
+    //       //     required: true,
+    //       //     message: `Không được để trống tên món`,
+    //       //   },
+    //       // ]}
+    //       >
+    //         <Input disabled={isDetail} /*placeholder="Nhập tên món"*/ />
+    //       </Form.Item>
+    //       <h4>Tình trạng</h4>
+    //       <Form.Item
+    //         name="status"
+    //       // rules={[
+    //       //   {
+    //       //     required: true,
+    //       //     message: `Không được để trống tên món`,
+    //       //   },
+    //       // ]}
+    //       >
+    //         <Input disabled={isDetail} /*placeholder="Nhập tên món"*/ />
+    //       </Form.Item>
+    //       <h4>Thanh toán của Admin</h4>
+    //       <Form.Item
+    //         name="paid"
+    //       // rules={[
+    //       //   {
+    //       //     required: true,
+    //       //     message: `Không được để trống tên món`,
+    //       //   },
+    //       // ]}
+    //       >
+    //       </Form.Item>
+    //       <div className="checkboxCont">
+    //         <FormControlLabel
+    //           control={
+    //             <Checkbox
+    //               disabled={isDetail}
+    //               onChange={handleCheckbox}
+    //               checked={role}
+    //             />
+    //           }
+    //           name="paid"
+    //           label="Đã thanh toán"
+    //         />
+    //         <FormControlLabel
+    //           control={
+    //             <Checkbox
+    //               disabled={isDetail}
+    //               onChange={handleCheckbox}
+    //               checked={!role}
+    //             />
+    //           }
+    //           name="unpaid"
+    //           label="Chưa thanh toán"
+    //         />
+    //       </div>
+    //       <h4>Tổng lương</h4>
+    //       <Form.Item
+    //         name="salary"
+    //       // rules={[
+    //       //   {
+    //       //     required: true,
+    //       //     message: `Không được để trống tên món`,
+    //       //   },
+    //       // ]}
+    //       >
+    //         <Input disabled={isDetail} /*placeholder="Nhập tên món"*/ />
+    //       </Form.Item>
+    //     </div>
+    //     <div className="rightBody">
+    //       <h4>Giờ làm</h4>
+    //       <div className="rightCont1">
+    //         <h4>Giờ đăng nhập</h4>
+    //         <Form.Item
+    //           name="login"
+    //         // rules={[
+    //         //   {
+    //         //     required: true,
+    //         //     message: `Không được để trống tên món`,
+    //         //   },
+    //         // ]}
+    //         >
+    //           <Input disabled={isDetail} /*placeholder="Nhập tên món"*/ />
+    //         </Form.Item>
+    //         <h4>Giờ đăng xuất</h4>
+    //         <Form.Item
+    //           name="logout"
+    //         // rules={[
+    //         //   {
+    //         //     required: true,
+    //         //     message: `Không được để trống tên món`,
+    //         //   },
+    //         // ]}
+    //         >
+    //           <Input disabled={isDetail} /*placeholder="Nhập tên món"*/ />
+    //         </Form.Item>
+    //       </div>
+    //       <div className="rightCont2">
+    //         <h4>Tổng giờ làm</h4>
+    //         <Form.Item
+    //           name="workTime"
+    //         // rules={[
+    //         //   {
+    //         //     required: true,
+    //         //     message: `Không được để trống tên món`,
+    //         //   },
+    //         // ]}
+    //         >
+    //           <Input disabled={isDetail} /*placeholder="Nhập tên món"*/ />
+    //         </Form.Item>
+    //         <h4>Rate/giờ</h4>
+    //         <Form.Item
+    //           name="rate"
+    //         // rules={[
+    //         //   {
+    //         //     required: true,
+    //         //     message: `Không được để trống tên món`,
+    //         //   },
+    //         // ]}
+    //         >
+    //           <Input disabled={isDetail} /*placeholder="Nhập tên món"*/ />
+    //         </Form.Item>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
   );
 };
 export default ModalContent;
