@@ -45,7 +45,7 @@ const MenuHeader = (props) => {
           checkedChildren={menuText.switchOp1}
           unCheckedChildren={menuText.switchOp2}
           defaultChecked
-          style={{ minHeight: "2rem", width: "7rem" }}
+          style={{ minHeight: "2rem", width: "8rem" }}
         />
       )}
       <Input

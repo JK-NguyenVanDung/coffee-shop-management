@@ -4,7 +4,7 @@ import { formActions, formReducer } from "./form";
 import { employeesActions, employeesReducer } from "./employees";
 import { dishesActions, dishesReducer } from "./dishes";
 import { categoriesActions, categoriesReducer } from "./categories";
-// import { orderActions, orderReducer } from "./order";
+import { inventoriesActions, inventoriesReducer } from "./inventories";
 // import { newsActions, newsReducer } from "./news";
 // import { keyWordActions, keyWordReducer } from "./keyword";
 // import { vouchersActions, vouchersReducer } from "./voucher";
@@ -16,7 +16,7 @@ const actions = {
   employeesActions,
   dishesActions,
   categoriesActions,
-  //   orderActions,
+  inventoriesActions,
   //   newsActions,
   //   keyWordActions,
   //   vouchersActions,
@@ -32,7 +32,7 @@ const reducers = {
   categoriesReducer,
   //   productReducer,
   //   bannerReducer,
-  //   orderReducer,
+  inventoriesReducer,
   //   newsReducer,
   //   keyWordReducer,
   //   vouchersReducer,

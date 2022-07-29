@@ -140,7 +140,7 @@ export default function SiderDemos({ children, headerItem = null }) {
                   cursor: "pointer",
                   fontSize: 35,
                   paddingLeft: 20,
-                  width: location.pathname === "/menu" ? "7rem" : "10 0%",
+                  width: location.pathname === "/menu" ? "7rem" : "100%",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
