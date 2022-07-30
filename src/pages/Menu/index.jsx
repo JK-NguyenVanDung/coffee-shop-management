@@ -152,9 +152,9 @@ export const Category = () => {
   const menuGroup = useAppSelector((state) => state.menu.menuGroup);
 
   let settings = {
-    infinite: false,
+    infinite: listCate.length > 10 ? true : false,
     speed: 500,
-    slidesToShow: 10,
+    slidesToShow: 8,
     slidesToScroll: 4,
     arrows: true,
     dots: true,

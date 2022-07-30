@@ -160,7 +160,8 @@ const Category = () => {
             return {
               id: item._id,
               name: item.name,
-              category_type_id: item.category_type_id ? "Đồ uống" : "Đồ ăn",
+              category_type_id:
+                item.category_type_id === "true" ? "Đồ uống" : "Đồ ăn",
               createdAt: moment(new Date(item.createdAt)).format(
                 "h:mma - DD/MM/YYYY"
               ),
