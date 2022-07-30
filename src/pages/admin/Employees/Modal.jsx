@@ -198,7 +198,7 @@ const ModalContent = () => {
       phone.error ||
       password.error ||
       ID_card.error ||
-      fileList.length < 1
+      (fileList !== null && fileList.length <= 0)
     ) {
       return false;
     } else {
@@ -479,8 +479,12 @@ const ModalContent = () => {
                 //   min: 9,
                 // },
               ]}
-              validateStatus={ID_card.validateStatus}
-              help={ID_card.errorMsg}
+              validateStatus={
+                ID_card.validateStatus !== ""
+                  ? ID_card.validateStatus
+                  : undefined
+              }
+              help={ID_card.errorMsg !== "" ? ID_card.errorMsg : undefined}
             >
               <Input
                 disabled={isDetail}
@@ -500,8 +504,10 @@ const ModalContent = () => {
                   message: `Không được để trống email`,
                 },
               ]}
-              validateStatus={email.validateStatus}
-              help={email.errorMsg}
+              validateStatus={
+                email.validateStatus !== "" ? email.validateStatus : undefined
+              }
+              help={email.errorMsg !== "" ? email.errorMsg : undefined}
             >
               <Input
                 disabled={isDetail}
@@ -519,8 +525,10 @@ const ModalContent = () => {
                   message: `Không được để trống số điện thoại`,
                 },
               ]}
-              validateStatus={phone.validateStatus}
-              help={phone.errorMsg}
+              validateStatus={
+                phone.validateStatus !== "" ? phone.validateStatus : undefined
+              }
+              help={phone.errorMsg !== "" ? phone.errorMsg : undefined}
             >
               <Input
                 disabled={isDetail}
@@ -538,8 +546,12 @@ const ModalContent = () => {
                   message: `Không được để trống mật khẩu`,
                 },
               ]}
-              validateStatus={password.validateStatus}
-              help={password.errorMsg}
+              validateStatus={
+                password.validateStatus !== ""
+                  ? password.validateStatus
+                  : undefined
+              }
+              help={password.errorMsg !== "" ? password.errorMsg : undefined}
             >
               {dataItem ? (
                 <Input.Password
@@ -673,7 +685,7 @@ const ModalContent = () => {
         <div className="BtnAdd">
           <Button
             size="Large"
-            color={"success"}
+            color={dataItem ? "primary" : "success"}
             variant="contained"
             style={{
               paddingLeft: "15%",
@@ -682,11 +694,13 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
+            disabled={loading}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem && isDetail === true ? "Sửa " : "Lưu"}
+            {dataItem ? "Sửa" : "Lưu"}
           </Button>
           <Button
+            disabled={loading}
             size="Large"
             color="error"
             variant="contained"
