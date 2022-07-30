@@ -4,6 +4,8 @@ export const menuText = {
     searchMenu: "Tìm kiếm các món bên trong menu...",
     searchEmployees:  "Tìm kiếm nhân viên...",
     searchCategories: "Tìm kiếm nhóm món...",
+    searchInventories: "Tìm kiếm kho hàng...",
+    searchBills: "Tìm kiếm hóa đơn...",
     switchOp1: "Đồ uống",
     switchOp2: "Đồ ăn",
 
@@ -31,5 +33,8 @@ export const errorText={
     id_card: "Phải bao gồm đủ 9 hoặc 12 ký tự số",
     email: "Sai cấu trúc email",
     space: "Ký tự đầu tiên không được để dấu cách!",
-    formValidation: "Thông tin điền chưa chính xác!"
+    formValidation: "Thông tin điền chưa chính xác!",
+    unit:"Không được nhập số",
+    unit2:"Không được để trống"
+
 }

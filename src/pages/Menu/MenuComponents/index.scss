@@ -302,20 +302,19 @@
         }
     
     .billContentsCont {
-        padding-left: 20px;
-        padding-top: 20px;
+        padding-top: 5%;
         width: 100%;
         display: flex;
+        justify-content: flex-start;
         flex-direction: row;
-        justify-content: space-between;
-
     }
     .billContentCont{
-        display: inline-flex;
+        display: flex;
         width: 100%;
         justify-content: flex-start;
-        
         flex-direction: row;
+        padding-left: 7%;
+        padding-right: 7%;
     }
 //--------------------------------------------------------
 
@@ -443,7 +442,7 @@
         .checkbox{
             display: flex;
             width: 100%;
-            justify-content: flex-staet;
+            justify-content: flex-start;
         }
         .buttonCont{
             display:flex;
@@ -468,5 +467,4 @@
     font-size: 2rem;
     }
 }
-
 

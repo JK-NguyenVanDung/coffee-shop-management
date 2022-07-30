@@ -41,6 +41,7 @@ const slice = createSlice({
         },
         showInfo(state,actions){
             state.showInfo = true;
+            console.log(actions.payload);
             state.info = actions.payload;
         },
         hideInfo(state) {

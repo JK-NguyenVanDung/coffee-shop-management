@@ -1,0 +1,116 @@
+.dishSearchCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    padding: 10px;
+}
+
+// Thêm nhân viên
+
+.ModalCont {
+    width: 100%;
+    height: 95vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 12px ;
+  }
+
+.headerCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 4%;
+    padding-right: 3%;
+}
+.form{
+    height: 90vh;
+    overflow-y: scroll;
+}
+.bodyCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;   
+    overflow-y: scroll;
+
+}
+.radiogroupCont{
+    width: 100%;
+    display:inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-left: 15px;
+    .MuiTypography-root{
+        padding-right: 12px !important;
+        color:#fff;
+    }
+}
+.avatarCont{
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center; 
+    margin-bottom: 4%;
+    .ant-upload-picture-card-wrapper{
+        width: 100%;
+        display:flex;
+            justify-content: center;
+        align-items: center; 
+        .ant-upload-list-picture-card-container{
+            // width: 63%;
+            // height: 63%;
+            width: 320px;
+            height: 23vh;
+        }
+        .ant-upload-select-picture-card{
+            width: 98%;
+            height: 150%;
+        }
+    }
+}
+.ant-input, .ant-input-affix-wrapper{
+    max-width: 360px;
+}
+.ant-form-item-explain-error{
+    max-width: 360px;
+}
+.rowGroup{
+    display: inline-flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    .colGroup{
+        display: inline-flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+.commoditieCont{
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.tableRow{
+    cursor:pointer;
+}
+
+.ant-select {
+  width: 100%;
+}
+.btnAdd{
+    width: 94%;
+    margin-top: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

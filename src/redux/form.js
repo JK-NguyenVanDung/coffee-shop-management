@@ -13,6 +13,7 @@ const slice = createSlice({
         modalError: false,
         detail: false,
         delete: false,
+        errorText: "",
     },
     reducers: {
         showDelete(state) {
@@ -23,8 +24,9 @@ const slice = createSlice({
         setDetail(state,actions) {
             state.detail = actions.payload;
         },
-        showError(state) {
+        showError(state,actions) {
             state.modalError = true;
+            state.errorText = actions.payload;
         },
         hideError(state) {
             state.modalError = false;
