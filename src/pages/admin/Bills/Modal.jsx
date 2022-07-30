@@ -126,13 +126,10 @@ const ModalContent = () => {
   };
 
   function getHeaderTitle() {
-    if (dataItem && isDetail) {
-      return "Thông tin nhóm món";
-    }
     if (dataItem) {
       return "Sửa nhóm món";
     }
-    return "Thêm nhóm món";
+    return "Chi tiết đơn hàng";
   }
   const handleDelete = async () => {
     setLoading(true);
@@ -144,9 +141,17 @@ const ModalContent = () => {
     dispatch(actions.formActions.changeLoad(!loadData));
   };
   const labels = {
-    name: "Tên nhóm món",
-    create: "Ngày tạo",
-    update: "Ngày cập nhật",
+    id_order: "ID đơn hàng",
+    date_created: "Ngày tạo",
+    payment_staff: "Nhân viên thanh toán",
+    order: "Đơn hàng :",
+    dish_name: "Tên món",
+    amount: "SL",
+    unit_price: "Đơn giá",
+    total_order: "Tổng đơn",
+    tax: "Thuế VAT",
+    total_money: "Tổng tiền",
+    payment_methods: "Phương thức thanh toán",
   };
   return (
     <div className="ModalCont">
@@ -159,13 +164,13 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
-          <div style={{ width: "40%" }}>
-            <h4>{labels.name}</h4>
+          <div style={{ width: "90%" }}>
+            <h4>{labels.id_order}</h4>
             <Form.Item
-              name="name"
+              name="ID đơn hàng"
               rules={[
                 {
-                  required: true,
+                  required: true, 
                   message: `Không được để trống tên nhóm món`,
                 },
                 {
@@ -174,13 +179,38 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập tên nhóm món" />
+              <Input disabled={isDetail} placeholder="Nhập ID" />
             </Form.Item>
-            {dataItem ? (
-              <>
-                <h4>{labels.create}</h4>
+            <h4>{labels.date_created}</h4>
+            <Form.Item
+              name="Ngày tạo"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống`,
+                },
+              ]}
+            >
+              <Input disabled={isDetail} placeholder="Nhập ngày tạo" />
+            </Form.Item>
+            <h4>{labels.payment_staff}</h4>
+            <Form.Item
+              name="Nhân viên thanh toán"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống`,
+                },
+              ]}
+            >
+              <Input disabled={isDetail} placeholder="Nhập nhân viên thanh toán" />
+            </Form.Item>
+            <h4>{labels.order}</h4>
+            <div className="orderCont">
+              <div className="dishCont">
+                <h4>{labels.dish_name}</h4>
                 <Form.Item
-                  name="createdAt"
+                  name="Tên món"
                   rules={[
                     {
                       required: true,
@@ -188,11 +218,13 @@ const ModalContent = () => {
                     },
                   ]}
                 >
-                  <Input disabled={true} placeholder="Nhập" />
+                  <Input disabled={isDetail} placeholder="Nhập tên món" />
                 </Form.Item>
-                <h4>{labels.update}</h4>
+              </div>
+              <div className="amountCont">
+                <h4>{labels.amount}</h4>
                 <Form.Item
-                  name="updatedAt"
+                  name="SL"
                   rules={[
                     {
                       required: true,
@@ -200,52 +232,77 @@ const ModalContent = () => {
                     },
                   ]}
                 >
-                  <Input disabled={true} placeholder="Nhập" />
+                  <Input disabled={isDetail} placeholder="Nhập số lượng" />
                 </Form.Item>
-              </>
-            ) : null}
+              </div>
+              <div className="priceCont">
+                <h4>{labels.unit_price}</h4>
+                <Form.Item
+                  name="Đơn giá"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống`,
+                    },
+                  ]}
+                >
+                  <Input disabled={isDetail} placeholder="Nhập đơn giá" />
+                </Form.Item>
+              </div>
+            </div>
+            <h4>{labels.total_order}</h4>
+            <Form.Item
+              name="Tổng đơn"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống`,
+                },
+              ]}
+            >
+              <Input disabled={isDetail} placeholder="Nhập tổng đơn" />
+            </Form.Item>
+            <h4>{labels.tax}</h4>
+            <Form.Item
+              name="Thuế VAT"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống`,
+                },
+              ]}
+            >
+              <Input disabled={isDetail} placeholder="Nhập Thuế VAT" />
+            </Form.Item>
+            <h4>{labels.total_money}</h4>
+            <Form.Item
+              name="Tổng tiền"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống`,
+                },
+              ]}
+            >
+              <Input disabled={isDetail} placeholder="Nhập tổng tiền" />
+            </Form.Item>
+            <h4>{labels.payment_methods}</h4>
+            <Form.Item
+              name="Phương thức thanh toán"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống`,
+                },
+              ]}
+            >
+              <Input disabled={isDetail} placeholder="Nhập phương thức thanh toán" />
+            </Form.Item>
           </div>
         </div>
-        <div className="BtnAdd">
-          <Button
-            size="Large"
-            color={dataItem ? "primary" : "success"}
-            variant="contained"
-            style={{
-              paddingLeft: "15%",
-              paddingRight: "15%",
-              paddingTop: "2%",
-              paddingBottom: "2%",
-              color: "#fff",
-            }}
-            disabled={loading}
-            onClick={dataItem && isDetail === true ? editItem : handleOk}
-          >
-            {dataItem ? "Sửa" : "Lưu"}
-          </Button>
-          <Button
-            disabled={loading}
-            size="Large"
-            color="error"
-            variant="contained"
-            style={{
-              paddingLeft: "15%",
-              paddingRight: "15%",
-              paddingTop: "2%",
-              paddingBottom: "2%",
-              color: "#fff",
-            }}
-            onClick={dataItem && isDetail === true ? deleteItem : handleClose}
-          >
-            {dataItem && isDetail === true ? "Xoá " : "Hủy"}
-          </Button>
-        </div>
+
       </Form>
-      <AlertDialog
-        children={`Xác nhận xoá ${dataItem ? dataItem.name : null} ?`}
-        title="Xoá nhóm món"
-        onAccept={handleDelete}
-      />
+
     </div>
   );
 };
