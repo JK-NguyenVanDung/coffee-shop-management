@@ -171,8 +171,12 @@ const Inventory = () => {
                 item.amount.split("-")[0] + "/" + item.amount.split("-")[1],
               price: numbToCurrency(item.price),
               payment_type: item.payment_type,
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt,
+              createdAt: moment(new Date(item.createdAt)).format(
+                "h:mma - DD/MM/YYYY"
+              ),
+              updatedAt: moment(new Date(item.updatedAt)).format(
+                "h:mma - DD/MM/YYYY"
+              ),
             };
           })
         : []

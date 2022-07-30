@@ -92,15 +92,15 @@ const ModalContent = () => {
   const isDetail = useAppSelector((state) => state.form.detail);
 
   const listOptions = [
+    "thùng",
+    "gói",
+    "chai",
+    "lọ",
     "g",
     "mg",
     "kg",
     "l",
     "ml",
-    "thùng",
-    "gói",
-    "chai",
-    "lọ",
   ];
   const listPayments = ["Trực tiếp", "Momo", "Ngân hàng"];
   const [fileList, setFileList] = useState([]);
@@ -145,11 +145,10 @@ const ModalContent = () => {
   function checkCustomValidation() {
     if (
       unit.error === true ||
-      unit.value.length <= 0 ||
-      !/^([^0-9]*)$/.test(unit.value)
+      !/^([^0-9]*)$/.test(unit.value) ||
+      unit.value[0] === ""
     ) {
       //|| fileList.length < 1 thêm sau khi có hosting
-
       dispatch(actions.formActions.showError(unit.errorMsg));
 
       return false;
@@ -177,13 +176,12 @@ const ModalContent = () => {
         updatedAt: moment(new Date(dataItem.updatedAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
-        unit: { value: dataItem.amount.split("-")[1], error: false },
       });
       setUnit({
         error: false,
         value: dataItem.amount.split("-")[1],
       });
-      setPayment(dataItem.payment_type);
+      setPayment(getPaymentText(dataItem.payment_type));
       // nếu không có dữ liệu đặc biệt thì xoá
       setFileList([dataItem.avatar]);
       // setDate(new Date(dataItem.date_of_birth));
@@ -209,7 +207,42 @@ const ModalContent = () => {
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
-
+  const getPaymentText = (e) => {
+    let text = 0;
+    switch (payment) {
+      case "0":
+        text = "Trực tiếp";
+        break;
+      case "1":
+        text = "Momo";
+        break;
+      case "2":
+        text = "Ngân hàng";
+        break;
+      default:
+        text = "Trực tiếp";
+        break;
+    }
+    return text;
+  };
+  const getPaymentType = () => {
+    let numb = 0;
+    switch (payment) {
+      case "Trực tiếp":
+        numb = 0;
+        break;
+      case "Momo":
+        numb = 1;
+        break;
+      case "Ngân hàng":
+        numb = 2;
+        break;
+      default:
+        numb = 0;
+        break;
+    }
+    return numb;
+  };
   const onPreview = async (file) => {
     let src = file.url;
 
@@ -242,7 +275,7 @@ const ModalContent = () => {
                 name: values.name,
                 amount: values.amount + "-" + unit.value,
                 price: values.price,
-                payment_type: payment,
+                payment_type: getPaymentType(),
                 createdAt: values.createdAt,
                 updatedAt: values.updatedAt,
                 avatar: fileList[0].name,
@@ -258,7 +291,7 @@ const ModalContent = () => {
               name: values.name,
               amount: values.amount + "-" + unit.value,
               price: values.price,
-              payment_type: payment,
+              payment_type: getPaymentType(),
               createdAt: values.createdAt,
               updatedAt: values.updatedAt,
               avatar: fileList[0].name,
@@ -275,7 +308,7 @@ const ModalContent = () => {
       .catch((info) => {
         dispatch(actions.formActions.showError());
         setLoading(false);
-        console.log(info);
+        console.log("error" + info);
       });
   };
 
@@ -420,6 +453,10 @@ const ModalContent = () => {
                   required: true,
                   message: `Không được để trống tên món`,
                 },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
               ]}
             >
               <Input disabled={isDetail} placeholder="Nhập tên món" />
@@ -472,7 +509,7 @@ const ModalContent = () => {
               placeholder="Nhập đơn vị"
               onChange={handleSelect}
               onSelect={handleSelect}
-              value={unit.value !== "" ? unit.value : undefined}
+              value={unit.value !== "" ? unit.value : listOptions[0]}
               status={unit.error ? `error` : undefined}
             >
               {listOptions.map((item) => {
