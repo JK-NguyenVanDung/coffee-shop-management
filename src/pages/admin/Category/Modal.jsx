@@ -82,7 +82,7 @@ const ModalContent = () => {
     const setForm = () => {
       form.setFieldsValue({
         name: dataItem.name,
-        category_type_id: dataItem.category_type_id,
+        category_type_id: dataItem.category_type_id ? "Đồ uống" : "Đồ ăn",
 
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
