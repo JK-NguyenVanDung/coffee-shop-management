@@ -24,7 +24,7 @@ import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
-
+import { numbToCurrency } from "../../../helper/currency";
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(
@@ -69,7 +69,7 @@ const Inventory = () => {
     {
       title: "Tên mặt hàng",
       dataIndex: "name",
-      width: GIRD12.COL3,
+      width: GIRD12.COL2,
     },
 
     {
@@ -89,7 +89,7 @@ const Inventory = () => {
       title: "Số lượng/Đơn vị",
       dataIndex: "amount",
       // render: (text) => <a>{text}</a>,
-      width: GIRD12.COL1,
+      width: GIRD12.COL2,
     },
     {
       title: "Tổng tiền",
@@ -167,8 +167,9 @@ const Inventory = () => {
             return {
               id: item._id,
               name: item.name,
-              amount: item.amount,
-              price: item.price,
+              amount:
+                item.amount.split("-")[0] + "/" + item.amount.split("-")[1],
+              price: numbToCurrency(item.price),
               payment_type: item.payment_type,
               createdAt: item.createdAt,
               updatedAt: item.updatedAt,
@@ -208,10 +209,10 @@ const Inventory = () => {
   function cancel(e) {
     // message.error('Click on No');
   }
-  useEffect(() => {
-    // test.current = 2;
-    fetchData(postList);
-  }, [loadData]);
+  // useEffect(() => {
+  //   // test.current = 2;
+  //   fetchData(postList);
+  // }, [loadData]);
 
   const onSearch = (value) => console.log(value);
 

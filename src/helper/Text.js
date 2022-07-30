@@ -33,5 +33,8 @@ export const errorText={
     id_card: "Phải bao gồm đủ 9 hoặc 12 ký tự số",
     email: "Sai cấu trúc email",
     space: "Ký tự đầu tiên không được để dấu cách!",
-    formValidation: "Thông tin điền chưa chính xác!"
+    formValidation: "Thông tin điền chưa chính xác!",
+    unit:"Không được nhập số",
+    unit2:"Không được để trống"
+
 }

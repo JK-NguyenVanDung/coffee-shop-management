@@ -105,7 +105,7 @@ const ModalContent = () => {
   const listPayments = ["Trực tiếp", "Momo", "Ngân hàng"];
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
-  const [select, setSelect] = useState("");
+  const [payment, setPayment] = useState("");
   const handleChange = (newValue) => {
     setDate(newValue);
   };
@@ -123,25 +123,67 @@ const ModalContent = () => {
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
 
+  const [unit, setUnit] = useState({
+    value: "",
+    validateStatus: "",
+    errorMsg: "",
+    error: false,
+  });
+  const CustomError = () => {
+    return (
+      <div
+        class="ant-form-item-explain ant-form-item-explain-connected"
+        style={{ height: "auto", opacity: 1, minHeight: "24px" }}
+      >
+        <div role="alert" class="ant-form-item-explain-error">
+          {unit.errorMsg}
+        </div>
+      </div>
+    );
+  };
+
+  function checkCustomValidation() {
+    if (
+      unit.error === true ||
+      unit.value.length <= 0 ||
+      !/^([^0-9]*)$/.test(unit.value)
+    ) {
+      //|| fileList.length < 1 thêm sau khi có hosting
+
+      dispatch(actions.formActions.showError(unit.errorMsg));
+
+      return false;
+    } else if (fileList.length <= 0) {
+      dispatch(actions.formActions.showError("Phải có ảnh"));
+
+      return false;
+    } else {
+      return true;
+    }
+  }
   useEffect(() => {
     form.resetFields();
     setFileList(null);
-
     const setForm = () => {
       form.setFieldsValue({
         _id: dataItem._id,
         name: dataItem.name,
-        amount: dataItem.amount,
+        amount: dataItem.amount.split("-")[0],
         price: dataItem.price,
-        payment_type: dataItem.payment_type,
+        // payment_type: dataItem.payment_type,
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
         updatedAt: moment(new Date(dataItem.updatedAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
+        unit: { value: dataItem.amount.split("-")[1], error: false },
       });
-
+      setUnit({
+        error: false,
+        value: dataItem.amount.split("-")[1],
+      });
+      setPayment(dataItem.payment_type);
       // nếu không có dữ liệu đặc biệt thì xoá
       setFileList([dataItem.avatar]);
       // setDate(new Date(dataItem.date_of_birth));
@@ -190,41 +232,43 @@ const ModalContent = () => {
     form
       .validateFields()
       .then(async (values) => {
-        setLoading(true);
-        const temp = [];
-        if (dataItem) {
-          await collections.editInventory({
-            _id: dataItem._id,
-            body: {
+        if (checkCustomValidation()) {
+          setLoading(true);
+          const temp = [];
+          if (dataItem) {
+            await collections.editInventory({
+              _id: dataItem._id,
+              body: {
+                name: values.name,
+                amount: values.amount + "-" + unit.value,
+                price: values.price,
+                payment_type: payment,
+                createdAt: values.createdAt,
+                updatedAt: values.updatedAt,
+                avatar: fileList[0].name,
+              },
+            });
+            handleClose();
+            dispatch(actions.formActions.changeLoad(!loadData));
+            message.success("Thay đổi thành công");
+
+            setLoading(false);
+          } else {
+            await collections.addInventory({
               name: values.name,
-              amount: values.amount + select,
+              amount: values.amount + "-" + unit.value,
               price: values.price,
-              payment_type: values.payment_type,
+              payment_type: payment,
               createdAt: values.createdAt,
               updatedAt: values.updatedAt,
               avatar: fileList[0].name,
-            },
-          });
-          handleClose();
-          dispatch(actions.formActions.changeLoad(!loadData));
-          message.success("Thay đổi thành công");
+            });
+            handleClose();
+            dispatch(actions.formActions.changeLoad(!loadData));
+            message.success("Thêm thành công");
 
-          setLoading(false);
-        } else {
-          await collections.addInventory({
-            name: values.name,
-            amount: values.amount,
-            price: values.price,
-            payment_type: values.payment_type,
-            createdAt: values.createdAt,
-            updatedAt: values.updatedAt,
-            avatar: fileList[0].name,
-          });
-          handleClose();
-          dispatch(actions.formActions.changeLoad(!loadData));
-          message.success("Thêm thành công");
-
-          setLoading(false);
+            setLoading(false);
+          }
         }
       })
 
@@ -236,7 +280,42 @@ const ModalContent = () => {
   };
 
   function handleSelect(value) {
-    setSelect(value);
+    console.log(value);
+    setUnit(validateUnit(value));
+  }
+  function handlePayment(value) {
+    setPayment(value);
+  }
+  function validateUnit(value) {
+    if (value.length <= 0) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.unit2,
+        error: true,
+      };
+    }
+    if (!/^([^0-9]*)$/.test(value[0])) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.unit,
+        error: true,
+      };
+    }
+    // if (value.length > 1) {
+    //   return {
+    //     value: value[value.length - 1],
+    //     validateStatus: "error",
+    //     errorMsg: errorText.unit,
+    //     error: true,
+    //   };
+    // }
+    return {
+      value: value,
+
+      error: false,
+    };
   }
   function getHeaderTitle() {
     if (dataItem && isDetail) {
@@ -261,7 +340,7 @@ const ModalContent = () => {
     name: "Tên món",
     amount: "Số lượng",
     unit: "Đơn vị",
-    price: "Tổng tiền",
+    price: "Tổng tiền (VNĐ)",
     payment_type: "Phương thức thanh toán",
     create: "Ngày tạo",
     update: "Ngày cập nhật",
@@ -277,7 +356,14 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
-          <div style={{ width: "40%", display: "flex", flexDirection: "column", justifyContent: "flex-start"  }}>
+          <div
+            style={{
+              width: "40%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+            }}
+          >
             <h4>{labels.avatar}</h4>
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
@@ -353,21 +439,51 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập số lượng" />
+              <InputNumber
+                style={{ width: "100%" }}
+                formatter={(value) =>
+                  `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                min={0}
+                max={1000000000000}
+                disabled={isDetail}
+              />
             </Form.Item>
             <h4>{labels.unit}</h4>
+            {/* <Form.Item
+              name="unit"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống đơn vị`,
+                },
+              ]}
+              validateStatus={
+                unit.validateStatus ? unit.validateStatus : undefined
+              }
+              help={unit.errorMsg ? unit.errorMsg : undefined}
+            >
+          
+            </Form.Item> */}
             <Select
+              mode="tags"
               disabled={isDetail}
               dropdownStyle={{ zIndex: 2000 }}
-              defaultValue="g"
               placeholder="Nhập đơn vị"
               onChange={handleSelect}
+              onSelect={handleSelect}
+              value={unit.value !== "" ? unit.value : undefined}
+              status={unit.error ? `error` : undefined}
             >
               {listOptions.map((item) => {
                 return <Option value={item}>{item}</Option>;
               })}
             </Select>
-
+            {unit.error ? (
+              <CustomError />
+            ) : (
+              <div style={{ minHeight: "24px" }}></div>
+            )}
             <h4>{labels.price}</h4>
             <Form.Item
               name="price"
@@ -385,12 +501,11 @@ const ModalContent = () => {
               <InputNumber
                 style={{ width: "100%" }}
                 formatter={(value) =>
-                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
                 min={0}
-                max={1000000000}
+                max={1000000000000}
                 disabled={isDetail}
-                placeholder="Nhập tổng tiền"
               />
             </Form.Item>
             <h4>{labels.payment_type}</h4>
@@ -399,7 +514,8 @@ const ModalContent = () => {
               disabled={isDetail}
               dropdownStyle={{ zIndex: 2000 }}
               placeholder="Lựa chọn phương thức"
-              onChange={handleSelect}
+              onChange={handlePayment}
+              value={payment !== "" ? payment : listPayments[0]}
             >
               {listPayments.map((item) => {
                 return <Option value={item}>{item}</Option>;

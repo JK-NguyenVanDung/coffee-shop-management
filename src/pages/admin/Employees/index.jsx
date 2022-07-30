@@ -191,7 +191,6 @@ const Employees = () => {
 
   useEffect(() => {
     // test.current = 2;
-    console.log("1");
     fetchData(postList);
   }, [checkOnload, postList]);
 
@@ -251,10 +250,6 @@ const Employees = () => {
   function cancel(e) {
     // message.error('Click on No');
   }
-  useEffect(() => {
-    // test.current = 2;
-    fetchData(postList);
-  }, [loadData, checkOnload]);
 
   const onSearch = (value) => console.log(value);
 

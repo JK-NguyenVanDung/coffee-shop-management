@@ -368,7 +368,7 @@ const ModalContent = () => {
                   `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
                 min={0}
-                max={1000000000}
+                max={1000000000000}
                 disabled={isDetail}
                 placeholder="Nhập giá"
               />
