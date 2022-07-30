@@ -19,6 +19,8 @@ import { numbToCurrency } from "../../../helper/currency";
 
 import * as collections from "../../../api/Collections/dish";
 import * as cateCollections from "../../../api/Collections/category";
+import * as billCollections from "../../../api/Collections/bill";
+
 import Loading from "../../../components/Loading";
 import {
   Button,
@@ -41,6 +43,7 @@ import Clipboard from "../../../assets/img/clipboard.svg";
 import Clipper from "../../../assets/img/clipper.svg";
 import OrderItem from "./OrderItem";
 import { RemoveButton } from "./RemoveButton";
+
 function currentDate() {
   let currentdate = new Date();
   let datetime =
@@ -67,14 +70,30 @@ const BillDetail = () => {
   let paymentMethod = useAppSelector((state) => state.menu.paymentMethod);
   let note = useAppSelector((state) => state.menu.note);
   let openPrint = useAppSelector((state) => state.menu.openPrint);
-
+  const [loading, setLoading] = useState(false);
   let dispatch = useAppDispatch();
 
   function onRemove() {
     dispatch(actions.menuActions.closeDetail());
   }
-  function createOrder() {
-    let order = {};
+  async function createOrder() {
+    try {
+      setLoading(true);
+      let data = {
+        account_id: user,
+        details: orderList,
+        price_total: totalBill,
+        payment_type: paymentMethod,
+      };
+      await billCollections.addBill(data);
+      setLoading(false);
+
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      // history.replace("/");
+    }
     dispatch(actions.menuActions.createOrder());
 
     if (printBill) {
@@ -97,7 +116,7 @@ const BillDetail = () => {
       label: "Tổng đơn",
       content: numbToCurrency(total) ? numbToCurrency(total) : "N/A",
     },
-    { label: "Thuế VAT", content: "10%" },
+    { label: "Thuế VAT", content: "0%" },
     {
       label: "Tổng tiền",
       content: numbToCurrency(totalBill) ? numbToCurrency(totalBill) : "N/A",
@@ -107,6 +126,8 @@ const BillDetail = () => {
     <>
       {open && (
         <div>
+          <Loading loading={loading} />
+
           <div className="backdrop" onClick={onRemove}></div>
           <div className="billDetailCont">
             <img className="clipper" src={Clipper} />

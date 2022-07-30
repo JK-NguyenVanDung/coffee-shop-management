@@ -67,9 +67,10 @@ const ModalContent = () => {
   const editItem = () => dispatch(actions.formActions.setDetail(false));
   useEffect(() => {
     form.resetFields();
-
     const setForm = () => {
       form.setFieldsValue({
+        //truyền data khi bấm vào => dataItem.
+
         name: dataItem.name,
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
