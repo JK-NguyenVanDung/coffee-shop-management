@@ -13,7 +13,7 @@ let initialState = {
     printBill: true,
     openPrint: false,
     print: false,
-    menuGroup: "drink",
+    menuGroup: true,
     info: {},
     showInfo: false,
     openDetail: false,
@@ -21,7 +21,8 @@ let initialState = {
     listAll:[],
     loadData: false,
     dishType: "drink",
-    selectedCate: "CT01",
+    selectedCate: "",
+    searchList: [],
 }
 const slice = createSlice({
     name: 'menu',
@@ -40,6 +41,7 @@ const slice = createSlice({
         },
         showInfo(state,actions){
             state.showInfo = true;
+            console.log(actions.payload);
             state.info = actions.payload;
         },
         hideInfo(state) {
@@ -128,7 +130,7 @@ const slice = createSlice({
             let exist = false;
             if(state.orderList.length > 0){
                 state.orderList.map((item)=>{
-                    if(temp.id === item.id){
+                    if(temp._id === item._id){
                         item.amount +=1;
                         exist = true
                     }
@@ -214,10 +216,11 @@ const slice = createSlice({
             state.loadData= false ;
         },
         changeCategory(state,actions){
-            let temp = actions.payload;
-            state.selectedCate = temp;
-        }
-
+            state.selectedCate =actions.payload;
+        },
+        setListSearch(state,actions){
+            state.searchList =actions.payload;
+        },
 
     }
 })

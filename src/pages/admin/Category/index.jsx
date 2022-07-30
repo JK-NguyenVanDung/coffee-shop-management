@@ -197,10 +197,6 @@ const Category = () => {
   function cancel(e) {
     // message.error('Click on No');
   }
-  useEffect(() => {
-    // test.current = 2;
-    fetchData(postList);
-  }, [loadData]);
 
   const onSearch = (value) => console.log(value);
 

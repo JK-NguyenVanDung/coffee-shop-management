@@ -32,8 +32,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { IconButton, Typography } from "@mui/material";
-import * as collections from "../../../api/Collections/dish";
-import * as cateCollections from "../../../api/Collections/category";
+import * as collections from "../../../api/Collections/inventory";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -84,7 +83,7 @@ const radioBtnstyles = (theme) => ({
 
 const ModalContent = () => {
   const [loading, setLoading] = useState(false);
-  const dataItem = useAppSelector((state) => state.dishes.detail);
+  const dataItem = useAppSelector((state) => state.inventories.detail);
   const [date, setDate] = React.useState(new Date("2001-08-18"));
   const [status, setStatus] = React.useState("1");
   let [role, setRole] = useState(true);
@@ -92,11 +91,21 @@ const ModalContent = () => {
   const modalError = useAppSelector((state) => state.form.modalError);
   const isDetail = useAppSelector((state) => state.form.detail);
 
-  const listCate = useAppSelector((state) => state.dishes.listCate);
-
+  const listOptions = [
+    "thùng",
+    "gói",
+    "chai",
+    "lọ",
+    "g",
+    "mg",
+    "kg",
+    "l",
+    "ml",
+  ];
+  const listPayments = ["Trực tiếp", "Momo", "Ngân hàng"];
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
-  const [select, setSelect] = useState("");
+  const [payment, setPayment] = useState("");
   const handleChange = (newValue) => {
     setDate(newValue);
   };
@@ -113,46 +122,68 @@ const ModalContent = () => {
     dispatch(actions.formActions.showDelete());
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
-  useEffect(() => {
-    async function getCategories() {
-      try {
-        setLoading(true);
-        const response = await cateCollections.getCategories();
-        dispatch(actions.dishesActions.setListCate(response));
-        setLoading(false);
-      } catch (error) {
-        //history.replace("/");
-      }
+
+  const [unit, setUnit] = useState({
+    value: "",
+    validateStatus: "",
+    errorMsg: "",
+    error: false,
+  });
+  const CustomError = () => {
+    return (
+      <div
+        class="ant-form-item-explain ant-form-item-explain-connected"
+        style={{ height: "auto", opacity: 1, minHeight: "24px" }}
+      >
+        <div role="alert" class="ant-form-item-explain-error">
+          {unit.errorMsg}
+        </div>
+      </div>
+    );
+  };
+
+  function checkCustomValidation() {
+    if (
+      unit.error === true ||
+      !/^([^0-9]*)$/.test(unit.value) ||
+      unit.value[0] === ""
+    ) {
+      //|| fileList.length < 1 thêm sau khi có hosting
+      dispatch(actions.formActions.showError(unit.errorMsg));
+
+      return false;
+    } else if (fileList.length <= 0) {
+      dispatch(actions.formActions.showError("Phải có ảnh"));
+
+      return false;
+    } else {
+      return true;
     }
-    getCategories();
-  }, []);
+  }
   useEffect(() => {
     form.resetFields();
     setFileList(null);
-
     const setForm = () => {
       form.setFieldsValue({
         _id: dataItem._id,
         name: dataItem.name,
-        amount: dataItem.amount,
-        amount_sell: dataItem.amount_sell,
+        amount: dataItem.amount.split("-")[0],
         price: dataItem.price,
-        recipe: dataItem.recipe,
-        status: dataItem.status,
-        avatar: dataItem.avatar,
-        dish_type: dataItem.dish_type[0],
+        // payment_type: dataItem.payment_type,
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
         updatedAt: moment(new Date(dataItem.updatedAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
-        category_type: dataItem.category_type,
       });
-
+      setUnit({
+        error: false,
+        value: dataItem.amount.split("-")[1],
+      });
+      setPayment(getPaymentText(dataItem.payment_type));
       // nếu không có dữ liệu đặc biệt thì xoá
       setFileList([dataItem.avatar]);
-      setStatus(dataItem.account_status);
       // setDate(new Date(dataItem.date_of_birth));
     };
 
@@ -176,7 +207,42 @@ const ModalContent = () => {
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
-
+  const getPaymentText = (e) => {
+    let text = 0;
+    switch (payment) {
+      case "0":
+        text = "Trực tiếp";
+        break;
+      case "1":
+        text = "Momo";
+        break;
+      case "2":
+        text = "Ngân hàng";
+        break;
+      default:
+        text = "Trực tiếp";
+        break;
+    }
+    return text;
+  };
+  const getPaymentType = () => {
+    let numb = 0;
+    switch (payment) {
+      case "Trực tiếp":
+        numb = 0;
+        break;
+      case "Momo":
+        numb = 1;
+        break;
+      case "Ngân hàng":
+        numb = 2;
+        break;
+      default:
+        numb = 0;
+        break;
+    }
+    return numb;
+  };
   const onPreview = async (file) => {
     let src = file.url;
 
@@ -199,66 +265,103 @@ const ModalContent = () => {
     form
       .validateFields()
       .then(async (values) => {
-        setLoading(true);
-        const temp = [];
-        if (dataItem) {
-          await collections.editDish({
-            _id: dataItem._id,
-            body: {
+        if (checkCustomValidation()) {
+          setLoading(true);
+          const temp = [];
+          if (dataItem) {
+            await collections.editInventory({
+              _id: dataItem._id,
+              body: {
+                name: values.name,
+                amount: values.amount + "-" + unit.value,
+                price: values.price,
+                payment_type: getPaymentType(),
+                createdAt: values.createdAt,
+                updatedAt: values.updatedAt,
+                avatar: fileList[0].name,
+              },
+            });
+            handleClose();
+            dispatch(actions.formActions.changeLoad(!loadData));
+            message.success("Thay đổi thành công");
+
+            setLoading(false);
+          } else {
+            await collections.addInventory({
               name: values.name,
-              recipe: values.recipe,
+              amount: values.amount + "-" + unit.value,
               price: values.price,
-              active: values.active,
+              payment_type: getPaymentType(),
+              createdAt: values.createdAt,
+              updatedAt: values.updatedAt,
               avatar: fileList[0].name,
-              dish_type: values.dish_type,
-              category_type: values.category_type,
-            },
-          });
-          handleClose();
-          dispatch(actions.formActions.changeLoad(!loadData));
-          message.success("Thay đổi thành công");
+            });
+            handleClose();
+            dispatch(actions.formActions.changeLoad(!loadData));
+            message.success("Thêm thành công");
 
-          setLoading(false);
-        } else {
-          await collections.addDish({
-            name: values.name,
-            recipe: values.recipe,
-            price: values.price,
-            active: values.active,
-            avatar: fileList[0].name,
-            dish_type: values.dish_type,
-            category_type: values.category_type,
-          });
-          handleClose();
-          dispatch(actions.formActions.changeLoad(!loadData));
-          message.success("Thêm thành công");
-
-          setLoading(false);
+            setLoading(false);
+          }
         }
       })
 
       .catch((info) => {
         dispatch(actions.formActions.showError());
         setLoading(false);
-        console.log(info);
+        console.log("error" + info);
       });
   };
 
   function handleSelect(value) {
-    setSelect(value);
+    console.log(value);
+    setUnit(validateUnit(value));
+  }
+  function handlePayment(value) {
+    setPayment(value);
+  }
+  function validateUnit(value) {
+    if (value.length <= 0) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.unit2,
+        error: true,
+      };
+    }
+    if (!/^([^0-9]*)$/.test(value[0])) {
+      return {
+        value: value,
+        validateStatus: "error",
+        errorMsg: errorText.unit,
+        error: true,
+      };
+    }
+    // if (value.length > 1) {
+    //   return {
+    //     value: value[value.length - 1],
+    //     validateStatus: "error",
+    //     errorMsg: errorText.unit,
+    //     error: true,
+    //   };
+    // }
+    return {
+      value: value,
+
+      error: false,
+    };
   }
   function getHeaderTitle() {
     if (dataItem && isDetail) {
-      return "Thông tin món ăn";
+      return "Thông tin hàng hoá";
     }
     if (dataItem) {
-      return "Sửa món ăn";
+      return "Sửa hàng hoá";
     }
-    return "Thêm món ăn";
+    return "Thêm hàng hoá";
   }
   const handleDelete = async () => {
     setLoading(true);
-    await collections.removeDish(dataItem._id);
+    await collections.removeInventory(dataItem._id);
     message.success("Xoá thành công");
     setLoading(false);
     dispatch(actions.formActions.hideDelete());
@@ -268,11 +371,10 @@ const ModalContent = () => {
   const labels = {
     avatar: "Hình ảnh",
     name: "Tên món",
-    recipe: "Công thức",
-    price: "Đơn giá",
-    // amount: "Số lượng",
-    amount_sell: "Đã bán",
-    dish_type: "Loại món",
+    amount: "Số lượng",
+    unit: "Đơn vị",
+    price: "Tổng tiền (VNĐ)",
+    payment_type: "Phương thức thanh toán",
     create: "Ngày tạo",
     update: "Ngày cập nhật",
   };
@@ -287,7 +389,14 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
-          <div style={{ width: "30%" }}>
+          <div
+            style={{
+              width: "40%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+            }}
+          >
             <h4>{labels.avatar}</h4>
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
@@ -335,7 +444,7 @@ const ModalContent = () => {
               </>
             ) : null}
           </div>
-          <div>
+          <div className="commoditieCont">
             <h4>{labels.name}</h4>
             <Form.Item
               name="name"
@@ -344,17 +453,22 @@ const ModalContent = () => {
                   required: true,
                   message: `Không được để trống tên món`,
                 },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
               ]}
             >
               <Input disabled={isDetail} placeholder="Nhập tên món" />
             </Form.Item>
-            <h4>{labels.price}</h4>
+
+            <h4>{labels.amount}</h4>
             <Form.Item
-              name="price"
+              name="amount"
               rules={[
                 {
                   required: true,
-                  message: `Không được để trống giá`,
+                  message: `Không được để trống số lượng`,
                 },
                 {
                   pattern: new RegExp(/^\w/),
@@ -365,41 +479,55 @@ const ModalContent = () => {
               <InputNumber
                 style={{ width: "100%" }}
                 formatter={(value) =>
-                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
                 min={0}
                 max={1000000000000}
                 disabled={isDetail}
-                placeholder="Nhập giá"
               />
             </Form.Item>
-            {dataItem ? (
-              <>
-                <h4>{labels.amount_sell}</h4>
-                <Form.Item
-                  name="amount_sell"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống đã bán`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
-                    },
-                  ]}
-                >
-                  <Input disabled={true} placeholder="Nhập đã bán" />
-                </Form.Item>
-              </>
-            ) : null}
-            <h4>{labels.dish_type}</h4>
-            <Form.Item
-              name="dish_type"
+            <h4>{labels.unit}</h4>
+            {/* <Form.Item
+              name="unit"
               rules={[
                 {
                   required: true,
-                  message: `Không được để trống loại món`,
+                  message: `Không được để trống đơn vị`,
+                },
+              ]}
+              validateStatus={
+                unit.validateStatus ? unit.validateStatus : undefined
+              }
+              help={unit.errorMsg ? unit.errorMsg : undefined}
+            >
+          
+            </Form.Item> */}
+            <Select
+              mode="tags"
+              disabled={isDetail}
+              dropdownStyle={{ zIndex: 2000 }}
+              placeholder="Nhập đơn vị"
+              onChange={handleSelect}
+              onSelect={handleSelect}
+              value={unit.value !== "" ? unit.value : listOptions[0]}
+              status={unit.error ? `error` : undefined}
+            >
+              {listOptions.map((item) => {
+                return <Option value={item}>{item}</Option>;
+              })}
+            </Select>
+            {unit.error ? (
+              <CustomError />
+            ) : (
+              <div style={{ minHeight: "24px" }}></div>
+            )}
+            <h4>{labels.price}</h4>
+            <Form.Item
+              name="price"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống tổng tiền`,
                 },
                 {
                   pattern: new RegExp(/^\w/),
@@ -407,59 +535,32 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Select
+              <InputNumber
+                style={{ width: "100%" }}
+                formatter={(value) =>
+                  `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                min={0}
+                max={1000000000000}
                 disabled={isDetail}
-                dropdownStyle={{ zIndex: 2000 }}
-                placeholder="Nhập loại món"
-                onChange={handleSelect}
-              >
-                {listCate.map((item) => {
-                  return <Option value={item._id}>{item.name}</Option>;
-                })}
-              </Select>
+              />
             </Form.Item>
-            <h4>{labels.dish_type}</h4>
-            <Form.Item
-              name="category_type"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống loại menu`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
+            <h4>{labels.payment_type}</h4>
+            <Select
+              name="payment_type"
+              disabled={isDetail}
+              dropdownStyle={{ zIndex: 2000 }}
+              placeholder="Lựa chọn phương thức"
+              onChange={handlePayment}
+              value={payment !== "" ? payment : listPayments[0]}
             >
-              <Select
-                disabled={isDetail}
-                dropdownStyle={{ zIndex: 2000 }}
-                placeholder="Nhập loại menu"
-              >
-                <Option value={true}>Đồ uống</Option>
-                <Option value={false}>Đồ ăn</Option>
-              </Select>
-            </Form.Item>
-            <h4>{labels.recipe}</h4>
-            <Form.Item
-              name="recipe"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống công thức`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập công thức" />
-            </Form.Item>
+              {listPayments.map((item) => {
+                return <Option value={item}>{item}</Option>;
+              })}
+            </Select>
           </div>
         </div>
-        <div className="BtnAdd">
+        <div className="btnAdd">
           <Button
             size="Large"
             color="success"

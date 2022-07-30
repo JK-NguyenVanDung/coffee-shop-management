@@ -2,6 +2,8 @@ import { Layout, Menu } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { Button } from "@mui/material/";
 
 import logo from "../../../src/assets/img/logo.svg";
 import {
@@ -15,6 +17,9 @@ import {
   InfoCircleOutlined,
   LineChartOutlined,
 } from "@ant-design/icons";
+import { IconButton } from "@mui/material/";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import React from "react";
@@ -31,6 +36,7 @@ const { SubMenu } = Menu;
 // }
 export default function SiderDemos({ children, headerItem = null }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const nameMenu = useAppSelector((state) =>
     state.form.nameMenu ? state.form.nameMenu : "Menu"
@@ -44,7 +50,11 @@ export default function SiderDemos({ children, headerItem = null }) {
   const toggle = () => {
     setCollapsed(!collapsed);
   };
+  function goBack() {
+    dispatch(actions.formActions.setNameMenu(`Menu`));
 
+    navigate(`../menu`);
+  }
   return (
     <Layout>
       <Sider
@@ -127,8 +137,35 @@ export default function SiderDemos({ children, headerItem = null }) {
           style={{ padding: 0 }}
         >
           {nameMenu && (
-            <h4 style={{ fontSize: 35, paddingLeft: 20 }}>{nameMenu}</h4>
+            <>
+              {location.pathname === "/menu/search" ? (
+                <IconButton
+                  style={{ marginLeft: 40, width: 60 }}
+                  onClick={() =>
+                    location.pathname === "/menu/search" ? goBack() : {}
+                  }
+                >
+                  <ArrowBackIcon />
+                </IconButton>
+              ) : null}
+              <h4
+                style={{
+                  cursor: "pointer",
+                  fontSize: 35,
+                  paddingLeft: 20,
+                  width: location.pathname === "/menu" ? "5rem" : "100%",
+                  height: "10rem",
+                  whiteSpace: location.pathname === "/menu" ? null : "nowrap",
+                  overflow: location.pathname === "/menu" ? null : "hidden",
+                  textOverflow:
+                    location.pathname === "/menu" ? null : "ellipsis",
+                }}
+              >
+                {nameMenu}
+              </h4>
+            </>
           )}
+
           {headerItem}
           <HeaderProFile />
         </Header>

@@ -74,7 +74,7 @@ const MenuItemDetail = () => {
       {open && (
         <div>
           <div className="backdrop" onClick={onRemove}></div>
-          <div class="orderItemDetailCont">
+          <div className="orderItemDetailCont">
             <div className="orderItemBgCont">
               <div className="infoImageCont">
                 <img
@@ -82,46 +82,45 @@ const MenuItemDetail = () => {
                   src={info.url ? info.url : PlaceHolder}
                 />
               </div>
+              <h1>{info.name}</h1>
+              <div className="billContentsCont">
+                {billContent.map((item) => {
+                  return (
+                    <>
+                      <div className="billContentCont">
+                        <Typography
+                          sx={{
+                            fontSize: "0.8rem",
+                            fontWeight: "bold",
+                            paddingRight: "3%",
+                          }}
+                          color="text.secondary"
+                          gutterBottom
+                        >
+                          {item.label}
+                        </Typography>                    
+                        <Typography
+                          sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                          color="text.secondary"
+                          gutterBottom
+                        >
+                          {item.content}
+                        </Typography>
+                      </div>
+                    </>
+                  );
+                })}
+              </div>
 
               <div className="cardCont">
                 <Card sx={{ minWidth: "100%" }}>
-                  <div className="billContentsCont">
-                    {billContent.map((item) => {
-                      return (
-                        <>
-                          <div className="billContentCont">
-                            <Typography
-                              sx={{
-                                fontSize: "0.8rem",
-                                fontWeight: "bold",
-                                paddingRight: "3%",
-                              }}
-                              color="text.secondary"
-                              gutterBottom
-                            >
-                              {item.label}
-                            </Typography>
-                            <Typography
-                              sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                              color="text.secondary"
-                              gutterBottom
-                            >
-                              {item.content}
-                            </Typography>
-                          </div>
-                        </>
-                      );
-                    })}
-                  </div>
-
-                  <CardContent>
-                    <div class="noteCont">
+                  <CardContent sx={{ minWidth: "100%" }}>
+                    <div className="noteCont">
                       <TextField
+                        disabled={true}
                         placeholder="Nhập ghi chú của khách hàng ở đây"
-                        label="Ghi chú"
-                        onChange={(e) =>
-                          dispatch(actions.menuActions.setNote(e))
-                        }
+                        label="Công thức"
+                        value={info.recipe}
                         multiline
                         rows={2}
                         maxRows={4}
