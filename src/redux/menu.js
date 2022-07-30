@@ -13,7 +13,7 @@ let initialState = {
     printBill: true,
     openPrint: false,
     print: false,
-    menuGroup: "drink",
+    menuGroup: true,
     info: {},
     showInfo: false,
     openDetail: false,
@@ -130,7 +130,7 @@ const slice = createSlice({
             let exist = false;
             if(state.orderList.length > 0){
                 state.orderList.map((item)=>{
-                    if(temp.id === item.id){
+                    if(temp._id === item._id){
                         item.amount +=1;
                         exist = true
                     }

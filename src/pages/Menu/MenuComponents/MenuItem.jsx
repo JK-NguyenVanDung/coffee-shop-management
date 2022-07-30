@@ -35,6 +35,7 @@ export const MenuItem = ({ item }) => {
   let orderList = useAppSelector((state) => state.menu.orderList);
   const [hover, setHover] = useState(false);
   const bindTap = useDoubleTap((event) => {
+    console.log(item);
     dispatch(actions.menuActions.addOrderItem(item));
   });
   function openDetail() {
