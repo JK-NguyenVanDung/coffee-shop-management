@@ -128,7 +128,13 @@ export const MenuLists = ({ dataList, category }) => {
 
   return (
     <div className="menuCont" ref={myRef}>
-      <h2>{data.length > 0 ? category.name : category.name + ": Hết hàng"}</h2>
+      <h2>
+        {category.category_type_id === menuGroup.toString()
+          ? data.length > 0
+            ? category.name
+            : category.name + ": Hết hàng"
+          : undefined}
+      </h2>
       <div className="menuItemCont">
         <Slider {...settings}>
           {data.map((item) => {
@@ -142,6 +148,8 @@ export const MenuLists = ({ dataList, category }) => {
 export const Category = () => {
   let selected = useAppSelector((state) => state.menu.selectedCate);
   const dispatch = useAppDispatch();
+  let listCate = useAppSelector((state) => state.menu.listCate);
+  const menuGroup = useAppSelector((state) => state.menu.menuGroup);
 
   let settings = {
     infinite: false,
@@ -185,11 +193,26 @@ export const Category = () => {
       },
     ],
   };
+  const [data, setData] = useState(listCate);
+
+  function refreshData() {
+    setData(
+      listCate.filter(
+        (record) => record.category_type_id === menuGroup.toString()
+      )
+    );
+  }
+
+  useEffect(() => {
+    refreshData();
+  }, [menuGroup]);
+
   const selectCategory = (cate) => {
     dispatch(actions.menuActions.changeCategory(cate));
   };
-  let listCate = useAppSelector((state) => state.menu.listCate);
   useEffect(() => {
+    refreshData();
+
     {
       listCate[0] && selectCategory(listCate[0]._id);
     }
@@ -197,7 +220,7 @@ export const Category = () => {
 
   return (
     <Slider {...settings}>
-      {listCate.map((item) => {
+      {data.map((item) => {
         return (
           <Button
             disableElevation
@@ -246,8 +269,9 @@ export default function Menu() {
 
         // }))
         dispatch(actions.menuActions.setListAll(response));
+      }
+      if (cateList.length === 0) {
         const categories = await cateCollections.getCategories();
-
         dispatch(actions.menuActions.setListCate(categories));
       }
 
