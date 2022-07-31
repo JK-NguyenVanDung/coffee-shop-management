@@ -70,14 +70,13 @@ const ModalContent = () => {
     const setForm = () => {
       form.setFieldsValue({
         //truyền data khi bấm vào => dataItem.
-
-        name: dataItem.name,
+        _id: dataItem._id,
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
-        updatedAt: moment(new Date(dataItem.updatedAt)).format(
-          "h:mma - DD/MM/YYYY"
-        ),
+        price_total: dataItem.price_total,
+        account_id: dataItem.account_id,
+        payment_type: dataItem.payment_type,
       });
     };
 
@@ -98,7 +97,7 @@ const ModalContent = () => {
           await collections.editBill({
             _id: dataItem._id,
             body: {
-              name: values.name,
+              
             },
           });
           handleClose();
@@ -183,7 +182,7 @@ const ModalContent = () => {
             </Form.Item>
             <h4>{labels.date_created}</h4>
             <Form.Item
-              name="Ngày tạo"
+              name="createdAt"
               rules={[
                 {
                   required: true,
@@ -195,7 +194,7 @@ const ModalContent = () => {
             </Form.Item>
             <h4>{labels.payment_staff}</h4>
             <Form.Item
-              name="Nhân viên thanh toán"
+              name="account_id"
               rules={[
                 {
                   required: true,
@@ -276,7 +275,7 @@ const ModalContent = () => {
             </Form.Item>
             <h4>{labels.total_money}</h4>
             <Form.Item
-              name="Tổng tiền"
+              name="price_total"
               rules={[
                 {
                   required: true,
@@ -288,7 +287,7 @@ const ModalContent = () => {
             </Form.Item>
             <h4>{labels.payment_methods}</h4>
             <Form.Item
-              name="Phương thức thanh toán"
+              name="payment_type"
               rules={[
                 {
                   required: true,
