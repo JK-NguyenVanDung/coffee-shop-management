@@ -23,6 +23,7 @@ let initialState = {
     dishType: "drink",
     selectedCate: "",
     searchList: [],
+    
 }
 const slice = createSlice({
     name: 'menu',
@@ -163,10 +164,10 @@ const slice = createSlice({
                 count += item.amount
                 total +=  item.price * item.amount;
             })
-            totalBill =  total+ ( Math.floor(total *0.1)); 
+            // totalBill =  total+ ( Math.floor(total *0.1)); 
             state.amount = count;
             state.total = total;
-            state.totalBill = totalBill;
+            state.totalBill = total;
             state.orderList=  state.orderList;
         },
         increaseAmount(state,actions){

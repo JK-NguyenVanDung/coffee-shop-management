@@ -206,10 +206,10 @@ const ModalContent = () => {
     }
   }
   const handleOk = async () => {
-    if (checkCustomValidation()) {
-      form
-        .validateFields()
-        .then(async (values) => {
+    form
+      .validateFields()
+      .then(async (values) => {
+        if (checkCustomValidation()) {
           setLoading(true);
           const temp = [];
           if (dataItem) {
@@ -266,17 +266,17 @@ const ModalContent = () => {
 
             setLoading(false);
           }
-        })
-
-        .catch((info) => {
+        } else {
           dispatch(actions.formActions.showError());
-
           setLoading(false);
-        });
-    } else {
-      dispatch(actions.formActions.showError());
-      setLoading(false);
-    }
+        }
+      })
+
+      .catch((info) => {
+        dispatch(actions.formActions.showError());
+
+        setLoading(false);
+      });
   };
   function isVietnamesePhoneNumberValid(number) {
     return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(
