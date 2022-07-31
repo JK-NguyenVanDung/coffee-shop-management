@@ -12,6 +12,9 @@ import {
 } from "@ant-design/icons";
 import Bell from "../../assets/img/bell.svg";
 import { IconButton } from "@mui/material/";
+
+import Notification from "../../components/MenuHeader/Notification";
+
 const test = {
   email: "spottran2001@gmail.com",
   sdt: "03112323123",
@@ -25,6 +28,7 @@ const test = {
   status: 1,
   role: 1,
 };
+
 export default function HeaderProFile() {
   // const getProFile = useAppSelector((state) => state.showProfile.data);
   const info = test; //useAppSelector((state) => state.auth.info);
@@ -73,9 +77,11 @@ export default function HeaderProFile() {
         <Badge dot={true} offset={[-10, 10]}>
           <IconButton style={{ color: "#000" }}>
             <img src={Bell} />
+            <Notification />
           </IconButton>
         </Badge>
       </div>
+
       <div>
         <Dropdown overlay={menu} overlayStyle={{ width: "20rem" }}>
           <div className="ant-dropdown-link">
