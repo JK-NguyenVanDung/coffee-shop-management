@@ -128,7 +128,7 @@ const ModalContent = () => {
     if (dataItem) {
       return "Sửa nhóm món";
     }
-    return "Chi tiết đơn hàng";
+    return "Chi tiết hóa đơn";
   }
   const handleDelete = async () => {
     setLoading(true);
