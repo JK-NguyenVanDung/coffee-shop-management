@@ -222,7 +222,7 @@ const Bills = () => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(true));
 
-    dispatch(actions.billsActions.setDetail(item.id));
+    dispatch(actions.billsActions.setDetail(item._id));
   };
 
   const handleOpen = () => {
@@ -234,11 +234,11 @@ const Bills = () => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
 
-    dispatch(actions.billsActions.setDetail(item.id));
+    dispatch(actions.billsActions.setDetail(item._id));
   }
   async function handleDelete(item) {
     setLoading(true);
-    await collections.removeBill(item.id);
+    await collections.removeBill(item._id);
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Xoá thành công");
 

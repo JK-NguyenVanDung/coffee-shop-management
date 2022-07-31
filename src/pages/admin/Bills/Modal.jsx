@@ -49,6 +49,7 @@ const ModalContent = () => {
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
 
+  const [details, setDetails] = useState([]);
   const handleChange = (newValue) => {
     setDate(newValue);
   };
@@ -65,19 +66,39 @@ const ModalContent = () => {
     dispatch(actions.formActions.showDelete());
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
+  function getPayment(item) {
+    let role = "";
+    switch (item) {
+      case 0:
+        role = "Tiền mặt";
+        break;
+      case 1:
+        role = "Momo";
+        break;
+      case 2:
+        role = "Ngân hàng";
+        break;
+      default:
+        role = "Tiền mặt";
+        break;
+    }
+    return role;
+  }
   useEffect(() => {
     form.resetFields();
     const setForm = () => {
       form.setFieldsValue({
         //truyền data khi bấm vào => dataItem.
-        _id: dataItem._id,
+        id: dataItem._id,
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
         price_total: dataItem.price_total,
         account_id: dataItem.account_id,
-        payment_type: dataItem.payment_type,
+        payment_type: getPayment(dataItem.payment_type),
+        vat: 0,
       });
+      setDetails(dataItem.details);
     };
 
     if (dataItem) {
@@ -96,9 +117,7 @@ const ModalContent = () => {
         if (dataItem) {
           await collections.editBill({
             _id: dataItem._id,
-            body: {
-              
-            },
+            body: {},
           });
           handleClose();
           dispatch(actions.formActions.changeLoad(!loadData));
@@ -125,9 +144,6 @@ const ModalContent = () => {
   };
 
   function getHeaderTitle() {
-    if (dataItem) {
-      return "Sửa nhóm món";
-    }
     return "Chi tiết đơn hàng";
   }
   const handleDelete = async () => {
@@ -140,7 +156,7 @@ const ModalContent = () => {
     dispatch(actions.formActions.changeLoad(!loadData));
   };
   const labels = {
-    id_order: "ID đơn hàng",
+    id: "ID đơn hàng",
     date_created: "Ngày tạo",
     payment_staff: "Nhân viên thanh toán",
     order: "Đơn hàng :",
@@ -164,12 +180,12 @@ const ModalContent = () => {
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
           <div style={{ width: "90%" }}>
-            <h4>{labels.id_order}</h4>
+            <h4>{labels.id}</h4>
             <Form.Item
-              name="ID đơn hàng"
+              name="id"
               rules={[
                 {
-                  required: true, 
+                  required: true,
                   message: `Không được để trống tên nhóm món`,
                 },
                 {
@@ -202,56 +218,48 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập nhân viên thanh toán" />
+              <Input
+                disabled={isDetail}
+                placeholder="Nhập nhân viên thanh toán"
+              />
             </Form.Item>
             <h4>{labels.order}</h4>
-            <div className="orderCont">
-              <div className="dishCont">
-                <h4>{labels.dish_name}</h4>
-                <Form.Item
-                  name="Tên món"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={isDetail} placeholder="Nhập tên món" />
-                </Form.Item>
-              </div>
-              <div className="amountCont">
-                <h4>{labels.amount}</h4>
-                <Form.Item
-                  name="SL"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={isDetail} placeholder="Nhập số lượng" />
-                </Form.Item>
-              </div>
-              <div className="priceCont">
-                <h4>{labels.unit_price}</h4>
-                <Form.Item
-                  name="Đơn giá"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={isDetail} placeholder="Nhập đơn giá" />
-                </Form.Item>
-              </div>
-            </div>
+            {details.map((item) => {
+              return (
+                <div className="orderCont">
+                  <div className="dishCont">
+                    <h4>{labels.dish_name}</h4>
+
+                    <Input
+                      disabled={isDetail}
+                      placeholder="Nhập tên món"
+                      value={item.name}
+                    />
+                  </div>
+                  <div className="amountCont">
+                    <h4>{labels.amount}</h4>
+
+                    <Input
+                      disabled={isDetail}
+                      placeholder="Nhập số lượng"
+                      value={item.amount}
+                    />
+                  </div>
+                  <div className="priceCont">
+                    <h4>{labels.unit_price}</h4>
+
+                    <Input
+                      disabled={isDetail}
+                      placeholder="Nhập đơn giá"
+                      value={item.price}
+                    />
+                  </div>
+                </div>
+              );
+            })}
             <h4>{labels.total_order}</h4>
             <Form.Item
-              name="Tổng đơn"
+              name="price_total"
               rules={[
                 {
                   required: true,
@@ -263,7 +271,7 @@ const ModalContent = () => {
             </Form.Item>
             <h4>{labels.tax}</h4>
             <Form.Item
-              name="Thuế VAT"
+              name="vat"
               rules={[
                 {
                   required: true,
@@ -295,13 +303,14 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập phương thức thanh toán" />
+              <Input
+                disabled={isDetail}
+                placeholder="Nhập phương thức thanh toán"
+              />
             </Form.Item>
           </div>
         </div>
-
       </Form>
-
     </div>
   );
 };
