@@ -28,19 +28,11 @@ import ModalContent from "./Modal";
 import { CloseOutlined } from "@ant-design/icons";
 import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-};
 const Bills = () => {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.bills.listAll);
   const [showList, setShowList] = useState(false);
+  const [selectionType, setSelectionType] = useState("checkbox");
 
   const [search, setSearch] = useState("");
 
@@ -79,9 +71,9 @@ const Bills = () => {
     },
     {
       title: "Đơn hàng",
-      dataIndex: "name",
+      dataIndex: "details",
       width: GIRD12.COL4,
-      key: "name",
+      key: "details",
     },
     {
       title: "Ngày tạo",
@@ -184,17 +176,19 @@ const Bills = () => {
       showList
         ? dataList.map((item, index) => {
             return {
+              key: item._id,
               _id: item._id,
               name: item.name,
               account_id: item.account_id,
-              price_total: item.price_total,
+              price_total: numbToCurrency(item.price_total),
               details: item.details.map((item) => {
                 return `${
                   item.name +
                   ", " +
                   numbToCurrency(item.price) +
                   ", x" +
-                  item.amount
+                  item.amount +
+                  "\n"
                 }`;
               }),
               payment_type: item.payment_type,
@@ -208,6 +202,22 @@ const Bills = () => {
   }, [showList, dataList]);
 
   const dispatch = useAppDispatch();
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      // console.log(
+      //   `selectedRowKeys: ${selectedRowKeys}`,
+      //   "selectedRows: ",
+      //   selectedRows
+      // );
+
+      dispatch(actions.billsActions.setDetail(selectedRowKeys));
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === "Disabled User",
+      // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
   const getDetail = (item) => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(true));
@@ -290,6 +300,10 @@ const Bills = () => {
 
       <div>
         <Table
+          rowSelection={{
+            type: selectionType,
+            ...rowSelection,
+          }}
           loading={loading}
           columns={columns}
           dataSource={data}
