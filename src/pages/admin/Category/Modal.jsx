@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table, Form, Popconfirm, Upload, message, Tooltip } from "antd";
+import {
+  Input,
+  Table,
+  Form,
+  Popconfirm,
+  Upload,
+  message,
+  Tooltip,
+  Select,
+} from "antd";
+
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -36,6 +46,7 @@ const radioBtnstyles = (theme) => ({
   },
   checked: {},
 });
+const { Option } = Select;
 
 const ModalContent = () => {
   const [loading, setLoading] = useState(false);
@@ -71,6 +82,9 @@ const ModalContent = () => {
     const setForm = () => {
       form.setFieldsValue({
         name: dataItem.name,
+        category_type_id:
+          dataItem.category_type_id === "true" ? "Đồ uống" : "Đồ ăn",
+
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
@@ -98,6 +112,7 @@ const ModalContent = () => {
             _id: dataItem._id,
             body: {
               name: values.name,
+              category_type_id: values.category_type_id,
             },
           });
           handleClose();
@@ -108,6 +123,7 @@ const ModalContent = () => {
         } else {
           await collections.addCategory({
             name: values.name,
+            category_type_id: values.category_type_id,
           });
           handleClose();
           dispatch(actions.formActions.changeLoad(!loadData));
@@ -144,6 +160,8 @@ const ModalContent = () => {
   };
   const labels = {
     name: "Tên nhóm món",
+    category_type_id: "Tên loại menu",
+
     create: "Ngày tạo",
     update: "Ngày cập nhật",
   };
@@ -174,6 +192,29 @@ const ModalContent = () => {
               ]}
             >
               <Input disabled={isDetail} placeholder="Nhập tên nhóm món" />
+            </Form.Item>
+            <h4>{labels.category_type_id}</h4>
+            <Form.Item
+              name="category_type_id"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống loại menu`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Select
+                disabled={isDetail}
+                dropdownStyle={{ zIndex: 2000 }}
+                placeholder="Nhập loại menu"
+              >
+                <Option value={true}>Đồ uống</Option>
+                <Option value={false}>Đồ ăn</Option>
+              </Select>
             </Form.Item>
             {dataItem ? (
               <>

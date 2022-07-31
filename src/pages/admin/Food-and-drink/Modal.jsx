@@ -462,7 +462,7 @@ const ModalContent = () => {
         <div className="BtnAdd">
           <Button
             size="Large"
-            color="success"
+            color={dataItem ? "primary" : "success"}
             variant="contained"
             style={{
               paddingLeft: "15%",
@@ -471,11 +471,13 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
+            disabled={loading}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem && isDetail === true ? "Sửa" : "Lưu"}{" "}
+            {dataItem ? "Sửa" : "Lưu"}
           </Button>
           <Button
+            disabled={loading}
             size="Large"
             color="error"
             variant="contained"
