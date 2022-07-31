@@ -249,12 +249,12 @@ const ModalContent = () => {
   }
   function getHeaderTitle() {
     if (dataItem && isDetail) {
-      return "Thông tin món ăn";
+      return "Chi tiết món";
     }
     if (dataItem) {
-      return "Sửa món ăn";
+      return "Sửa thông tin món";
     }
-    return "Thêm món ăn";
+    return "Thêm món mới";
   }
   const handleDelete = async () => {
     setLoading(true);
@@ -269,10 +269,11 @@ const ModalContent = () => {
     avatar: "Hình ảnh",
     name: "Tên món",
     recipe: "Công thức",
-    price: "Đơn giá",
+    price: "Đơn giá (VND)",
     // amount: "Số lượng",
     amount_sell: "Đã bán",
     dish_type: "Loại món",
+    category_type: "Loại menu",
     create: "Ngày tạo",
     update: "Ngày cập nhật",
   };
@@ -287,7 +288,7 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
-          <div style={{ width: "30%" }}>
+          <div style={{ width: "30%", display: "flet", flexDirection: "column", justifyContent: "flet-start" }}>
             <h4>{labels.avatar}</h4>
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
@@ -335,7 +336,7 @@ const ModalContent = () => {
               </>
             ) : null}
           </div>
-          <div>
+          <div style={{ width: "50%" }}>
             <h4>{labels.name}</h4>
             <Form.Item
               name="name"
@@ -373,7 +374,7 @@ const ModalContent = () => {
                 placeholder="Nhập giá"
               />
             </Form.Item>
-            {dataItem ? (
+            {/* {dataItem ? (
               <>
                 <h4>{labels.amount_sell}</h4>
                 <Form.Item
@@ -392,7 +393,7 @@ const ModalContent = () => {
                   <Input disabled={true} placeholder="Nhập đã bán" />
                 </Form.Item>
               </>
-            ) : null}
+            ) : null} */}
             <h4>{labels.dish_type}</h4>
             <Form.Item
               name="dish_type"
@@ -418,7 +419,7 @@ const ModalContent = () => {
                 })}
               </Select>
             </Form.Item>
-            <h4>{labels.dish_type}</h4>
+            <h4>{labels.category_type}</h4>
             <Form.Item
               name="category_type"
               rules={[
@@ -459,7 +460,7 @@ const ModalContent = () => {
             </Form.Item>
           </div>
         </div>
-        <div className="BtnAdd">
+        <div className="btnDish">
           <Button
             size="Large"
             color="success"

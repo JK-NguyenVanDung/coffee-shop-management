@@ -205,7 +205,7 @@ const ModalContent = () => {
             ) : null}
           </div>
         </div>
-        <div className="BtnAdd">
+        <div className="BtnCategory">
           <Button
             size="Large"
             color={dataItem ? "primary" : "success"}

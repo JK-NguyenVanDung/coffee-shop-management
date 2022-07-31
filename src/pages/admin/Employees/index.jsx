@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
+import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -258,13 +259,12 @@ const Employees = () => {
       <div className="dishSearchCont">
         <Button
           variant="contained"
-          endIcon={<ConstructionIcon />}
+          endIcon={<PendingActionsOutlinedIcon  />}
           style={{ marginRight: "1%", backgroundColor: "#111", color: "#fff" }}
           size="small"
         >
-          QUẢN LÝ
+          CHẤM CÔNG
         </Button>
-
         <Button
           onClick={handleOpen}
           variant="contained"

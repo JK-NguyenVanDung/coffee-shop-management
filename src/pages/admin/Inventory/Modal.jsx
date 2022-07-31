@@ -560,7 +560,7 @@ const ModalContent = () => {
             </Select>
           </div>
         </div>
-        <div className="btnAdd">
+        <div className="btnInventory">
           <Button
             size="Large"
             color="success"
