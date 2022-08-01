@@ -147,9 +147,9 @@ const ModalContent = () => {
     dish_name: "Tên món",
     amount: "SL",
     unit_price: "Đơn giá (VND)",
-    total_order: "Tổng đơn",
+    total_order: "Tổng đơn (VND)",
     tax: "Thuế VAT",
-    total_money: "Tổng tiền",
+    total_money: "Tổng tiền (VND)",
     payment_methods: "Phương thức thanh toán",
   };
   return (

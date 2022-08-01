@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table, Form, Popconfirm, Upload, message, Tooltip } from "antd";
+import { Input, Table, Form, Popconfirm, Upload, message, Tooltip, Select } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -27,6 +27,7 @@ import moment from "moment";
 
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
+const { Option } = Select;
 
 const radioBtnstyles = (theme) => ({
   radio: {
@@ -144,6 +145,7 @@ const ModalContent = () => {
   };
   const labels = {
     name: "Tên nhóm món",
+    category_type: "Loại menu",
     create: "Ngày tạo",
     update: "Ngày cập nhật",
   };
@@ -203,12 +205,35 @@ const ModalContent = () => {
                 </Form.Item>
               </>
             ) : null}
+            <h4>{labels.category_type}</h4>
+            <Form.Item
+              name="category_type"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống loại menu`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Select
+                disabled={isDetail}
+                dropdownStyle={{ zIndex: 2000 }}
+                placeholder="Nhập loại menu"
+              >
+                <Option value={true}>Đồ uống</Option>
+                <Option value={false}>Đồ ăn</Option>
+              </Select>
+            </Form.Item>
           </div>
         </div>
         <div className="BtnCategory">
           <Button
             size="Large"
-            color={dataItem ? "primary" : "success"}
+            color="success"
             variant="contained"
             style={{
               paddingLeft: "15%",

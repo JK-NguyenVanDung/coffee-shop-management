@@ -286,7 +286,14 @@ const Bills = () => {
   return (
     <>
       <div className="dishSearchCont">
-
+        <Button
+          variant="contained"
+          endIcon={<CloseOutlined />}
+          style={{ marginRight: "1%", backgroundColor: "#B2431E", color: "#fff" , paddingTop: "1%" }}
+          size="small"
+        >
+          XÓA ĐƠN
+        </Button>
         <FormModal children={<ModalContent />} />
 
         <div className="dishSearch">
