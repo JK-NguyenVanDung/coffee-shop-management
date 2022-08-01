@@ -235,6 +235,7 @@ export const Category = () => {
                 bgcolor: "transparent",
               },
               mr: 1,
+              color: "#111",
             }}
           >
             <div
