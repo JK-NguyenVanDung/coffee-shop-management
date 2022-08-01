@@ -52,22 +52,16 @@ const ModalContent = () => {
   const openDialog = useAppSelector((state) => state.form.delete);
 
   const [details, setDetails] = useState([]);
-  const handleChange = (newValue) => {
-    setDate(newValue);
-  };
-  const handleStatus = (e) => {
-    setStatus(e.target.value);
-  };
+
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
-  const handlePrint = () => dispatch(actions.formActions.showForm());
+  const handlePrint = () => {
+    dispatch(actions.formActions.closeForm());
+    message.success("In đơn thành công");
+  };
   const handleClose = () => dispatch(actions.formActions.closeForm());
 
-  const deleteItem = () => {
-    dispatch(actions.formActions.showDelete());
-  };
-  const editItem = () => dispatch(actions.formActions.setDetail(false));
   function getPayment(item) {
     let role = "";
     switch (item) {
