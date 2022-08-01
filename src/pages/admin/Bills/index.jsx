@@ -159,7 +159,7 @@ const Bills = () => {
                 In
               </Button>
               <Popconfirm
-                title={`Bạn có muốn xoá ${item.name}`}
+                title={`Bạn có muốn xoá đơn ${item.createdAt}`}
                 onConfirm={() => handleDelete(item)}
                 onCancel={cancel}
                 okText="Có"
@@ -292,9 +292,9 @@ const Bills = () => {
             color: "#fff",
             paddingTop: "1%",
           }}
-          size="small"
+          size="medium"
         >
-          XÓA ĐƠN TRONG 3 THÁNG VỪA QUA
+          XÓA 3 THÁNG ĐƠN
         </Button>
         <FormModal children={<ModalContent />} />
 
