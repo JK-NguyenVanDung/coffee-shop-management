@@ -560,7 +560,7 @@ const ModalContent = () => {
             </Select>
           </div>
         </div>
-        <div className="BtnAdd">
+        <div className="btnInventory">
           <Button
             size="Large"
             color={dataItem ? "primary" : "success"}

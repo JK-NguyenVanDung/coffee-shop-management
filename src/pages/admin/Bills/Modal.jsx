@@ -162,7 +162,7 @@ const ModalContent = () => {
     order: "Đơn hàng :",
     dish_name: "Tên món",
     amount: "SL",
-    unit_price: "Đơn giá",
+    unit_price: "Đơn giá (VND)",
     total_order: "Tổng đơn",
     tax: "Thuế VAT",
     total_money: "Tổng tiền",

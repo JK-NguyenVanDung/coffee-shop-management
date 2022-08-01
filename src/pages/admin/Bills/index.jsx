@@ -146,6 +146,46 @@ const Bills = () => {
       width: GIRD12.COL2,
       key: "price_total",
     },
+    {
+      width: GIRD12.COL3,
+
+      title: "Hoạt động",
+      render: (item) => {
+        return (
+          <>
+            <div className="btnBills">
+              <Button
+                variant="contained"
+                endIcon={<LocalPrintshopOutlinedIcon />}
+                style={{ marginRight: "7%", color: "#fff" }}
+                size="small"
+                color="primary"
+                onClick={() => handleEdit(item)}
+              >
+                In
+              </Button>
+              <Popconfirm
+                title={`Bạn có muốn xoá ${item.name}`}
+                onConfirm={() => handleDelete(item)}
+                onCancel={cancel}
+                okText="Có"
+                cancelText="Không"
+                placement="left"
+              >
+                <Button
+                  variant="contained"
+                  endIcon={<DeleteSweepIcon />}
+                  size="small"
+                  color="error"
+                >
+                  Xóa
+                </Button>
+              </Popconfirm>
+            </div>
+          </>
+        );
+      },
+    },
   ];
   const fetchData = async (value) => {
     try {
@@ -257,32 +297,6 @@ const Bills = () => {
   return (
     <>
       <div className="dishSearchCont">
-        <Button
-          variant="contained"
-          endIcon={<CloseOutlined />}
-          style={{
-            marginRight: "1%",
-            backgroundColor: "#B2431E",
-            color: "#fff",
-          }}
-          size="small"
-        >
-          HỦY ĐƠN
-        </Button>
-
-        <Button
-          onClick={handleOpen}
-          variant="contained"
-          endIcon={<LocalPrintshopOutlinedIcon />}
-          style={{
-            marginRight: "1%",
-            backgroundColor: "#4CACBA",
-            color: "#fff",
-          }}
-          size="small"
-        >
-          IN ĐƠN
-        </Button>
         <FormModal children={<ModalContent />} />
 
         <div className="dishSearch">
