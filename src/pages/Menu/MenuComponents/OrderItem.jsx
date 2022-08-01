@@ -49,10 +49,10 @@ const OrderItem = ({ item, changeAmount = false }) => {
     dispatch(actions.menuActions.resetOrderBar());
   };
   function onDecrease() {
-    dispatch(actions.menuActions.decreaseAmount(item.id));
+    dispatch(actions.menuActions.decreaseAmount(item._id));
   }
   function onIncrease() {
-    dispatch(actions.menuActions.increaseAmount(item.id));
+    dispatch(actions.menuActions.increaseAmount(item._id));
   }
   return (
     <div className="orderItemCont">
