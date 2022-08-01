@@ -37,6 +37,7 @@ import moment from "moment";
 
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
+const { Option } = Select;
 
 const radioBtnstyles = (theme) => ({
   radio: {
@@ -46,7 +47,6 @@ const radioBtnstyles = (theme) => ({
   },
   checked: {},
 });
-const { Option } = Select;
 
 const ModalContent = () => {
   const [loading, setLoading] = useState(false);
@@ -244,12 +244,35 @@ const ModalContent = () => {
                 </Form.Item>
               </>
             ) : null}
+            <h4>{labels.category_type}</h4>
+            <Form.Item
+              name="category_type"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống loại menu`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Select
+                disabled={isDetail}
+                dropdownStyle={{ zIndex: 2000 }}
+                placeholder="Nhập loại menu"
+              >
+                <Option value={true}>Đồ uống</Option>
+                <Option value={false}>Đồ ăn</Option>
+              </Select>
+            </Form.Item>
           </div>
         </div>
         <div className="BtnCategory">
           <Button
             size="Large"
-            color={dataItem ? "primary" : "success"}
+            color="success"
             variant="contained"
             style={{
               paddingLeft: "15%",
