@@ -28,6 +28,8 @@ import moment from "moment";
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
 
+import { numbToCurrency } from "../../../helper/currency";
+
 const radioBtnstyles = (theme) => ({
   radio: {
     "&$checked": {
@@ -59,7 +61,7 @@ const ModalContent = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
-  const handleOpen = () => dispatch(actions.formActions.showForm());
+  const handlePrint = () => dispatch(actions.formActions.showForm());
   const handleClose = () => dispatch(actions.formActions.closeForm());
 
   const deleteItem = () => {
@@ -93,7 +95,7 @@ const ModalContent = () => {
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
-        price_total: dataItem.price_total,
+        price_total: numbToCurrency(dataItem.price_total),
         account_id: dataItem.account_id,
         payment_type: getPayment(dataItem.payment_type),
         vat: 0,
@@ -194,7 +196,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập ID" />
+              <Input disabled={true} placeholder="Nhập ID" />
             </Form.Item>
             <h4>{labels.date_created}</h4>
             <Form.Item
@@ -206,7 +208,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập ngày tạo" />
+              <Input disabled={true} placeholder="Nhập ngày tạo" />
             </Form.Item>
             <h4>{labels.payment_staff}</h4>
             <Form.Item
@@ -218,45 +220,48 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input
-                disabled={isDetail}
-                placeholder="Nhập nhân viên thanh toán"
-              />
+              <Input disabled={true} placeholder="Nhập nhân viên thanh toán" />
             </Form.Item>
             <h4>{labels.order}</h4>
-            {details.map((item) => {
-              return (
-                <div className="orderCont">
-                  <div className="dishCont">
-                    <h4>{labels.dish_name}</h4>
+            <div class="orderItems">
+              {details.map((item) => {
+                return (
+                  <div className="orderCont">
+                    <div className="dishCont">
+                      <h4>{labels.dish_name}</h4>
 
-                    <Input
-                      disabled={isDetail}
-                      placeholder="Nhập tên món"
-                      value={item.name}
-                    />
-                  </div>
-                  <div className="amountCont">
-                    <h4>{labels.amount}</h4>
+                      <Input
+                        disabled={true}
+                        placeholder="Nhập tên món"
+                        value={item.name}
+                      />
+                    </div>
+                    <div className="dishCont">
+                      <h4>{labels.amount}</h4>
 
-                    <Input
-                      disabled={isDetail}
-                      placeholder="Nhập số lượng"
-                      value={item.amount}
-                    />
-                  </div>
-                  <div className="priceCont">
-                    <h4>{labels.unit_price}</h4>
+                      <Input
+                        disabled={true}
+                        placeholder="Nhập số lượng"
+                        value={
+                          item.category_type
+                            ? `${item.amount} ly`
+                            : `${item.amount} đĩa`
+                        }
+                      />
+                    </div>
+                    <div className="dishCont">
+                      <h4>{labels.unit_price}</h4>
 
-                    <Input
-                      disabled={isDetail}
-                      placeholder="Nhập đơn giá"
-                      value={item.price}
-                    />
+                      <Input
+                        disabled={true}
+                        placeholder="Nhập đơn giá"
+                        value={numbToCurrency(item.price)}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
             <h4>{labels.total_order}</h4>
             <Form.Item
               name="price_total"
@@ -267,7 +272,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập tổng đơn" />
+              <Input disabled={true} placeholder="Nhập tổng đơn" />
             </Form.Item>
             <h4>{labels.tax}</h4>
             <Form.Item
@@ -279,7 +284,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập Thuế VAT" />
+              <Input disabled={true} placeholder="Nhập Thuế VAT" />
             </Form.Item>
             <h4>{labels.total_money}</h4>
             <Form.Item
@@ -291,7 +296,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập tổng tiền" />
+              <Input disabled={true} placeholder="Nhập tổng tiền" />
             </Form.Item>
             <h4>{labels.payment_methods}</h4>
             <Form.Item
@@ -304,12 +309,51 @@ const ModalContent = () => {
               ]}
             >
               <Input
-                disabled={isDetail}
+                disabled={true}
                 placeholder="Nhập phương thức thanh toán"
               />
             </Form.Item>
           </div>
         </div>
+        {isDetail && (
+          <div
+            className="BtnAdd"
+            style={{ marginTop: "3vh", marginBottom: "5vh" }}
+          >
+            <Button
+              size="Large"
+              color={dataItem ? "primary" : "success"}
+              variant="contained"
+              style={{
+                paddingLeft: "15%",
+                paddingRight: "15%",
+                paddingTop: "2%",
+                paddingBottom: "2%",
+                color: "#fff",
+              }}
+              disabled={loading}
+              onClick={handlePrint}
+            >
+              In đơn
+            </Button>
+            <Button
+              disabled={loading}
+              size="Large"
+              color="error"
+              variant="contained"
+              style={{
+                paddingLeft: "15%",
+                paddingRight: "15%",
+                paddingTop: "2%",
+                paddingBottom: "2%",
+                color: "#fff",
+              }}
+              onClick={handleClose}
+            >
+              Hủy In
+            </Button>
+          </div>
+        )}
       </Form>
     </div>
   );

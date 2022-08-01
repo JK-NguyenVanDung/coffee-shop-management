@@ -37,24 +37,24 @@ const Bills = () => {
   const [search, setSearch] = useState("");
 
   const [postList, setPostList] = useState({ page: 1, per_page: 10 });
-  const checkOnload = useAppSelector((state) => state.form.loadData);
 
   const loadData = useAppSelector((state) => state.form.loadData);
   const [data, setData] = useState([]);
   const onChangeSearch = async (value) => {
     const reg = new RegExp(value, "gi");
-    const filteredData = map(dataList, (record) => {
-      const idMatch = get(record, "_id").match(reg);
-      const employeMatch = get(record, "account_id").match(reg);
-
-      if (!idMatch || !employeMatch) {
+    const temp = data;
+    const filteredData = map(temp, (record) => {
+      const nameMatch = get(record, "createdAt").match(reg);
+      if (!nameMatch) {
         return null;
       }
       return record;
     }).filter((record) => !!record);
 
     setSearch(value);
-    setData(value ? filteredData : dataList);
+    value
+      ? setData(filteredData)
+      : dispatch(actions.formActions.changeLoad(!loadData));
   };
   // const emitEmpty = () => {
   //   this.setState({
@@ -64,15 +64,9 @@ const Bills = () => {
   // };
   const columns = [
     {
-      title: "ID Đơn hàng",
-      dataIndex: "_id",
-      width: GIRD12.COL1,
-      key: "_id",
-    },
-    {
       title: "Đơn hàng",
       dataIndex: "details",
-      width: GIRD12.COL4,
+      width: GIRD12.COL6,
       key: "details",
     },
     {
@@ -160,7 +154,7 @@ const Bills = () => {
                 style={{ marginRight: "7%", color: "#fff" }}
                 size="small"
                 color="primary"
-                onClick={() => handleEdit(item)}
+                onClick={() => handlePrint(item)}
               >
                 In
               </Button>
@@ -205,11 +199,7 @@ const Bills = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData(postList);
-  }, [loadData, postList]);
-
-  useEffect(() => {
-    fetchData(postList);
-  }, []);
+  }, [loadData]);
 
   useEffect(() => {
     setData(
@@ -218,7 +208,6 @@ const Bills = () => {
             return {
               key: item._id,
               _id: item._id,
-              name: item.name,
               account_id: item.account_id,
               price_total: numbToCurrency(item.price_total),
               details: item.details.map((item) => {
@@ -231,6 +220,7 @@ const Bills = () => {
                   "\n"
                 }`;
               }),
+
               payment_type: item.payment_type,
               createdAt: moment(new Date(item.createdAt)).format(
                 "h:mma - DD/MM/YYYY"
@@ -260,7 +250,7 @@ const Bills = () => {
   };
   const getDetail = (item) => {
     dispatch(actions.formActions.showForm());
-    dispatch(actions.formActions.setDetail(true));
+    dispatch(actions.formActions.setDetail(false));
 
     dispatch(actions.billsActions.setDetail(item._id));
   };
@@ -270,9 +260,9 @@ const Bills = () => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
   };
-  async function handleEdit(item) {
+  async function handlePrint(item) {
     dispatch(actions.formActions.showForm());
-    dispatch(actions.formActions.setDetail(false));
+    dispatch(actions.formActions.setDetail(true));
 
     dispatch(actions.billsActions.setDetail(item._id));
   }
@@ -287,10 +277,6 @@ const Bills = () => {
   function cancel(e) {
     // message.error('Click on No');
   }
-  useEffect(() => {
-    // test.current = 2;
-    fetchData(postList);
-  }, [loadData]);
 
   const onSearch = (value) => console.log(value);
 
@@ -314,10 +300,6 @@ const Bills = () => {
 
       <div>
         <Table
-          rowSelection={{
-            type: selectionType,
-            ...rowSelection,
-          }}
           loading={loading}
           columns={columns}
           dataSource={data}

@@ -5,7 +5,7 @@ export const menuText = {
     searchEmployees:  "Tìm kiếm nhân viên...",
     searchCategories: "Tìm kiếm nhóm món...",
     searchInventories: "Tìm kiếm kho hàng...",
-    searchBills: "Tìm kiếm hóa đơn...",
+    searchBills: "Tìm kiếm theo ngày tạo...",
     switchOp1: "Đồ uống",
     switchOp2: "Đồ ăn",
 
