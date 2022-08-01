@@ -39,30 +39,31 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    .ant-form-item-control-input-content{
+        .ant-input{
+            max-width: 100%
+        }
+    }
 }
 .orderCont {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     .dishCont {
-        width: 50%;
+        width: 30%;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        padding-right: 4%;
+        justify-content: flex-start;  
+        margin-bottom: 2vh;
+              
     }
-    .amountCont {
-        width: 50%;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-right: 4%;
-    }
-    .priceCont {
-        width: 50%;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-    }
+
 }
+
+
+.orderItems{
+    margin-top: 3vh;
+    margin-bottom: 2vh;
+}
+

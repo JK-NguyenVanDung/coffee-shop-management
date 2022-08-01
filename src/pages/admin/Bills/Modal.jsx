@@ -28,6 +28,8 @@ import moment from "moment";
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
 
+import { numbToCurrency } from "../../../helper/currency";
+
 const radioBtnstyles = (theme) => ({
   radio: {
     "&$checked": {
@@ -49,6 +51,7 @@ const ModalContent = () => {
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
 
+  const [details, setDetails] = useState([]);
   const handleChange = (newValue) => {
     setDate(newValue);
   };
@@ -58,26 +61,46 @@ const ModalContent = () => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
-  const handleOpen = () => dispatch(actions.formActions.showForm());
+  const handlePrint = () => dispatch(actions.formActions.showForm());
   const handleClose = () => dispatch(actions.formActions.closeForm());
 
   const deleteItem = () => {
     dispatch(actions.formActions.showDelete());
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
+  function getPayment(item) {
+    let role = "";
+    switch (item) {
+      case 0:
+        role = "Tiền mặt";
+        break;
+      case 1:
+        role = "Momo";
+        break;
+      case 2:
+        role = "Ngân hàng";
+        break;
+      default:
+        role = "Tiền mặt";
+        break;
+    }
+    return role;
+  }
   useEffect(() => {
     form.resetFields();
     const setForm = () => {
       form.setFieldsValue({
         //truyền data khi bấm vào => dataItem.
-        _id: dataItem._id,
+        id: dataItem._id,
         createdAt: moment(new Date(dataItem.createdAt)).format(
           "h:mma - DD/MM/YYYY"
         ),
-        price_total: dataItem.price_total,
+        price_total: numbToCurrency(dataItem.price_total),
         account_id: dataItem.account_id,
-        payment_type: dataItem.payment_type,
+        payment_type: getPayment(dataItem.payment_type),
+        vat: 0,
       });
+      setDetails(dataItem.details);
     };
 
     if (dataItem) {
@@ -96,9 +119,7 @@ const ModalContent = () => {
         if (dataItem) {
           await collections.editBill({
             _id: dataItem._id,
-            body: {
-              
-            },
+            body: {},
           });
           handleClose();
           dispatch(actions.formActions.changeLoad(!loadData));
@@ -125,10 +146,7 @@ const ModalContent = () => {
   };
 
   function getHeaderTitle() {
-    if (dataItem) {
-      return "Sửa nhóm món";
-    }
-    return "Chi tiết hóa đơn";
+    return "Chi tiết đơn hàng";
   }
   const handleDelete = async () => {
     setLoading(true);
@@ -140,7 +158,7 @@ const ModalContent = () => {
     dispatch(actions.formActions.changeLoad(!loadData));
   };
   const labels = {
-    id_order: "ID đơn hàng",
+    id: "ID đơn hàng",
     date_created: "Ngày tạo",
     payment_staff: "Nhân viên thanh toán",
     order: "Đơn hàng :",
@@ -164,12 +182,12 @@ const ModalContent = () => {
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
           <div style={{ width: "90%" }}>
-            <h4>{labels.id_order}</h4>
+            <h4>{labels.id}</h4>
             <Form.Item
-              name="ID đơn hàng"
+              name="id"
               rules={[
                 {
-                  required: true, 
+                  required: true,
                   message: `Không được để trống tên nhóm món`,
                 },
                 {
@@ -178,7 +196,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập ID" />
+              <Input disabled={true} placeholder="Nhập ID" />
             </Form.Item>
             <h4>{labels.date_created}</h4>
             <Form.Item
@@ -190,7 +208,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập ngày tạo" />
+              <Input disabled={true} placeholder="Nhập ngày tạo" />
             </Form.Item>
             <h4>{labels.payment_staff}</h4>
             <Form.Item
@@ -202,56 +220,51 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập nhân viên thanh toán" />
+              <Input disabled={true} placeholder="Nhập nhân viên thanh toán" />
             </Form.Item>
             <h4>{labels.order}</h4>
-            <div className="orderCont">
-              <div className="dishCont">
-                <h4>{labels.dish_name}</h4>
-                <Form.Item
-                  name="Tên món"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={isDetail} placeholder="Nhập tên món" />
-                </Form.Item>
-              </div>
-              <div className="amountCont">
-                <h4>{labels.amount}</h4>
-                <Form.Item
-                  name="SL"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={isDetail} placeholder="Nhập số lượng" />
-                </Form.Item>
-              </div>
-              <div className="priceCont">
-                <h4>{labels.unit_price}</h4>
-                <Form.Item
-                  name="Đơn giá"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={isDetail} placeholder="Nhập đơn giá" />
-                </Form.Item>
-              </div>
+            <div class="orderItems">
+              {details.map((item) => {
+                return (
+                  <div className="orderCont">
+                    <div className="dishCont">
+                      <h4>{labels.dish_name}</h4>
+
+                      <Input
+                        disabled={true}
+                        placeholder="Nhập tên món"
+                        value={item.name}
+                      />
+                    </div>
+                    <div className="dishCont">
+                      <h4>{labels.amount}</h4>
+
+                      <Input
+                        disabled={true}
+                        placeholder="Nhập số lượng"
+                        value={
+                          item.category_type
+                            ? `${item.amount} ly`
+                            : `${item.amount} đĩa`
+                        }
+                      />
+                    </div>
+                    <div className="dishCont">
+                      <h4>{labels.unit_price}</h4>
+
+                      <Input
+                        disabled={true}
+                        placeholder="Nhập đơn giá"
+                        value={numbToCurrency(item.price)}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             <h4>{labels.total_order}</h4>
             <Form.Item
-              name="Tổng đơn"
+              name="price_total"
               rules={[
                 {
                   required: true,
@@ -259,11 +272,11 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập tổng đơn" />
+              <Input disabled={true} placeholder="Nhập tổng đơn" />
             </Form.Item>
             <h4>{labels.tax}</h4>
             <Form.Item
-              name="Thuế VAT"
+              name="vat"
               rules={[
                 {
                   required: true,
@@ -271,7 +284,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập Thuế VAT" />
+              <Input disabled={true} placeholder="Nhập Thuế VAT" />
             </Form.Item>
             <h4>{labels.total_money}</h4>
             <Form.Item
@@ -283,7 +296,7 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập tổng tiền" />
+              <Input disabled={true} placeholder="Nhập tổng tiền" />
             </Form.Item>
             <h4>{labels.payment_methods}</h4>
             <Form.Item
@@ -295,13 +308,53 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập phương thức thanh toán" />
+              <Input
+                disabled={true}
+                placeholder="Nhập phương thức thanh toán"
+              />
             </Form.Item>
           </div>
         </div>
-
+        {isDetail && (
+          <div
+            className="BtnAdd"
+            style={{ marginTop: "3vh", marginBottom: "5vh" }}
+          >
+            <Button
+              size="Large"
+              color={dataItem ? "primary" : "success"}
+              variant="contained"
+              style={{
+                paddingLeft: "15%",
+                paddingRight: "15%",
+                paddingTop: "2%",
+                paddingBottom: "2%",
+                color: "#fff",
+              }}
+              disabled={loading}
+              onClick={handlePrint}
+            >
+              In đơn
+            </Button>
+            <Button
+              disabled={loading}
+              size="Large"
+              color="error"
+              variant="contained"
+              style={{
+                paddingLeft: "15%",
+                paddingRight: "15%",
+                paddingTop: "2%",
+                paddingBottom: "2%",
+                color: "#fff",
+              }}
+              onClick={handleClose}
+            >
+              Hủy In
+            </Button>
+          </div>
+        )}
       </Form>
-
     </div>
   );
 };

@@ -71,6 +71,11 @@ const Category = () => {
       dataIndex: "name",
       width: GIRD12.COL3,
     },
+    {
+      title: "Tên nhóm menu",
+      dataIndex: "category_type_id",
+      width: GIRD12.COL1,
+    },
 
     {
       title: "Tạo vào",
@@ -155,6 +160,8 @@ const Category = () => {
             return {
               id: item._id,
               name: item.name,
+              category_type_id:
+                item.category_type_id === "true" ? "Đồ uống" : "Đồ ăn",
               createdAt: moment(new Date(item.createdAt)).format(
                 "h:mma - DD/MM/YYYY"
               ),
