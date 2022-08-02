@@ -35,7 +35,7 @@ function Notification(props) {
     let temp = items;
     let current = new Date();
     const obj = { name: inputItem, time: current.toString() };
-    if (temp.length >= 3) {
+    if (temp !== null && temp.length >= 3) {
       temp[0] = obj;
     } else {
       temp.push(obj);
