@@ -16,7 +16,7 @@ import { map, includes, sortBy, uniqBy, each, result, get } from "lodash";
 import { menuText } from "../../../helper/Text";
 
 import FormModal from "../../../components/FormElements/FormModal";
-import * as collections from "../../../api/Collections/employees";
+import * as collections from "../../../api/Collections/schedule";
 import { GIRD12 } from "../../../helper/constant";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
@@ -27,7 +27,7 @@ import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlin
 
 const Schedule = () => {
   const [loading, setLoading] = useState(false);
-  const dataList = useAppSelector((state) => state.employees.listAll);
+  const dataList = useAppSelector((state) => state.schedule.listAll);
   const [showList, setShowList] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -97,8 +97,8 @@ const Schedule = () => {
   const fetchData = async (value) => {
     try {
       setLoading(true);
-      const response = await collections.getEmployees();
-      dispatch(actions.employeesActions.setListAll(response));
+      const response = await collections.getSchedules();
+      dispatch(actions.schedulesActions.setListAll(response));
       setShowList(true);
       setLoading(false);
       // setPagination({
@@ -150,11 +150,11 @@ const Schedule = () => {
   const getDetail = (item) => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(true));
-    dispatch(actions.employeesActions.setDetail(item.id));
+    dispatch(actions.schedulesActions.setDetail(item.id));
   };
 
   const handleOpen = () => {
-    dispatch(actions.employeesActions.setDetail(null));
+    dispatch(actions.schedulesActions.setDetail(null));
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
   };
@@ -162,11 +162,11 @@ const Schedule = () => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
 
-    dispatch(actions.employeesActions.setDetail(item.id));
+    dispatch(actions.schedulesActions.setDetail(item.id));
   }
   async function handleDelete(item) {
     setLoading(true);
-    await collections.removeEmployee(item.id);
+    await collections.removeSchedule(item.id);
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Xoá thành công");
     setLoading(false);
@@ -205,7 +205,7 @@ const Schedule = () => {
 
         <div className="dishSearch">
           <SearchTable
-            placeholder={menuText.searchEmployees}
+            placeholder={menuText.searchSchedules}
             allowClear
             size="default"
             value={search}
