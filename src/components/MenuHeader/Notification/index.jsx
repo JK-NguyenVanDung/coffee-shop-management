@@ -17,11 +17,11 @@ import moment from "moment";
 
 function Notification(props) {
   const [items, setItems] = useState([]);
-  const [inputItem, setInputItem] = useState([]);
+  const [inputItem, setInputItem] = useState("");
   const [update, setUpdate] = useState(false);
   useEffect(() => {
     const temp = JSON.parse(localStorage.getItem("items"));
-    if (temp.length > 0) {
+    if (temp && temp.length > 0) {
       temp.reverse();
       setItems(temp);
     }
@@ -32,20 +32,25 @@ function Notification(props) {
   }, [items, update]);
 
   function addItem() {
-    let temp = items;
-    let current = new Date();
-    const obj = { name: inputItem, time: current.toString() };
-    if (temp.length >= 3) {
-      temp[0] = obj;
-    } else {
-      temp.push(obj);
-    }
-    setItems(temp);
-    // localStorage.setItem("items", JSON.stringify(items));
+    if (inputItem.trim() !== "") {
+      let temp = items;
+      let current = new Date();
+      const obj = { name: inputItem, time: current.toString() };
+      if (temp !== null) {
+        if (temp.length >= 3) {
+          temp[0] = obj;
+        } else {
+          temp.push(obj);
+        }
+      }
+      setItems(temp);
 
-    console.log(items.length);
-    setUpdate(!update);
-    setInputItem("");
+      // localStorage.setItem("items", JSON.stringify(items));
+
+      console.log(items.length);
+      setUpdate(!update);
+      setInputItem("");
+    }
   }
   function deleteItem(e) {
     const result = items.filter((item) => item.time !== e.time);
@@ -78,6 +83,7 @@ function Notification(props) {
               variant="contained"
               onClick={addItem}
               sx={{ color: "#fff" }}
+              disabled={inputItem.trim() === ""}
             >
               Tạo thông báo
             </Button>
