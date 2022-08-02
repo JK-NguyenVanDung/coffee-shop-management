@@ -288,7 +288,14 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
-          <div style={{ width: "30%", display: "flet", flexDirection: "column", justifyContent: "flet-start" }}>
+          <div
+            style={{
+              width: "30%",
+              display: "flet",
+              flexDirection: "column",
+              justifyContent: "flet-start",
+            }}
+          >
             <h4>{labels.avatar}</h4>
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
@@ -475,7 +482,7 @@ const ModalContent = () => {
             disabled={loading}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem ? "Sửa" : "Lưu"}
+            {dataItem && isDetail === true ? "Sửa" : "Lưu"}
           </Button>
           <Button
             disabled={loading}

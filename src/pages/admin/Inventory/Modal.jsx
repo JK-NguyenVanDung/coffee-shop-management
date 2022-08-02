@@ -575,7 +575,7 @@ const ModalContent = () => {
             disabled={loading}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem ? "Sửa" : "Lưu"}
+            {dataItem && isDetail === true ? "Sửa" : "Lưu"}
           </Button>
           <Button
             disabled={loading}
