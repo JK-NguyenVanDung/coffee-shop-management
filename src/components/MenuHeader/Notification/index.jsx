@@ -21,7 +21,7 @@ function Notification(props) {
   const [update, setUpdate] = useState(false);
   useEffect(() => {
     const temp = JSON.parse(localStorage.getItem("items"));
-    if (temp.length > 0) {
+    if (temp && temp.length > 0) {
       temp.reverse();
       setItems(temp);
     }
@@ -35,12 +35,15 @@ function Notification(props) {
     let temp = items;
     let current = new Date();
     const obj = { name: inputItem, time: current.toString() };
-    if (temp !== null && temp.length >= 3) {
-      temp[0] = obj;
-    } else {
-      temp.push(obj);
+    if (temp !== null) {
+      if (temp.length >= 3) {
+        temp[0] = obj;
+      } else {
+        temp.push(obj);
+      }
     }
     setItems(temp);
+
     // localStorage.setItem("items", JSON.stringify(items));
 
     console.log(items.length);
