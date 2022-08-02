@@ -10,7 +10,7 @@ const config = combineReducers({
     employees: reducers.employeesReducer,
     dishes: reducers.dishesReducer,
     categories: reducers.categoriesReducer,
-    // banner: reducers.bannerReducer,
+    schedule: reducers.scheduleReducer,
     bills: reducers.billsReducer,
     inventories: reducers.inventoriesReducer,
     // order: reducers.orderReducer,

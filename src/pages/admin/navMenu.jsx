@@ -1,15 +1,4 @@
-import {
-  AmazonOutlined,
-  BoxPlotFilled,
-  BulbOutlined,
-  PieChartOutlined,
-  ProjectOutlined,
-  GiftOutlined,
-  TeamOutlined,
-  UserOutlined,
-  MenuOutlined,
-  CommentOutlined,
-} from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons/";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import TimelineRoundedIcon from "@mui/icons-material/TimelineRounded";
 import LocalCafeRoundedIcon from "@mui/icons-material/LocalCafeRounded";
@@ -18,7 +7,7 @@ import WarehouseRoundedIcon from "@mui/icons-material/WarehouseRounded";
 import ReceiptLongRoundedIcon from "@mui/icons-material/ReceiptLongRounded";
 import ListAltRoundedIcon from "@mui/icons-material/ListAltRounded";
 import { AdminRouter } from "../../router/pageRouter";
-
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 export const ROLES = [
   { value: 0b1, key: "menu", name: "Menu" },
   { key: "employee_manager", value: 0b10, name: "Quản lý Nhân viên" },
@@ -89,5 +78,13 @@ export const MENU = [
     title: "Quản lý kho hàng",
     children: [],
     value: 0b100000,
+  },
+  {
+    id: 8,
+    path: AdminRouter.SCHEDULE.path,
+    icon: CalendarMonthIcon,
+    title: "Quản lý lịch làm",
+    children: [],
+    value: 0b1000000,
   },
 ];
