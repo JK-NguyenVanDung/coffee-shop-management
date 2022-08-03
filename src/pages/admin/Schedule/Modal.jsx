@@ -13,9 +13,9 @@ import AddIcon from "@mui/icons-material/Add";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { CloseOutlined } from "@ant-design/icons";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
+import { GIRD12 } from "../../../helper/constant";
 
 import { TextField, FormControl } from "@mui/material/";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -23,6 +23,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/employees";
+import * as employeesCollections from "../../../api/Collections/employees";
+import Checkbox from "@mui/material/Checkbox";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -39,328 +41,100 @@ import moment from "moment";
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
 
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
+import { styled } from "@mui/material/styles";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 
-const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+import startOfWeek from "date-fns/startOfWeek";
+import endOfWeek from "date-fns/endOfWeek";
+import isSameDay from "date-fns/isSameDay";
+import isWithinInterval from "date-fns/isWithinInterval";
 
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
+import format from "date-fns/format";
+import addDays from "date-fns/addDays";
+import { CustomDay } from "./CustonDatePicker";
 
-  const isLt2M = file.size / 1024 / 1024 < 2;
-
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-
-  return isJpgOrPng && isLt2M;
-};
-
-const radioBtnstyles = (theme) => ({
-  radio: {
-    "&$checked": {
-      color: "#4B8DF8",
-    },
-  },
-  checked: {},
-});
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 const ModalContent = () => {
   const [loading, setLoading] = useState(false);
-  const dataItem = useAppSelector((state) => state.employees.detail);
-  const [date, setDate] = React.useState(new Date("2001-08-18"));
+  const dataItem = useAppSelector((state) => state.schedule.detail);
   const [status, setStatus] = React.useState("1");
   let [role, setRole] = useState(true);
   const loadData = useAppSelector((state) => state.form.loadData);
   const modalError = useAppSelector((state) => state.form.modalError);
   const isDetail = useAppSelector((state) => state.form.detail);
-  const [fileList, setFileList] = useState([]);
+  const currentEmployee = useAppSelector(
+    (state) => state.schedule.currentEmployee
+  );
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
-  const [email, setEmail] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [phone, setPhone] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [password, setPassword] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [ID_card, setID_card] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
 
-  const handleChange = (newValue) => {
-    setDate(newValue);
-  };
-  const handleStatus = (e) => {
-    setStatus(e.target.value);
-  };
+  const employeeList = useAppSelector((state) => state.employees.listAll);
+
+  const date = useAppSelector((state) => state.schedule.currentDate);
+
+  const [select, setSelect] = useState("");
+
+  const dataList = useAppSelector((state) => state.schedule.listAll);
+  const [showList, setShowList] = useState(false);
+
+  const [search, setSearch] = useState("");
+
+  const [postList, setPostList] = useState({ page: 1, per_page: 10 });
+  const checkOnload = useAppSelector((state) => state.form.loadData);
+
+  const [data, setData] = useState([]);
+
+  const test = new Date();
+
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
   const handleOpen = () => dispatch(actions.formActions.showForm());
   const handleClose = () => dispatch(actions.formActions.closeForm());
-  const handleCheckbox = (event) => {
-    if (event.target.name === "employee") setRole(true);
-    else setRole(false);
-  };
+
   const deleteItem = () => {
     dispatch(actions.formActions.showDelete());
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
-  useEffect(() => {
-    form.resetFields();
-    setFileList(null);
 
-    const setForm = () => {
-      form.setFieldsValue({
-        email: dataItem.email,
-        phone_number: dataItem.phone_number,
-        password: dataItem.password,
-        address: dataItem.address,
-        full_name: dataItem.full_name,
-        id_card: dataItem.id_card,
-      });
-      // nếu không có dữ liệu đặc biệt thì xoá
-      setFileList([dataItem.avatar]);
-      setRole(dataItem.role === 0 ? true : false);
-      setStatus(dataItem.account_status);
-      setDate(new Date(dataItem.date_of_birth));
-    };
+  const handleOk = async () => {};
 
-    if (dataItem) {
-      setForm();
+  const start = startOfWeek(date ? Date.parse(date) : new Date(), {
+    weekStartsOn: 1,
+  });
+
+  const getDetail = (item) => {
+    dispatch(actions.formActions.showForm());
+    dispatch(actions.formActions.setDetail(true));
+    dispatch(actions.scheduleActions.setDetail(item.id));
+  };
+
+  const getName = (id) => {
+    for (let i = 0; i < employeeList.length; i++) {
+      if (employeeList[i]._id === id) {
+        return employeeList[i].full_name;
+      }
     }
-  }, [dataItem]);
-  const { employee, manager } = role;
-  const error = [employee, manager].filter((v) => v).length !== 1;
-  const UploadButton = () => {
+  };
+  const getBackground = (item) => {
+    if (item === "Ca sáng") {
+      return colors.success;
+    } else if (item === "Ca chiều") {
+      return colors.warning;
+    }
+    return colors.error;
+  };
+  const getDateTitle = (date) => {
     return (
-      <div style={fileList === null ? { width: "19.5rem", height: "50%" } : {}}>
-        <div style={{ padding: 2 }}>
-          {loading ? <LoadingOutlined /> : <PlusOutlined />}
-          Upload
-        </div>
+      <div>
+        <p>{date !== 8 ? `Thứ ${date}` : "Chủ nhật"},</p>
+        <p>{format(addDays(start, date - 2), "dd/MM/yyyy")}</p>
       </div>
     );
-  };
-
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
-  const onPreview = async (file) => {
-    let src = file.url;
-
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-
-        reader.onload = () => resolve(reader.result);
-      });
-    }
-
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
-  };
-  const handleCancel = () => {
-    form.setFieldsValue({ email: "asdasd" });
-  };
-
-  function disablePassword() {
-    setDisablePass(!disablePass);
-  }
-
-  function checkCustomValidation() {
-    if (
-      email.error ||
-      phone.error ||
-      password.error ||
-      ID_card.error ||
-      (fileList !== null && fileList.length <= 0)
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-  const handleOk = async () => {
-    form
-      .validateFields()
-      .then(async (values) => {
-        if (checkCustomValidation()) {
-          setLoading(true);
-          const temp = [];
-          if (dataItem) {
-            await collections.editEmployee({
-              _id: dataItem._id,
-              body: {
-                email: values.email.replace(/\s/g, "").replace(/ /g, ""),
-                phone_number: values.phone_number
-                  .replace(/\s/g, "")
-                  .replace(/ /g, ""),
-                password: values.password.replace(/\s/g, "").replace(/ /g, ""),
-                address: values.address,
-                account_status: Number(status),
-                role: role ? 0 : 1,
-                full_name: values.full_name,
-                id_card: values.id_card,
-                date_of_birth:
-                  date.getMonth() +
-                  1 +
-                  "/" +
-                  date.getDate() +
-                  "/" +
-                  date.getFullYear(),
-                avatar: fileList[0].name,
-              },
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thay đổi thành công");
-
-            setLoading(false);
-          } else {
-            await collections.addEmployee({
-              email: values.email.replace(/\s/g, ""),
-              phone_number: values.phone_number.replace(/\s/g, ""),
-              password: values.password.replace(/\s/g, ""),
-              address: values.address,
-              account_status: Number(status),
-              role: role ? 0 : 1,
-              full_name: values.full_name,
-              id_card: values.id_card,
-              date_of_birth:
-                date.getMonth() +
-                1 +
-                "/" +
-                date.getDate() +
-                "/" +
-                date.getFullYear(),
-              avatar: fileList[0].name,
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thêm thành công");
-
-            setLoading(false);
-          }
-        } else {
-          dispatch(actions.formActions.showError());
-          setLoading(false);
-        }
-      })
-
-      .catch((info) => {
-        dispatch(actions.formActions.showError());
-
-        setLoading(false);
-      });
-  };
-  function isVietnamesePhoneNumberValid(number) {
-    return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(
-      number
-    );
-  }
-  function isEmail(email) {
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-  }
-  const validateEmail = (value) => {
-    if (!isEmail(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.email,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const validateID_card = (value) => {
-    const reg = /^[0-9]{9}([0-9]{3})?$/;
-    if (!reg.test(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.id_card,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const handleID_card = (value) => {
-    setID_card(validateID_card(value.target.value));
-  };
-
-  const validatePassword = (value) => {
-    const reg =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$/;
-    if (!reg.test(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.password,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const handlePassword = (value) => {
-    setPassword(validatePassword(value.target.value));
-  };
-
-  const validatePhone = (value) => {
-    if (!isVietnamesePhoneNumberValid(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.phone2,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-
-      validateStatus: "success",
-    };
-  };
-
-  const handleEmail = (value) => {
-    setEmail(validateEmail(value.target.value));
-  };
-  const handlePhone = (value) => {
-    setPhone(validatePhone(value.target.value));
   };
   function getHeaderTitle() {
     if (dataItem && isDetail) {
@@ -380,343 +154,614 @@ const ModalContent = () => {
     dispatch(actions.formActions.closeForm());
     dispatch(actions.formActions.changeLoad(!loadData));
   };
-  const labels = {
-    avatar: "Hình ảnh",
-    fullname: "Họ tên",
-    birthday: "Ngày sinh",
-    idcard: "CMND/CCCD",
-    email: "Email",
-    phone: "SĐT",
-    password: "Mật khẩu",
-    repeatPassword: "Nhập lại Mật khẩu",
-    address: "Địa chỉ",
-    status: "Tình trạng",
-    position: "Chức vụ",
+
+  const checkedDate = (items) => {
+    let checked = false;
+    for (let i = 0; i < items.length; i++) {}
   };
+  const handleCheckbox = (item) => {};
+  const handleEmptyCheckbox = () => {};
+
+  const columns = [
+    {
+      title: "Ca làm",
+      dataIndex: "shift",
+      width: GIRD12.COL1,
+      render: (item) => {
+        return {
+          props: {
+            style: {
+              background: getBackground(item),
+            },
+          },
+          children: <div className="shiftCont"> {item} </div>,
+        };
+      },
+    },
+    {
+      title: getDateTitle(2),
+      dataIndex: "monday",
+      render: (item) => {
+        return item ? (
+          <div className="userCont">
+            <Checkbox
+              disabled={isDetail}
+              onChange={handleCheckbox(item)}
+              checked={checkedDate(item)}
+            />
+          </div>
+        ) : (
+          <div>
+            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+          </div>
+        );
+      },
+    },
+    {
+      title: getDateTitle(3),
+      dataIndex: "tuesday",
+      render: (item) => {
+        return item ? (
+          <div className="userCont">
+            <Checkbox
+              disabled={isDetail}
+              onChange={handleCheckbox(item)}
+              checked={checkedDate(item)}
+            />
+          </div>
+        ) : (
+          <div>
+            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+          </div>
+        );
+      },
+    },
+    {
+      title: getDateTitle(4),
+      dataIndex: "wednesday",
+      render: (item) => {
+        return item ? (
+          <div className="userCont">
+            <Checkbox
+              disabled={isDetail}
+              onChange={handleCheckbox(item)}
+              checked={checkedDate(item)}
+            />
+          </div>
+        ) : (
+          <div>
+            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+          </div>
+        );
+      },
+    },
+    {
+      title: getDateTitle(5),
+      dataIndex: "thursday",
+      render: (item) => {
+        return item ? (
+          <div className="userCont">
+            <Checkbox
+              disabled={isDetail}
+              onChange={handleCheckbox(item)}
+              checked={checkedDate(item)}
+            />
+          </div>
+        ) : (
+          <div>
+            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+          </div>
+        );
+      },
+    },
+    {
+      title: getDateTitle(6),
+      dataIndex: "friday",
+      render: (item) => {
+        return item ? (
+          <div className="userCont">
+            <Checkbox
+              disabled={isDetail}
+              onChange={handleCheckbox(item)}
+              checked={checkedDate(item)}
+            />
+          </div>
+        ) : (
+          <div>
+            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+          </div>
+        );
+      },
+    },
+    {
+      title: getDateTitle(7),
+      dataIndex: "saturday",
+      render: (item) => {
+        return item ? (
+          <div className="userCont">
+            <Checkbox
+              disabled={isDetail}
+              onChange={handleCheckbox(item)}
+              checked={checkedDate(item)}
+            />
+          </div>
+        ) : (
+          <div>
+            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+          </div>
+        );
+      },
+    },
+    {
+      title: getDateTitle(8),
+      dataIndex: "sunday",
+      render: (item) => {
+        return item ? (
+          <div className="userCont">
+            <Checkbox
+              disabled={isDetail}
+              onChange={handleCheckbox(item)}
+              checked={checkedDate(item)}
+            />
+          </div>
+        ) : (
+          <div>
+            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+          </div>
+        );
+      },
+    },
+  ];
+  const fetchData = async (value) => {
+    try {
+      setLoading(true);
+      // const response = await collections.getSchedules();
+      const employees = await employeesCollections.getEmployees();
+      dispatch(actions.employeesActions.setListAll(employees));
+
+      const response = [
+        {
+          _id: "sadsadsadsad",
+
+          shifts: [
+            {
+              _id: "1",
+              shift: "Ca sáng",
+              monday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+                "62d68b7a83d7ce588288fb16",
+              ],
+
+              tuesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              wednesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              thursday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              friday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              saturday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              sunday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+            },
+            {
+              _id: "2",
+              shift: "Ca chiều",
+              monday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              tuesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              wednesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              thursday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              friday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              saturday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              sunday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+            },
+            {
+              _id: "3",
+
+              shift: "Ca tối",
+              monday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              tuesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              wednesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              thursday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              friday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              saturday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              sunday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+            },
+          ],
+          startDay: "8/15/2022",
+          endDay: "8/21/2022",
+          createdAt: "2022-07-22T03:17:22.831Z",
+          updatedAt: "2022-07-22T03:17:22.831Z",
+        },
+        {
+          _id: "2222",
+
+          shifts: [
+            {
+              _id: "1",
+              shift: "Ca sáng",
+              monday: ["62d4272c4ff9d853e14b2f85"],
+
+              tuesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              wednesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              thursday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              friday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              saturday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              sunday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+            },
+            {
+              _id: "2",
+              shift: "Ca chiều",
+              monday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              tuesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              wednesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              thursday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              friday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              saturday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              sunday: [
+                "62d4272c4ff9d853e14b2f85",
+                "62d439a84ff9d853e14b2faf",
+                "62d68b7a83d7ce588288fb14",
+              ],
+            },
+            {
+              _id: "3",
+
+              shift: "Ca tối",
+              monday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              tuesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              wednesday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              thursday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              friday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              saturday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+
+              sunday: [
+                "62d4272c4ff9d853e14b2f85",
+                "2",
+                "62d68b7a83d7ce588288fb14",
+              ],
+            },
+          ],
+          startDay: "8/1/2022",
+          endDay: "8/7/2022",
+          createdAt: "2022-07-22T03:17:22.831Z",
+          updatedAt: "2022-07-22T03:17:22.831Z",
+        },
+      ];
+      dispatch(actions.scheduleActions.setListAll(response));
+      setShowList(true);
+      setLoading(false);
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      //history.replace("/");
+    }
+  };
+
+  function setSelectedEmployee(e) {
+    setSelect(e.target.value);
+  }
+
+  useEffect(() => {
+    fetchData(postList);
+    dispatch(actions.scheduleActions.setCurrent(test.toUTCString()));
+    console.log(date);
+  }, []);
+
+  useEffect(() => {
+    let currentIndex = 0;
+
+    const tempDate = date ? date : new Date();
+
+    const start = startOfWeek(Date.parse(tempDate), {
+      weekStartsOn: 1,
+    });
+    for (let i = 0; i < dataList.length; i++) {
+      if (dataList[i].startDay === start.toLocaleDateString()) {
+        currentIndex = i;
+        console.log(i);
+
+        break;
+      } else {
+        console.log(start);
+      }
+    }
+    setData(
+      showList
+        ? dataList[currentIndex].shifts.map((item, index) => {
+            return {
+              shift: item.shift,
+              monday: item.monday,
+
+              tuesday: item.tuesday,
+
+              wednesday: item.wednesday,
+
+              thursday: item.thursday,
+
+              friday: item.friday,
+
+              saturday: item.saturday,
+
+              sunday: item.sunday,
+            };
+          })
+        : []
+    );
+  }, [showList, checkOnload, dataList, date]);
+
   return (
-    <div className="ModalCont">
+    <div className="ModalEmployeeCont">
       {modalError && <AlertModal chilren={errorText.formValidation} />}
       <div className="headerCont">
         <h2>{getHeaderTitle()}</h2>
-        <IconButton onClick={handleClose}>
+        <IconButton onClick={handleClose} style={{ marginBottom: 10 }}>
           <CloseOutlined />
         </IconButton>
-      </div>
-      <Form form={form} className="form" initialValues={{ modifier: "public" }}>
-        <div className="bodyCont">
-          <div style={{ width: "40%" }}>
-            <h4>{labels.avatar}</h4>
-            <div className="avatarCont">
-              {/* <ImgCrop rotate> */}
-              <Upload
-                accept="image/*"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture-card"
-                fileList={fileList}
-                maxCount={1}
-                onChange={onChange}
-                onPreview={onPreview}
-                style={{ width: "500px", height: "100%" }}
-                disabled={isDetail}
-              >
-                <UploadButton />
-              </Upload>
-              {/* </ImgCrop> */}
-            </div>
-            <h4 style={{ marginTop: fileList !== null ? "4.5%" : 0 }}>
-              {labels.fullname}
-            </h4>
-            <Form.Item
-              name="full_name"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống họ tên`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập họ tên" />
-            </Form.Item>
-
-            <div style={{ marginBottom: "10%" }}>
-              <h4>{labels.birthday}</h4>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DesktopDatePicker
-                  // minDate={moment().subtract(100, "years")._d}
-                  // maxDate={moment().subtract(14, "years")._d}
-                  inputFormat="dd/MM/yyyy"
-                  value={date}
-                  onChange={handleChange}
-                  disabled={isDetail}
-                  renderInput={(params) => (
-                    <TextField
-                      style={{ width: "100%" }}
-                      {...params}
-                      label=""
-                      variant="standard"
-                      InputLabelProps={{ shrink: false }}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-            </div>
-            <h4>{labels.idcard}</h4>
-            <Form.Item
-              name="id_card"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống CMND/CCCD`,
-                },
-                // {
-                //   required: true,
-                //   message: errorText.id_card,
-                //   max: 12,
-                //   min: 9,
-                // },
-              ]}
-              validateStatus={
-                ID_card.validateStatus !== ""
-                  ? ID_card.validateStatus
-                  : undefined
-              }
-              help={ID_card.errorMsg !== "" ? ID_card.errorMsg : undefined}
-            >
-              <Input
-                disabled={isDetail}
-                placeholder="Nhập CMND"
-                value={ID_card}
-                onChange={(e) => handleID_card(e)}
-              />
-            </Form.Item>
-          </div>
-          <div>
-            <h4>{labels.email}</h4>
-            <Form.Item
-              name="email"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống email`,
-                },
-              ]}
-              validateStatus={
-                email.validateStatus !== "" ? email.validateStatus : undefined
-              }
-              help={email.errorMsg !== "" ? email.errorMsg : undefined}
-            >
-              <Input
-                disabled={isDetail}
-                placeholder="Nhập email"
-                value={email}
-                onChange={(e) => handleEmail(e)}
-              />
-            </Form.Item>
-            <h4>{labels.phone}</h4>
-            <Form.Item
-              name="phone_number"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống số điện thoại`,
-                },
-              ]}
-              validateStatus={
-                phone.validateStatus !== "" ? phone.validateStatus : undefined
-              }
-              help={phone.errorMsg !== "" ? phone.errorMsg : undefined}
-            >
-              <Input
-                disabled={isDetail}
-                value={phone.value}
-                placeholder="Nhập số điện thoại"
-                onChange={(value) => handlePhone(value)}
-              />
-            </Form.Item>
-            <h4>{labels.password}</h4>
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống mật khẩu`,
-                },
-              ]}
-              validateStatus={
-                password.validateStatus !== ""
-                  ? password.validateStatus
-                  : undefined
-              }
-              help={password.errorMsg !== "" ? password.errorMsg : undefined}
-            >
-              {dataItem ? (
-                <Input.Password
-                  placeholder="Nhập mật khẩu"
-                  disabled={disablePass || isDetail}
-                  value={password.value}
-                  onChange={(value) => handlePassword(value)}
-                  prefix={
-                    <IconButton
-                      disabled={isDetail}
-                      onClick={() => disablePassword()}
-                    >
-                      {!disablePass || isDetail ? (
-                        <LockOpenRoundedIcon fontSize="small" color="primary" />
-                      ) : (
-                        <LockRoundedIcon
-                          fontSize="small"
-                          color="primary"
-                          style={{ backgrounColor: "#fff" }}
-                        />
-                      )}
-                    </IconButton>
-                  }
-                />
-              ) : (
-                <Input.Password
-                  disabled={isDetail}
-                  placeholder="Nhập mật khẩu"
-                  value={password.value}
-                  onChange={(value) => handlePassword(value)}
-                />
-              )}
-            </Form.Item>
-
-            <h4>{labels.address}</h4>
-            <Form.Item
-              name="address"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống Địa Chỉ`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
-            </Form.Item>
-            <h4>{labels.status}</h4>
-            <div style={{ marginTop: "5%", marginBottom: "5%" }}>
-              <div>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={status}
-                  onChange={handleStatus}
-                  name="radio-buttons-group"
+      </div>{" "}
+      <div className="toolBarCont">
+        {isDetail ? (
+          <>
+            <h3 className="title">
+              Xếp lịch cho nhân viên: {dataItem.full_name}
+            </h3>
+          </>
+        ) : (
+          <>
+            <h3 className="title"> Xếp lịch cho nhân viên:</h3>
+            <div style={{ width: "30%", marginRight: "5%" }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Chọn nhân viên
+                </InputLabel>
+                <Select
+                  size="small"
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={select}
+                  label="Chọn nhân viên"
+                  onChange={(e) => setSelectedEmployee(e)}
                 >
-                  <div class="radiogroupCont">
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="1"
-                      control={<Radio size="small" color="info" />}
-                      label="Còn làm"
-                      style={{
-                        backgroundColor: colors.success,
-                        borderRadius: 12,
-                      }}
-                    />
-
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="2"
-                      control={<Radio size="small" color="info" />}
-                      label="Tạm nghỉ"
-                      style={{
-                        backgroundColor: colors.warning,
-                        borderRadius: 12,
-                      }}
-                    />
-
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="3"
-                      control={<Radio size="small" color="info" />}
-                      label="Đã nghỉ"
-                      style={{
-                        backgroundColor: colors.error,
-                        borderRadius: 12,
-                      }}
-                    />
-                  </div>
-                </RadioGroup>
-              </div>
+                  {employeeList.map((e) => {
+                    return (
+                      <MenuItem key={e._id} value={e._id}>
+                        {e.full_name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
             </div>
-            <h4>{labels.position}</h4>
-            <div style={{ marginBottom: "8%" }}>
-              <div className="PositionAdd">
-                <div>
-                  <div className="checkboxCont">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={isDetail}
-                          onChange={handleCheckbox}
-                          checked={role}
-                        />
-                      }
-                      name="employee"
-                      label="Nhân viên"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={isDetail}
-                          onChange={handleCheckbox}
-                          checked={!role}
-                        />
-                      }
-                      name="manager"
-                      label="Quản lý"
-                    />
-                  </div>
-                </div>
-              </div>
+            <div style={{ width: "30%" }}>
+              <CustomDay />
             </div>
-          </div>
-        </div>
-        <div className="BtnAdd">
-          <Button
-            size="Large"
-            color={dataItem ? "primary" : "success"}
-            variant="contained"
-            style={{
-              paddingLeft: "15%",
-              paddingRight: "15%",
-              paddingTop: "2%",
-              paddingBottom: "2%",
-              color: "#fff",
-            }}
-            disabled={loading}
-            onClick={dataItem && isDetail === true ? editItem : handleOk}
-          >
-            {dataItem ? "Sửa" : "Lưu"}
-          </Button>
-          <Button
-            disabled={loading}
-            size="Large"
-            color="error"
-            variant="contained"
-            style={{
-              paddingLeft: "15%",
-              paddingRight: "15%",
-              paddingTop: "2%",
-              paddingBottom: "2%",
-              color: "#fff",
-            }}
-            onClick={dataItem && isDetail === true ? deleteItem : handleClose}
-          >
-            {dataItem && isDetail === true ? "Xoá " : "Hủy"}
-          </Button>
-        </div>
-      </Form>
+          </>
+        )}
+      </div>
+      <Table
+        loading={loading}
+        columns={columns}
+        bordered
+        dataSource={data}
+        pagination={false}
+      />
+      <div className="BtnAdd">
+        <Button
+          size="small"
+          color={dataItem ? "primary" : "success"}
+          variant="contained"
+          style={{
+            paddingLeft: "10%",
+            paddingRight: "10%",
+            paddingTop: "1%",
+            paddingBottom: "1%",
+            color: "#fff",
+          }}
+          disabled={loading}
+          onClick={isDetail === true ? editItem : handleOk}
+        >
+          Lưu
+        </Button>
+        <Button
+          disabled={loading}
+          size="small"
+          color="error"
+          variant="contained"
+          style={{
+            paddingLeft: "10%",
+            paddingRight: "10%",
+            paddingTop: "1%",
+            paddingBottom: "1%",
+            color: "#fff",
+          }}
+          onClick={dataItem && isDetail === true ? deleteItem : handleClose}
+        >
+          {dataItem && isDetail === true ? "Xoá " : "Hủy"}
+        </Button>
+      </div>
       <AlertDialog
         children={`Xác nhận xoá ${dataItem ? dataItem.full_name : null} ?`}
         title="Xoá nhân viên"

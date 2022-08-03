@@ -6,19 +6,26 @@ const slice = createSlice({
     initialState: {
         detail: null,
         listAll: [],
+        listEmployees:[],
         loadData: false,
+        currentDate: null,
+        firstWeekday: null,
+        lastWeekday: null,
 
     },
     reducers: {
 
         setDetail(state, actions) {
-            let data = [...state.listAll];
+            let data = [...state.listEmployees];
             let index = data.findIndex((item)=> item._id === actions.payload)
-            console.log(index)
             state.detail = data[index];
         },
 
 
+        setListEmployees(state, actions) {
+            state.listEmployees = actions.payload;
+
+        },    
         setListAll(state, actions) {
             console.log(actions.payload);
             state.listAll = actions.payload;
@@ -26,6 +33,14 @@ const slice = createSlice({
         },      
         changeLoad(state, actions) {
             state.loadData = actions.payload;
+        },
+        setCurrent(state, actions) {
+            state.currentDate = actions.payload;
+        },    setStart(state, actions) {
+            state.firstWeekday = actions.payload;
+        },
+        setLast(state, actions) {
+            state.lastWeekday = actions.payload;
         },
     }
 })

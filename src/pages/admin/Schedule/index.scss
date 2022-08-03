@@ -8,15 +8,7 @@
 
 // Thêm nhân viên
 
-.ModalCont {
-    width: 100%;
-    height: 95vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 12px ;
-  }
-
+.ModalEmployeeCont{
 .headerCont {
     width: 100%;
     display: flex;
@@ -25,6 +17,22 @@
     align-items: center;
     padding-left: 4%;
     padding-right: 3%;
+}
+    
+}
+
+.toolBarCont{
+    margin-top: 2vh;
+    margin-bottom: 3vh;
+    width: 100%;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    .title{
+        padding-left: 10px;
+        padding-right: 20px;
+    }
 }
 .form{
     height: 90vh;
@@ -54,8 +62,9 @@
     justify-content: space-between;
 }
 .BtnAdd {
+    margin-top: 7vh;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
 // Thông tin nhân viên
@@ -200,4 +209,19 @@
 }
 .ant-form-item-explain-error{
     max-width: 360px;
+}
+
+.userCont{
+   display:flex;
+   width: 100%;
+   flex-direction: column;
+   justify-content: flex-start;
+}
+
+.shiftCont{
+    color:#fff;
+    display:flex;
+    width: 100%;
+    align-items: center;
+    justify-content:center;
 }
