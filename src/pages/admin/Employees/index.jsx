@@ -72,7 +72,7 @@ const Employees = () => {
       title: "Số điện thoại",
       dataIndex: "phone_number",
       // render: (text) => <a>{text}</a>,
-      width: GIRD12.COL2,
+      width: GIRD12.COL1,
     },
     {
       title: "Họ tên",
@@ -145,8 +145,16 @@ const Employees = () => {
           <>
             <Button
               variant="contained"
+              endIcon={<PendingActionsOutlinedIcon />}
+              style={{ marginRight: "5%", backgroundColor: "#111", color: "#fff" }}
+              size="small"
+            >
+              CHẤM CÔNG
+            </Button>
+            <Button
+              variant="contained"
               endIcon={<EditIcon />}
-              style={{ marginRight: "7%", color: "#fff" }}
+              style={{ marginRight: "5%", color: "#fff" }}
               size="small"
               color="primary"
               onClick={() => handleEdit(item)}
@@ -173,6 +181,7 @@ const Employees = () => {
           </>
         );
       },
+      width: GIRD12.COL4,
     },
   ];
   const fetchData = async (value) => {
@@ -203,22 +212,22 @@ const Employees = () => {
     setData(
       showList
         ? dataList.map((item, index) => {
-            return {
-              id: item._id,
-              email: item.email,
-              phone_number: item.phone_number,
-              password: item.password,
-              address: item.address,
-              account_status: item.account_status,
-              role: item.role,
-              full_name: item.full_name,
-              id_card: item.id_card,
-              date_of_birth: item.date_of_birth,
-              avatar: item.avatar,
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt,
-            };
-          })
+          return {
+            id: item._id,
+            email: item.email,
+            phone_number: item.phone_number,
+            password: item.password,
+            address: item.address,
+            account_status: item.account_status,
+            role: item.role,
+            full_name: item.full_name,
+            id_card: item.id_card,
+            date_of_birth: item.date_of_birth,
+            avatar: item.avatar,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+          };
+        })
         : []
     );
   }, [showList, checkOnload, dataList]);
@@ -257,14 +266,7 @@ const Employees = () => {
   return (
     <>
       <div className="dishSearchCont">
-        <Button
-          variant="contained"
-          endIcon={<PendingActionsOutlinedIcon  />}
-          style={{ marginRight: "1%", backgroundColor: "#111", color: "#fff" }}
-          size="small"
-        >
-          CHẤM CÔNG
-        </Button>
+
         <Button
           onClick={handleOpen}
           variant="contained"
@@ -294,10 +296,7 @@ const Employees = () => {
       </div>
       <div>
         <Table
-          rowSelection={{
-            type: selectionType,
-            ...rowSelection,
-          }}
+
           loading={loading}
           columns={columns}
           dataSource={data}
