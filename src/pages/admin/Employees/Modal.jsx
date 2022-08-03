@@ -362,15 +362,28 @@ const ModalContent = () => {
   const handlePhone = (value) => {
     setPhone(validatePhone(value.target.value));
   };
+  // function getHeaderTitle() {
+  //   if (dataItem && isDetail) {
+  //     return "Thông tin nhân viên";
+  //   }
+  //   if (dataItem) {
+  //     return "Sửa nhân viên";
+  //   }
+  //   return "Thêm nhân viên";
+  // }
+
+
+
+  //                 BẢNG CHẤM CÔNG NÈ
   function getHeaderTitle() {
-    if (dataItem && isDetail) {
-      return "Thông tin nhân viên";
-    }
     if (dataItem) {
       return "Sửa nhân viên";
     }
-    return "Thêm nhân viên";
+    return "Bảng chấm công";
   }
+
+
+  
   const handleDelete = async () => {
     setLoading(true);
     await collections.removeEmployee(dataItem._id);
@@ -380,23 +393,357 @@ const ModalContent = () => {
     dispatch(actions.formActions.closeForm());
     dispatch(actions.formActions.changeLoad(!loadData));
   };
+  // const labels = {
+  //   avatar: "Hình ảnh",
+  //   fullname: "Họ tên",
+  //   birthday: "Ngày sinh",
+  //   idcard: "CMND/CCCD",
+  //   email: "Email",
+  //   phone: "SĐT",
+  //   password: "Mật khẩu",
+  //   repeatPassword: "Nhập lại Mật khẩu",
+  //   address: "Địa chỉ",
+  //   status: "Tình trạng",
+  //   position: "Chức vụ",
+  // };
+
+
+  //                    BẢNG CHẤM CÔNG
   const labels = {
-    avatar: "Hình ảnh",
-    fullname: "Họ tên",
-    birthday: "Ngày sinh",
-    idcard: "CMND/CCCD",
-    email: "Email",
-    phone: "SĐT",
-    password: "Mật khẩu",
-    repeatPassword: "Nhập lại Mật khẩu",
-    address: "Địa chỉ",
-    status: "Tình trạng",
+    employee_name: "Tên nhân viên",
+    communications: "Thông tin liên lạc",
     position: "Chức vụ",
-  };
+    status: "Tình trạng",
+    admin_payment: "Thanh toán của Admin",
+    salary_total: "Tổng lương",
+    work_time: "Giờ làm (h/tuần)",
+    total_time: "Tổng giờ làm (h)",
+    rate: "Rate/ giờ",
+  }
   return (
+    // <div className="ModalCont">
+    //   {modalError && <AlertModal chilren={errorText.formValidation} />}
+    //   <div className="headerCont">
+    //     <h2>{getHeaderTitle()}</h2>
+    //     <IconButton onClick={handleClose}>
+    //       <CloseOutlined />
+    //     </IconButton>
+    //   </div>
+    //   <Form form={form} className="form" initialValues={{ modifier: "public" }}>
+    //     <div className="bodyCont">
+    //       <div style={{ width: "40%" }}>
+    //         <h4>{labels.avatar}</h4>
+    //         <div className="avatarCont">
+    //           {/* <ImgCrop rotate> */}
+    //           <Upload
+    //             accept="image/*"
+    //             action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+    //             listType="picture-card"
+    //             fileList={fileList}
+    //             maxCount={1}
+    //             onChange={onChange}
+    //             onPreview={onPreview}
+    //             style={{ width: "500px", height: "100%" }}
+    //             disabled={isDetail}
+    //           >
+    //             <UploadButton />
+    //           </Upload>
+    //           {/* </ImgCrop> */}
+    //         </div>
+    //         <h4 style={{ marginTop: fileList !== null ? "4.5%" : 0 }}>
+    //           {labels.fullname}
+    //         </h4>
+    //         <Form.Item
+    //           name="full_name"
+    //           rules={[
+    //             {
+    //               required: true,
+    //               message: `Không được để trống họ tên`,
+    //             },
+    //             {
+    //               pattern: new RegExp(/^\w/),
+    //               message: errorText.space,
+    //             },
+    //           ]}
+    //         >
+    //           <Input disabled={isDetail} placeholder="Nhập họ tên" />
+    //         </Form.Item>
+
+    //         <div style={{ marginBottom: "10%" }}>
+    //           <h4>{labels.birthday}</h4>
+    //           <LocalizationProvider dateAdapter={AdapterDateFns}>
+    //             <DesktopDatePicker
+    //               // minDate={moment().subtract(100, "years")._d}
+    //               // maxDate={moment().subtract(14, "years")._d}
+    //               inputFormat="dd/MM/yyyy"
+    //               value={date}
+    //               onChange={handleChange}
+    //               disabled={isDetail}
+    //               renderInput={(params) => (
+    //                 <TextField
+    //                   style={{ width: "100%" }}
+    //                   {...params}
+    //                   label=""
+    //                   variant="standard"
+    //                   InputLabelProps={{ shrink: false }}
+    //                 />
+    //               )}
+    //             />
+    //           </LocalizationProvider>
+    //         </div>
+    //         <h4>{labels.idcard}</h4>
+    //         <Form.Item
+    //           name="id_card"
+    //           rules={[
+    //             {
+    //               required: true,
+    //               message: `Không được để trống CMND/CCCD`,
+    //             },
+    //             // {
+    //             //   required: true,
+    //             //   message: errorText.id_card,
+    //             //   max: 12,
+    //             //   min: 9,
+    //             // },
+    //           ]}
+    //           validateStatus={ID_card.validateStatus}
+    //           help={ID_card.errorMsg}
+    //         >
+    //           <Input
+    //             disabled={isDetail}
+    //             placeholder="Nhập CMND"
+    //             value={ID_card}
+    //             onChange={(e) => handleID_card(e)}
+    //           />
+    //         </Form.Item>
+    //       </div>
+    //       <div>
+    //         <h4>{labels.email}</h4>
+    //         <Form.Item
+    //           name="email"
+    //           rules={[
+    //             {
+    //               required: true,
+    //               message: `Không được để trống email`,
+    //             },
+    //           ]}
+    //           validateStatus={email.validateStatus}
+    //           help={email.errorMsg}
+    //         >
+    //           <Input
+    //             disabled={isDetail}
+    //             placeholder="Nhập email"
+    //             value={email}
+    //             onChange={(e) => handleEmail(e)}
+    //           />
+    //         </Form.Item>
+    //         <h4>{labels.phone}</h4>
+    //         <Form.Item
+    //           name="phone_number"
+    //           rules={[
+    //             {
+    //               required: true,
+    //               message: `Không được để trống số điện thoại`,
+    //             },
+    //           ]}
+    //           validateStatus={phone.validateStatus}
+    //           help={phone.errorMsg}
+    //         >
+    //           <Input
+    //             disabled={isDetail}
+    //             value={phone.value}
+    //             placeholder="Nhập số điện thoại"
+    //             onChange={(value) => handlePhone(value)}
+    //           />
+    //         </Form.Item>
+    //         <h4>{labels.password}</h4>
+    //         <Form.Item
+    //           name="password"
+    //           rules={[
+    //             {
+    //               required: true,
+    //               message: `Không được để trống mật khẩu`,
+    //             },
+    //           ]}
+    //           validateStatus={password.validateStatus}
+    //           help={password.errorMsg}
+    //         >
+    //           {dataItem ? (
+    //             <Input.Password
+    //               placeholder="Nhập mật khẩu"
+    //               disabled={disablePass || isDetail}
+    //               value={password.value}
+    //               onChange={(value) => handlePassword(value)}
+    //               prefix={
+    //                 <IconButton
+    //                   disabled={isDetail}
+    //                   onClick={() => disablePassword()}
+    //                 >
+    //                   {!disablePass || isDetail ? (
+    //                     <LockOpenRoundedIcon fontSize="small" color="primary" />
+    //                   ) : (
+    //                     <LockRoundedIcon
+    //                       fontSize="small"
+    //                       color="primary"
+    //                       style={{ backgrounColor: "#fff" }}
+    //                     />
+    //                   )}
+    //                 </IconButton>
+    //               }
+    //             />
+    //           ) : (
+    //             <Input.Password
+    //               disabled={isDetail}
+    //               placeholder="Nhập mật khẩu"
+    //               value={password.value}
+    //               onChange={(value) => handlePassword(value)}
+    //             />
+    //           )}
+    //         </Form.Item>
+
+    //         <h4>{labels.address}</h4>
+    //         <Form.Item
+    //           name="address"
+    //           rules={[
+    //             {
+    //               required: true,
+    //               message: `Không được để trống Địa Chỉ`,
+    //             },
+    //             {
+    //               pattern: new RegExp(/^\w/),
+    //               message: errorText.space,
+    //             },
+    //           ]}
+    //         >
+    //           <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
+    //         </Form.Item>
+    //         <h4>{labels.status}</h4>
+    //         <div style={{ marginTop: "5%", marginBottom: "5%" }}>
+    //           <div>
+    //             <RadioGroup
+    //               row
+    //               aria-labelledby="demo-radio-buttons-group-label"
+    //               value={status}
+    //               onChange={handleStatus}
+    //               name="radio-buttons-group"
+    //             >
+    //               <div class="radiogroupCont">
+    //                 <FormControlLabel
+    //                   disabled={isDetail}
+    //                   value="1"
+    //                   control={<Radio size="small" color="info" />}
+    //                   label="Còn làm"
+    //                   style={{
+    //                     backgroundColor: colors.success,
+    //                     borderRadius: 12,
+    //                   }}
+    //                 />
+
+    //                 <FormControlLabel
+    //                   disabled={isDetail}
+    //                   value="2"
+    //                   control={<Radio size="small" color="info" />}
+    //                   label="Tạm nghỉ"
+    //                   style={{
+    //                     backgroundColor: colors.warning,
+    //                     borderRadius: 12,
+    //                   }}
+    //                 />
+
+    //                 <FormControlLabel
+    //                   disabled={isDetail}
+    //                   value="3"
+    //                   control={<Radio size="small" color="info" />}
+    //                   label="Đã nghỉ"
+    //                   style={{
+    //                     backgroundColor: colors.error,
+    //                     borderRadius: 12,
+    //                   }}
+    //                 />
+    //               </div>
+    //             </RadioGroup>
+    //           </div>
+    //         </div>
+    //         <h4>{labels.position}</h4>
+    //         <div style={{ marginBottom: "8%" }}>
+    //           <div className="PositionAdd">
+    //             <div>
+    //               <div className="checkboxCont">
+    //                 <FormControlLabel
+    //                   control={
+    //                     <Checkbox
+    //                       disabled={isDetail}
+    //                       onChange={handleCheckbox}
+    //                       checked={role}
+    //                     />
+    //                   }
+    //                   name="employee"
+    //                   label="Nhân viên"
+    //                 />
+    //                 <FormControlLabel
+    //                   control={
+    //                     <Checkbox
+    //                       disabled={isDetail}
+    //                       onChange={handleCheckbox}
+    //                       checked={!role}
+    //                     />
+    //                   }
+    //                   name="manager"
+    //                   label="Quản lý"
+    //                 />
+    //               </div>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //     <div className="BtnAdd">
+    //       <Button
+    //         size="Large"
+    //         color={"success"}
+    //         variant="contained"
+    //         style={{
+    //           paddingLeft: "15%",
+    //           paddingRight: "15%",
+    //           paddingTop: "2%",
+    //           paddingBottom: "2%",
+    //           color: "#fff",
+    //         }}
+    //         onClick={dataItem && isDetail === true ? editItem : handleOk}
+    //       >
+    //         {dataItem && isDetail === true ? "Sửa " : "Lưu"}
+    //       </Button>
+    //       <Button
+    //         size="Large"
+    //         color="error"
+    //         variant="contained"
+    //         style={{
+    //           paddingLeft: "15%",
+    //           paddingRight: "15%",
+    //           paddingTop: "2%",
+    //           paddingBottom: "2%",
+    //           color: "#fff",
+    //         }}
+    //         onClick={dataItem && isDetail === true ? deleteItem : handleClose}
+    //       >
+    //         {dataItem && isDetail === true ? "Xoá " : "Hủy"}
+    //       </Button>
+    //     </div>
+    //   </Form>
+    //   <AlertDialog
+    //     children={`Xác nhận xoá ${dataItem ? dataItem.full_name : null} ?`}
+    //     title="Xoá nhân viên"
+    //     onAccept={handleDelete}
+    //   />
+    // </div>
+
+
+
+
+    //                                BẢNG CHẤM CÔNG
     <div className="ModalCont">
       {modalError && <AlertModal chilren={errorText.formValidation} />}
-      <div className="headerCont">
+      <div className="headerTimekeeping">
         <h2>{getHeaderTitle()}</h2>
         <IconButton onClick={handleClose}>
           <CloseOutlined />
@@ -405,29 +752,9 @@ const ModalContent = () => {
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
           <div style={{ width: "40%" }}>
-            <h4>{labels.avatar}</h4>
-            <div className="avatarCont">
-              {/* <ImgCrop rotate> */}
-              <Upload
-                accept="image/*"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture-card"
-                fileList={fileList}
-                maxCount={1}
-                onChange={onChange}
-                onPreview={onPreview}
-                style={{ width: "500px", height: "100%" }}
-                disabled={isDetail}
-              >
-                <UploadButton />
-              </Upload>
-              {/* </ImgCrop> */}
-            </div>
-            <h4 style={{ marginTop: fileList !== null ? "4.5%" : 0 }}>
-              {labels.fullname}
-            </h4>
+            <h4>{labels.employee_name}</h4>
             <Form.Item
-              name="full_name"
+              name="Tên nhân viên"
               rules={[
                 {
                   required: true,
@@ -439,148 +766,18 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập họ tên" />
+              <Input disabled placeholder="Nhập họ tên" />
             </Form.Item>
 
-            <div style={{ marginBottom: "10%" }}>
-              <h4>{labels.birthday}</h4>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DesktopDatePicker
-                  // minDate={moment().subtract(100, "years")._d}
-                  // maxDate={moment().subtract(14, "years")._d}
-                  inputFormat="dd/MM/yyyy"
-                  value={date}
-                  onChange={handleChange}
-                  disabled={isDetail}
-                  renderInput={(params) => (
-                    <TextField
-                      style={{ width: "100%" }}
-                      {...params}
-                      label=""
-                      variant="standard"
-                      InputLabelProps={{ shrink: false }}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-            </div>
-            <h4>{labels.idcard}</h4>
+            <h4 style={{ marginTop: fileList !== null ? "4.5%" : 0 }}>
+              {labels.communications}
+            </h4>
             <Form.Item
-              name="id_card"
+              name="Thông tin liên lạc"
               rules={[
                 {
                   required: true,
-                  message: `Không được để trống CMND/CCCD`,
-                },
-                // {
-                //   required: true,
-                //   message: errorText.id_card,
-                //   max: 12,
-                //   min: 9,
-                // },
-              ]}
-              validateStatus={ID_card.validateStatus}
-              help={ID_card.errorMsg}
-            >
-              <Input
-                disabled={isDetail}
-                placeholder="Nhập CMND"
-                value={ID_card}
-                onChange={(e) => handleID_card(e)}
-              />
-            </Form.Item>
-          </div>
-          <div>
-            <h4>{labels.email}</h4>
-            <Form.Item
-              name="email"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống email`,
-                },
-              ]}
-              validateStatus={email.validateStatus}
-              help={email.errorMsg}
-            >
-              <Input
-                disabled={isDetail}
-                placeholder="Nhập email"
-                value={email}
-                onChange={(e) => handleEmail(e)}
-              />
-            </Form.Item>
-            <h4>{labels.phone}</h4>
-            <Form.Item
-              name="phone_number"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống số điện thoại`,
-                },
-              ]}
-              validateStatus={phone.validateStatus}
-              help={phone.errorMsg}
-            >
-              <Input
-                disabled={isDetail}
-                value={phone.value}
-                placeholder="Nhập số điện thoại"
-                onChange={(value) => handlePhone(value)}
-              />
-            </Form.Item>
-            <h4>{labels.password}</h4>
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống mật khẩu`,
-                },
-              ]}
-              validateStatus={password.validateStatus}
-              help={password.errorMsg}
-            >
-              {dataItem ? (
-                <Input.Password
-                  placeholder="Nhập mật khẩu"
-                  disabled={disablePass || isDetail}
-                  value={password.value}
-                  onChange={(value) => handlePassword(value)}
-                  prefix={
-                    <IconButton
-                      disabled={isDetail}
-                      onClick={() => disablePassword()}
-                    >
-                      {!disablePass || isDetail ? (
-                        <LockOpenRoundedIcon fontSize="small" color="primary" />
-                      ) : (
-                        <LockRoundedIcon
-                          fontSize="small"
-                          color="primary"
-                          style={{ backgrounColor: "#fff" }}
-                        />
-                      )}
-                    </IconButton>
-                  }
-                />
-              ) : (
-                <Input.Password
-                  disabled={isDetail}
-                  placeholder="Nhập mật khẩu"
-                  value={password.value}
-                  onChange={(value) => handlePassword(value)}
-                />
-              )}
-            </Form.Item>
-
-            <h4>{labels.address}</h4>
-            <Form.Item
-              name="address"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống Địa Chỉ`,
+                  message: `Không được để trống thông tin liên lạc`,
                 },
                 {
                   pattern: new RegExp(/^\w/),
@@ -588,118 +785,161 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
+              <Input disabled placeholder="Nhập thông tin liên lạc" />
+            </Form.Item>
+            <h4>{labels.position}</h4>
+            <Form.Item
+              name="Chức vụ"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống chức vụ`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Input disabled placeholder="Nhập chức vụ" />
             </Form.Item>
             <h4>{labels.status}</h4>
-            <div style={{ marginTop: "5%", marginBottom: "5%" }}>
-              <div>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={status}
-                  onChange={handleStatus}
-                  name="radio-buttons-group"
-                >
-                  <div class="radiogroupCont">
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="1"
-                      control={<Radio size="small" color="info" />}
-                      label="Còn làm"
-                      style={{
-                        backgroundColor: colors.success,
-                        borderRadius: 12,
-                      }}
-                    />
+            <Form.Item
+              name="Tình trạng"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống tình trạng`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Input disabled placeholder="Nhập tình trạng" />
+            </Form.Item>
+            <h4>{labels.admin_payment}</h4>
+            <div style={{ marginBottom: "5%" }}>
+              <div className="PositionAdd">
 
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="2"
-                      control={<Radio size="small" color="info" />}
-                      label="Tạm nghỉ"
-                      style={{
-                        backgroundColor: colors.warning,
-                        borderRadius: 12,
-                      }}
-                    />
+                <div className="paidCont">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={isDetail}
+                        onChange={handleCheckbox}
+                        checked={role}
+                      />
+                    }
+                    name="paid"
+                    label="Đã thanh toán"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={isDetail}
+                        onChange={handleCheckbox}
+                        checked={!role}
+                      />
+                    }
+                    name="unpaid"
+                    label="Chưa thanh toán"
+                  />
+                </div>
 
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="3"
-                      control={<Radio size="small" color="info" />}
-                      label="Đã nghỉ"
-                      style={{
-                        backgroundColor: colors.error,
-                        borderRadius: 12,
-                      }}
-                    />
-                  </div>
-                </RadioGroup>
               </div>
             </div>
-            <h4>{labels.position}</h4>
-            <div style={{ marginBottom: "8%" }}>
-              <div className="PositionAdd">
-                <div>
-                  <div className="checkboxCont">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={isDetail}
-                          onChange={handleCheckbox}
-                          checked={role}
-                        />
-                      }
-                      name="employee"
-                      label="Nhân viên"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={isDetail}
-                          onChange={handleCheckbox}
-                          checked={!role}
-                        />
-                      }
-                      name="manager"
-                      label="Quản lý"
-                    />
-                  </div>
-                </div>
+            <h4>{labels.salary_total}</h4>
+            <Form.Item
+              name="Tổng lương"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống tổng lương`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Input disabled placeholder="Nhập tổng lương" />
+            </Form.Item>
+          </div>
+          <div>
+            <h4>{labels.work_time}</h4>
+            <img src="Analitcs Report.png" height="150px" width="100%"/>
+            <div className="workCont">
+              <div className="total_time">
+                <h4>{labels.total_time}</h4>
+                <Form.Item
+                  name="Tổng giờ làm"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống tổng giờ làm`,
+                    },
+                    {
+                      pattern: new RegExp(/^\w/),
+                      message: errorText.space,
+                    },
+                  ]}
+                >
+                  <Input disabled placeholder="Nhập tổng giờ làm" />
+                </Form.Item>
+              </div>
+              <div className="rate">
+                <h4>{labels.rate}</h4>
+                <Form.Item
+                  name="Rate/giờ"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống rate/giờ`,
+                    },
+                    {
+                      pattern: new RegExp(/^\w/),
+                      message: errorText.space,
+                    },
+                  ]}
+                >
+                  <Input disabled placeholder="Nhập rate/giờ" />
+                </Form.Item>
               </div>
             </div>
           </div>
         </div>
-        <div className="BtnAdd">
+        <div className="btnTimekeeping">
           <Button
             size="Large"
             color={"success"}
             variant="contained"
             style={{
-              paddingLeft: "15%",
-              paddingRight: "15%",
+              paddingLeft: "10%",
+              paddingRight: "10%",
               paddingTop: "2%",
               paddingBottom: "2%",
               color: "#fff",
             }}
-            onClick={dataItem && isDetail === true ? editItem : handleOk}
+          // onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem && isDetail === true ? "Sửa " : "Lưu"}
+            Xuất File
           </Button>
           <Button
             size="Large"
             color="error"
             variant="contained"
             style={{
-              paddingLeft: "15%",
-              paddingRight: "15%",
+              paddingLeft: "10%",
+              paddingRight: "10%",
               paddingTop: "2%",
               paddingBottom: "2%",
               color: "#fff",
             }}
-            onClick={dataItem && isDetail === true ? deleteItem : handleClose}
+          // onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem && isDetail === true ? "Xoá " : "Hủy"}
+            Hủy
           </Button>
         </div>
       </Form>

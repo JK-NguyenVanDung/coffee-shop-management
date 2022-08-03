@@ -9,7 +9,7 @@
 // Thêm nhân viên
 
 .ModalCont {
-    width: 100%;
+    width: 150%;
     height: 95vh;
     display: flex;
     flex-direction: column;
@@ -27,6 +27,7 @@
     padding-right: 3%;
 }
 .form{
+
     height: 90vh;
     overflow-y: scroll;
 }
@@ -200,4 +201,52 @@
 }
 .ant-form-item-explain-error{
     max-width: 360px;
+}
+
+
+
+
+//                                              BẢNG CHẤM CÔNG
+.headerTimekeeping {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 35%;
+    padding-right: 3%;
+}
+.headerTimekeeping h2 {
+    font-size: 35px;
+}
+.css-atm9ut {
+    width: 80%;
+}
+.paidCont {
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.btnTimekeeping {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.workCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-right: 10%;
+}
+.total_time {
+    display: flex;
+    flex-direction: column;
+    padding-right: 4%;
+}
+.rate {
+    display: flex;
+    flex-direction: column;
 }
