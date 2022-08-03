@@ -11,10 +11,21 @@ const slice = createSlice({
         currentDate: null,
         firstWeekday: null,
         lastWeekday: null,
-
+        weekDetail: null,
+        newWeekSchedule: null,
     },
     reducers: {
+        setNewWeekSchedule(state, actions) {
+            state.newWeekSchedule = actions.payload;
+            console.log("idontknowdude")
 
+            console.log(actions.payload)
+
+        },
+        setWeekDetail(state, actions) {
+            state.weekDetail = actions.payload;
+            console.log(actions.payload)
+        },
         setDetail(state, actions) {
             let data = [...state.listEmployees];
             let index = data.findIndex((item)=> item._id === actions.payload)
@@ -42,6 +53,7 @@ const slice = createSlice({
         setLast(state, actions) {
             state.lastWeekday = actions.payload;
         },
+        
     }
 })
 export const scheduleReducer = slice.reducer;
