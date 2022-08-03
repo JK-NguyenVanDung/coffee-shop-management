@@ -5,12 +5,11 @@ import Bills from "../pages/admin/Bills";
 import Employees from "../pages/admin/Employees";
 import Food_and_drink from "../pages/admin/Food-and-drink";
 import Category from "../pages/admin/Category";
-// import KeyData from "../pages/admin/Keyword";
+import Schedule from "../pages/admin/Schedule";
 import Inventory from "../pages/admin/Inventory";
 import Search from "../pages/Menu/MenuComponents/Search";
 import SiderDemo from "../pages/admin";
 import MenuHeader from "../components/MenuHeader/MenuHeader";
-
 export const AdminRouter = {
   // ADMIN: {
   //   path: "/admin",
@@ -38,6 +37,9 @@ export const AdminRouter = {
   },
   CATEGORY: {
     path: "/category",
+  },
+  SCHEDULE: {
+    path: "/schedule",
   },
 };
 
@@ -89,6 +91,12 @@ const routes = [
     exact: false,
     headerItem: <MenuHeader switch={false} />,
     element: <Search />,
+  },
+  {
+    path: AdminRouter.SCHEDULE.path,
+    exact: false,
+    headerItem: null,
+    element: <Schedule />,
   },
 ];
 

@@ -46,6 +46,7 @@ export const GIRD12 = {
     COL10: '83.33333333%%',
     COL11: '91.66666667%',
     COL12: '100%',
+    COL13: "9%"
 }
 export const STATUS_ORDER = [
     {
