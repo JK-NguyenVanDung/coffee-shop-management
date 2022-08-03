@@ -61,7 +61,7 @@ import { CustomDay } from "./CustonDatePicker";
 const Schedule = () => {
   const [loading, setLoading] = useState(false);
   const employeeList = useAppSelector((state) => state.schedule.listEmployees);
-
+  const weekDetail = useAppSelector((state) => state.schedule.weekDetail);
   const date = useAppSelector((state) => state.schedule.currentDate);
 
   const [select, setSelect] = useState("");
@@ -112,7 +112,12 @@ const Schedule = () => {
       </div>
     );
   };
+  function logOut(e, f) {
+    let test = "62d68b7a83d7ce588288fb14";
 
+    console.log(e);
+    console.log(f);
+  }
   const columns = [
     {
       title: "Ca làm",
@@ -158,11 +163,10 @@ const Schedule = () => {
     },
     {
       title: getDateTitle(3),
-      dataIndex: "tuesday",
       render: (item) => {
         return (
           <div className="userCont">
-            {item.map((id) => {
+            {item.tuesday.map((id) => {
               return (
                 <div key={id}>
                   <Button
@@ -179,6 +183,17 @@ const Schedule = () => {
                 </div>
               );
             })}
+            <Button
+              onClick={() => logOut(item, item.tuesday)}
+              size="large"
+              sx={{
+                color: "#111",
+                p: 2,
+                minWidth: "100%",
+              }}
+            >
+              Thêm nhân viên
+            </Button>
           </div>
         );
       },
@@ -332,287 +347,154 @@ const Schedule = () => {
 
           shifts: [
             {
-              _id: "1",
+              _id: "0",
               shift: "Ca sáng",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-                "62d68b7a83d7ce588288fb16",
-              ],
+              days: [
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                  "62d68b7a83d7ce588288fb16",
+                ],
 
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
+              ],
+            },
+            {
+              _id: "1",
+              shift: "Ca chiều",
+
+              days: [
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                  "62d68b7a83d7ce588288fb16",
+                ],
+
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
+
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
+
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
+
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
+
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
+
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
               ],
             },
             {
               _id: "2",
-              shift: "Ca chiều",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-            {
-              _id: "3",
 
               shift: "Ca tối",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
+              days: [
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                  "62d68b7a83d7ce588288fb16",
+                ],
 
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
 
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
+                [
+                  "62d4272c4ff9d853e14b2f85",
+                  "62d439a84ff9d853e14b2faf",
+                  "62d68b7a83d7ce588288fb14",
+                ],
               ],
             },
           ],
-          startDay: "8/15/2022",
-          endDay: "8/21/2022",
-          createdAt: "2022-07-22T03:17:22.831Z",
-          updatedAt: "2022-07-22T03:17:22.831Z",
-        },
-        {
-          _id: "2222",
-
-          shifts: [
-            {
-              _id: "1",
-              shift: "Ca sáng",
-              monday: ["62d4272c4ff9d853e14b2f85"],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-            {
-              _id: "2",
-              shift: "Ca chiều",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-            {
-              _id: "3",
-
-              shift: "Ca tối",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-          ],
-          startDay: "8/1/2022",
-          endDay: "8/7/2022",
+          startDay: "8/03/2022",
+          endDay: "8/07/2022",
           createdAt: "2022-07-22T03:17:22.831Z",
           updatedAt: "2022-07-22T03:17:22.831Z",
         },
@@ -628,11 +510,11 @@ const Schedule = () => {
     }
   };
 
-  const test = new Date();
   useEffect(() => {
     // test.current = 2;
     fetchData(postList);
   }, [checkOnload]);
+  const test = new Date();
 
   useEffect(() => {
     fetchData(postList);
@@ -651,31 +533,32 @@ const Schedule = () => {
     for (let i = 0; i < dataList.length; i++) {
       if (dataList[i].startDay === start.toLocaleDateString()) {
         currentIndex = i;
-        console.log(i);
-
         break;
       } else {
-        console.log(start);
+        currentIndex = 0;
       }
     }
+    dispatch(actions.scheduleActions.setWeekDetail(dataList[currentIndex]));
+
     setData(
-      showList
-        ? dataList[currentIndex].shifts.map((item, index) => {
+      showList && weekDetail
+        ? weekDetail.shifts.map((item, index) => {
             return {
               shift: item.shift,
-              monday: item.monday,
+              monday: item.days[0],
 
-              tuesday: item.tuesday,
+              tuesday: item.days[1],
 
-              wednesday: item.wednesday,
+              wednesday: item.days[2],
 
-              thursday: item.thursday,
+              thursday: item.days[3],
 
-              friday: item.friday,
+              friday: item.days[4],
 
-              saturday: item.saturday,
+              saturday: item.days[5],
 
-              sunday: item.sunday,
+              sunday: item.days[6],
+              id: item._id,
             };
           })
         : []

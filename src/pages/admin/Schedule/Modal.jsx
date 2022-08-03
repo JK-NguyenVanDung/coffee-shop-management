@@ -69,10 +69,13 @@ const ModalContent = () => {
   const currentEmployee = useAppSelector(
     (state) => state.schedule.currentEmployee
   );
+  const newWeekSchedule = useAppSelector(
+    (state) => state.schedule.newWeekSchedule
+  );
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
 
-  const employeeList = useAppSelector((state) => state.employees.listAll);
+  const employeeList = useAppSelector((state) => state.schedule.listEmployees);
 
   const date = useAppSelector((state) => state.schedule.currentDate);
 
@@ -98,6 +101,30 @@ const ModalContent = () => {
 
   const deleteItem = () => {
     dispatch(actions.formActions.showDelete());
+  };
+
+  let response = {
+    _id: "",
+    confirmed: false,
+    shifts: [
+      {
+        _id: "0",
+        shift: "Ca sáng",
+        days: [[], [], [], [], [], [], []],
+      },
+      {
+        _id: "1",
+        shift: "Ca chiều",
+        days: [[], [], [], [], [], [], []],
+      },
+      {
+        _id: "2",
+        shift: "Ca tối",
+        days: [[], [], [], [], [], [], []],
+      },
+    ],
+    startDay: "",
+    endDay: "",
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
 
@@ -155,11 +182,32 @@ const ModalContent = () => {
     dispatch(actions.formActions.changeLoad(!loadData));
   };
 
-  const checkedDate = (items) => {
-    let checked = false;
-    for (let i = 0; i < items.length; i++) {}
+  const checkedDate = (item, day) => {
+    let clone = JSON.parse(JSON.stringify(newWeekSchedule));
+    let cur = clone.shifts[item.id].days[day];
+    if (cur.length > 0) {
+      for (let i = 0; i < cur.length; i++) {
+        if (cur[i] === select) {
+          return true;
+        }
+      }
+    }
+    return false;
   };
-  const handleCheckbox = (item) => {};
+
+  const handleCheckbox = (e, item, day) => {
+    let clone = JSON.parse(JSON.stringify(newWeekSchedule));
+
+    if (e.target.checked === true) {
+      clone.shifts[item.id].days[day].push(select);
+    } else {
+      let index = clone.shifts[item.id].days[day].indexOf(select);
+      if (index > -1) {
+        clone.shifts[item.id].days[day].splice(index, 1);
+      }
+    }
+    dispatch(actions.scheduleActions.setNewWeekSchedule(clone));
+  };
   const handleEmptyCheckbox = () => {};
 
   const columns = [
@@ -180,14 +228,13 @@ const ModalContent = () => {
     },
     {
       title: getDateTitle(2),
-      dataIndex: "monday",
       render: (item) => {
         return item ? (
           <div className="userCont">
             <Checkbox
               disabled={isDetail}
-              onChange={handleCheckbox(item)}
-              checked={checkedDate(item)}
+              onChange={(e) => handleCheckbox(e, item, 0)}
+              checked={checkedDate(item, 0)}
             />
           </div>
         ) : (
@@ -199,14 +246,13 @@ const ModalContent = () => {
     },
     {
       title: getDateTitle(3),
-      dataIndex: "tuesday",
       render: (item) => {
         return item ? (
           <div className="userCont">
             <Checkbox
               disabled={isDetail}
-              onChange={handleCheckbox(item)}
-              checked={checkedDate(item)}
+              onChange={(e) => handleCheckbox(e, item, 1)}
+              checked={checkedDate(item, 1)}
             />
           </div>
         ) : (
@@ -218,14 +264,13 @@ const ModalContent = () => {
     },
     {
       title: getDateTitle(4),
-      dataIndex: "wednesday",
       render: (item) => {
         return item ? (
           <div className="userCont">
             <Checkbox
               disabled={isDetail}
-              onChange={handleCheckbox(item)}
-              checked={checkedDate(item)}
+              onChange={(e) => handleCheckbox(e, item, 2)}
+              checked={checkedDate(item, 2)}
             />
           </div>
         ) : (
@@ -237,14 +282,13 @@ const ModalContent = () => {
     },
     {
       title: getDateTitle(5),
-      dataIndex: "thursday",
       render: (item) => {
         return item ? (
           <div className="userCont">
             <Checkbox
               disabled={isDetail}
-              onChange={handleCheckbox(item)}
-              checked={checkedDate(item)}
+              onChange={(e) => handleCheckbox(e, item, 3)}
+              checked={checkedDate(item, 3)}
             />
           </div>
         ) : (
@@ -256,14 +300,13 @@ const ModalContent = () => {
     },
     {
       title: getDateTitle(6),
-      dataIndex: "friday",
       render: (item) => {
         return item ? (
           <div className="userCont">
             <Checkbox
               disabled={isDetail}
-              onChange={handleCheckbox(item)}
-              checked={checkedDate(item)}
+              onChange={(e) => handleCheckbox(e, item, 4)}
+              checked={checkedDate(item, 4)}
             />
           </div>
         ) : (
@@ -275,14 +318,13 @@ const ModalContent = () => {
     },
     {
       title: getDateTitle(7),
-      dataIndex: "saturday",
       render: (item) => {
         return item ? (
           <div className="userCont">
             <Checkbox
               disabled={isDetail}
-              onChange={handleCheckbox(item)}
-              checked={checkedDate(item)}
+              onChange={(e) => handleCheckbox(e, item, 5)}
+              checked={checkedDate(item, 5)}
             />
           </div>
         ) : (
@@ -294,14 +336,13 @@ const ModalContent = () => {
     },
     {
       title: getDateTitle(8),
-      dataIndex: "sunday",
       render: (item) => {
         return item ? (
           <div className="userCont">
             <Checkbox
               disabled={isDetail}
-              onChange={handleCheckbox(item)}
-              checked={checkedDate(item)}
+              onChange={(e) => handleCheckbox(e, item, 6)}
+              checked={checkedDate(item, 6)}
             />
           </div>
         ) : (
@@ -312,305 +353,15 @@ const ModalContent = () => {
       },
     },
   ];
-  const fetchData = async (value) => {
+  const fetchData = async () => {
     try {
       setLoading(true);
       // const response = await collections.getSchedules();
       const employees = await employeesCollections.getEmployees();
-      dispatch(actions.employeesActions.setListAll(employees));
+      dispatch(actions.scheduleActions.setListEmployees(employees));
 
-      const response = [
-        {
-          _id: "sadsadsadsad",
-
-          shifts: [
-            {
-              _id: "1",
-              shift: "Ca sáng",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-                "62d68b7a83d7ce588288fb16",
-              ],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-            {
-              _id: "2",
-              shift: "Ca chiều",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-            {
-              _id: "3",
-
-              shift: "Ca tối",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-          ],
-          startDay: "8/15/2022",
-          endDay: "8/21/2022",
-          createdAt: "2022-07-22T03:17:22.831Z",
-          updatedAt: "2022-07-22T03:17:22.831Z",
-        },
-        {
-          _id: "2222",
-
-          shifts: [
-            {
-              _id: "1",
-              shift: "Ca sáng",
-              monday: ["62d4272c4ff9d853e14b2f85"],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-            {
-              _id: "2",
-              shift: "Ca chiều",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "62d439a84ff9d853e14b2faf",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-            {
-              _id: "3",
-
-              shift: "Ca tối",
-              monday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              tuesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              wednesday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              thursday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              friday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              saturday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-
-              sunday: [
-                "62d4272c4ff9d853e14b2f85",
-                "2",
-                "62d68b7a83d7ce588288fb14",
-              ],
-            },
-          ],
-          startDay: "8/1/2022",
-          endDay: "8/7/2022",
-          createdAt: "2022-07-22T03:17:22.831Z",
-          updatedAt: "2022-07-22T03:17:22.831Z",
-        },
-      ];
-      dispatch(actions.scheduleActions.setListAll(response));
+      console.log(response);
+      dispatch(actions.scheduleActions.setNewWeekSchedule(response));
       setShowList(true);
       setLoading(false);
       // setPagination({
@@ -622,56 +373,44 @@ const ModalContent = () => {
   };
 
   function setSelectedEmployee(e) {
+    dispatch(actions.formActions.changeLoad(!loadData));
+
     setSelect(e.target.value);
   }
 
   useEffect(() => {
-    fetchData(postList);
+    fetchData();
     dispatch(actions.scheduleActions.setCurrent(test.toUTCString()));
-    console.log(date);
   }, []);
+  useEffect(() => {
+    fetchData();
+  }, [loadData]);
 
   useEffect(() => {
-    let currentIndex = 0;
-
-    const tempDate = date ? date : new Date();
-
-    const start = startOfWeek(Date.parse(tempDate), {
-      weekStartsOn: 1,
-    });
-    for (let i = 0; i < dataList.length; i++) {
-      if (dataList[i].startDay === start.toLocaleDateString()) {
-        currentIndex = i;
-        console.log(i);
-
-        break;
-      } else {
-        console.log(start);
-      }
-    }
     setData(
-      showList
-        ? dataList[currentIndex].shifts.map((item, index) => {
+      showList && newWeekSchedule
+        ? newWeekSchedule.shifts.map((item, index) => {
             return {
+              id: item._id,
               shift: item.shift,
-              monday: item.monday,
+              monday: item.days[0],
 
-              tuesday: item.tuesday,
+              tuesday: item.days[1],
 
-              wednesday: item.wednesday,
+              wednesday: item.days[2],
 
-              thursday: item.thursday,
+              thursday: item.days[3],
 
-              friday: item.friday,
+              friday: item.days[4],
 
-              saturday: item.saturday,
+              saturday: item.days[5],
 
-              sunday: item.sunday,
+              sunday: item.days[6],
             };
           })
         : []
     );
-  }, [showList, checkOnload, dataList, date]);
+  }, [showList, date]);
 
   return (
     <div className="ModalEmployeeCont">
