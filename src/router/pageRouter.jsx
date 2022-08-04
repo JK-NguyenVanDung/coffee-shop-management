@@ -11,6 +11,9 @@ import Search from "../pages/Menu/MenuComponents/Search";
 import SiderDemo from "../pages/admin";
 import MenuHeader from "../components/MenuHeader/MenuHeader";
 import Login from "../pages/auth/Login/Login";
+import { useAppDispatch, useAppSelector } from "../hook/useRedux";
+import { Navigate } from "react-router-dom";
+
 export const AdminRouter = {
   // ADMIN: {
   //   path: "/admin",
@@ -102,6 +105,8 @@ const routes = [
 ];
 
 const MakeRoutes = () => {
+  const token = useAppSelector((state) => state.auth.token);
+
   return (
     <Routes>
       {routes.map((route, index) => {
@@ -111,9 +116,13 @@ const MakeRoutes = () => {
             exact={route.exact}
             path={route.path}
             element={
-              <SiderDemo headerItem={route.headerItem}>
-                {route.element}
-              </SiderDemo>
+              token ? (
+                <SiderDemo headerItem={route.headerItem}>
+                  {route.element}
+                </SiderDemo>
+              ) : (
+                <Navigate to="/" replace />
+              )
             }
           />
         );
