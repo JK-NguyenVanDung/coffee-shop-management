@@ -53,9 +53,9 @@ export default function HeaderProFile() {
   // });
   const token = useAppSelector((state) => state.auth.token);
 
-  const logout = () => {
+  const logout = async () => {
     console.log(token);
-    collections.logout(token);
+    const response = await collections.logout(token);
     dispatch(actions.authActions.logout());
     localStorage.removeItem("Bearer");
     navigate(`../`);

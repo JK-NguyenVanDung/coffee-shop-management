@@ -10,9 +10,10 @@ export const login = (body) => {
         throw err.message;
       }
 }
-export const logout = (token) => {
+export const logout = () => {
   try {
-      api.post(`/auth/logout`,token);
+      const response =  api.post(`/auth/logout`);
+      return response;
     } catch (err) {
       console.log(err)
 
