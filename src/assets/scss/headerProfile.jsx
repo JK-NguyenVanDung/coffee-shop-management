@@ -43,16 +43,18 @@ export default function HeaderProFile() {
   const [show, setShow] = useState(false);
   const [showNoti, setShowNoti] = useState(false);
 
-  const history = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   // useEffect(() => {
   //   if (getProFile) {
   //     setShow(true);
   //   }
   // });
-  // const logout = () => {
-  //   dispatch(actions.authActions.logout());
-  // };
+  const logout = () => {
+    dispatch(actions.authActions.logout());
+    localStorage.removeItem("Bearer");
+    navigate(`../`);
+  };
   // const routerProfile = () => {
   //   history.replace("/admin/profile");
   // };
@@ -66,7 +68,7 @@ export default function HeaderProFile() {
                 </Menu.Item> */}
       </Menu.ItemGroup>
       <Menu.Divider />
-      <Menu.Item icon={<LoginOutlined />} onClick={() => {}}>
+      <Menu.Item icon={<LoginOutlined />} onClick={logout}>
         {/* logout */}
         Logout
       </Menu.Item>

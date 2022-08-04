@@ -493,6 +493,7 @@ const Schedule = () => {
               ],
             },
           ],
+          confirmed: false,
           startDay: "8/03/2022",
           endDay: "8/07/2022",
           createdAt: "2022-07-22T03:17:22.831Z",
