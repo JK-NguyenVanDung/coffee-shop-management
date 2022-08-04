@@ -14,6 +14,7 @@ import Bell from "../../assets/img/bell.svg";
 import ActiveBell from "../../assets/img/bell_active.svg";
 
 import { IconButton } from "@mui/material/";
+import * as collections from "../../api/Collections/auth";
 
 import Notification from "../../components/MenuHeader/Notification";
 
@@ -50,7 +51,11 @@ export default function HeaderProFile() {
   //     setShow(true);
   //   }
   // });
+  const token = useAppSelector((state) => state.auth.token);
+
   const logout = () => {
+    console.log(token);
+    collections.logout(token);
     dispatch(actions.authActions.logout());
     localStorage.removeItem("Bearer");
     navigate(`../`);
