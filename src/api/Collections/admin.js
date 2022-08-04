@@ -10,7 +10,7 @@ export default {
     return axiosConfig.getProperties(`${API_CONFIG.ADMIN.GET}`, {
       params: paramsValue
     });
-  },
+  },  
   edit: (id, dataValue) => {
     return axiosConfig.put(`${API_CONFIG.ADMIN.EDIT(id)}`, dataValue);
   },

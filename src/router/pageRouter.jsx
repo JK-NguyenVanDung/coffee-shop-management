@@ -10,6 +10,7 @@ import Inventory from "../pages/admin/Inventory";
 import Search from "../pages/Menu/MenuComponents/Search";
 import SiderDemo from "../pages/admin";
 import MenuHeader from "../components/MenuHeader/MenuHeader";
+import Login from "../pages/auth/Login/Login";
 export const AdminRouter = {
   // ADMIN: {
   //   path: "/admin",
@@ -117,6 +118,13 @@ const MakeRoutes = () => {
           />
         );
       })}
+      {/* <Route
+          path="/admin"
+          render={() => {
+            return token ? <AuthRouter /> : <Redirect to="/" />;
+          }}
+        /> */}
+      <Route path="/" element={<Login />} />
     </Routes>
   );
 };

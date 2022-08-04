@@ -12,13 +12,16 @@ import formWaves from "../../../assets/img/waves.svg";
 import { MailOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
+
+import * as collections from "../../../api/Collections/auth";
+
 import "antd/dist/antd.css";
 
 // import authService from "../../../service/auth/authService";
 function Login() {
   const [loading, setLoading] = useState(false);
-
-  function onFinish() {}
+  const token = useAppSelector((state) => state.auth.token);
+  const dispatch = useAppDispatch();
 
   const layout = {
     labelCol: {
@@ -28,8 +31,59 @@ function Login() {
       span: 16,
     },
   };
-
+  const tailLayout = {
+    wrapperCol: {
+      offset: 8,
+      span: 16,
+    },
+  };
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+  const openNotification = () => {
+    const args = {
+      message: "Đăng nhập",
+      description: "Xin mời đăng nhập",
+      duration: 2,
+    };
+    notification.success(args);
+  };
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (token) {
+      navigate(`../menu`);
+    } else {
+      navigate(`../`);
+    }
+  }, [token]);
+  useEffect(() => {
+    openNotification();
+  }, []);
+
+  const onFinish = (values) => {
+    const fetchAuth = async () => {
+      setLoading(true);
+      try {
+        console.log(values);
+        const response = await collections.login(values);
+        dispatch(actions.authActions.login(response.accessToken));
+        localStorage.setItem("Bearer", `Bearer ${response.accessToken}`);
+        // setToken(response.access_token);
+        // dispatch(loginSuccess(token));
+        console.log(response.data.token);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+        message.success("Đăng nhập thành công");
+      } catch (error) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      }
+    };
+    fetchAuth();
+    // dispatch(actions.authActions.clickAdd("Akkk"));
+    // history.replace('/admin')
+  };
+
   return (
     <div>
       <div className="Home">
@@ -154,7 +208,7 @@ function Login1() {
     notification.success(args);
   };
   const onFinish = (values) => {
-    const fecthAuth = async () => {
+    const fetchAuth = async () => {
       setLoading(true);
       try {
         // const response = await authService.login(values);
@@ -173,7 +227,7 @@ function Login1() {
         }, 1000);
       }
     };
-    // fecthAuth();
+    // fetchAuth();
     // dispatch(actions.authActions.clickAdd('Akkk'));
     // history.replace('/admin')
   };
