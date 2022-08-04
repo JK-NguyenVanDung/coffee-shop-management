@@ -98,7 +98,7 @@ export default function HeaderProFile() {
           visible={showNoti}
         >
           <div className="ant-dropdown-link">
-            <Badge dot={true} offset={[-10, 10]}>
+            <Badge dot={showNoti} offset={[-10, 10]}>
               <IconButton
                 style={{ color: "#000" }}
                 onClick={(e) => showNotification(e)}
