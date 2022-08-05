@@ -141,25 +141,45 @@ const ModalContent = () => {
 
   const handleOk = async () => {
     setLoading(true);
+    const start = startOfWeek(date, {
+      weekStartsOn: 1,
+    });
+    const end = endOfWeek(date, {
+      weekStartsOn: 1,
+    });
     const obj = {
-      morning: newWeekSchedule.shifts[0],
-      afternoon: newWeekSchedule.shifts[1],
-      night: newWeekSchedule.shifts[2],
+      morning: newWeekSchedule.shifts[0] ? newWeekSchedule.shifts[0] : [],
+      afternoon: newWeekSchedule.shifts[1] ? newWeekSchedule.shifts[1] : [],
+      night: newWeekSchedule.shifts[2] ? newWeekSchedule.shifts[2] : [],
       begin_at: begin_at,
       end_at: end_at,
       status: false,
     };
-
+    const editObj = {
+      morning: newWeekSchedule.shifts[0] ? newWeekSchedule.shifts[0] : [],
+      afternoon: newWeekSchedule.shifts[1] ? newWeekSchedule.shifts[1] : [],
+      night: newWeekSchedule.shifts[2] ? newWeekSchedule.shifts[2] : [],
+      begin_at: newWeekSchedule.start,
+      end_at: newWeekSchedule.end,
+      status: newWeekSchedule.false,
+    };
     // console.log(obj);
-    let duplicated = false;
 
     if (newWeekSchedule._id === "") {
+      console.log("s1");
       const response = await collections.addSchedule(obj);
       if (response) {
+        console.log("s2");
+
         await collections.editSchedule({ _id: response._id, body: obj });
       }
     } else {
-      await collections.editSchedule({ _id: newWeekSchedule._id, body: obj });
+      console.log("s3");
+
+      await collections.editSchedule({
+        _id: newWeekSchedule._id,
+        body: editObj,
+      });
     }
     handleClose();
     dispatch(actions.formActions.changeLoad(!loadData));
@@ -442,8 +462,9 @@ const ModalContent = () => {
     });
 
     for (let i = 0; i < dataList.length; i++) {
-      let temp = new Date(dataList[i].begin_at).toLocaleDateString();
-      if (temp == start.toLocaleDateString()) {
+      let temp = new Date(dataList[i].begin_at).toLocaleDateString("vi-VN");
+
+      if (temp == start.toLocaleDateString("vi-VN")) {
         currentIndex = i;
         break;
       } else {
@@ -451,7 +472,8 @@ const ModalContent = () => {
       }
     }
     let existedSchedule = dataList[currentIndex];
-    if (currentIndex !== -1) {
+    // console.log("why" + start.toLocaleDateString("vi-VN"));
+    if (currentIndex !== -1 && dataList.length > 0) {
       let temp = {
         _id: existedSchedule._id,
         status: existedSchedule.status,
