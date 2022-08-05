@@ -20,7 +20,9 @@
 }
     
 }
-
+ #simple{
+       top: -7px;
+    }
 .toolBarCont{
     margin-top: 2vh;
     margin-bottom: 3vh;
@@ -33,11 +35,7 @@
         padding-left: 10px;
         padding-right: 20px;
     }
-    #demo-simple-select-label{
-        margin-bottom: 7px !important;
-        padding-bottom: 7px !important;
-        bottom: 10px!important;
-    }
+   
 }
 .form{
     height: 90vh;
