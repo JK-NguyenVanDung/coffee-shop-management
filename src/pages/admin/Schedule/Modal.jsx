@@ -156,7 +156,7 @@ const ModalContent = () => {
     }
     handleClose();
     dispatch(actions.formActions.changeLoad(!loadData));
-    message.success("Thêm thành công");
+    message.success("Xếp lịch nhân viên thành công");
 
     setLoading(false);
   };
@@ -195,18 +195,18 @@ const ModalContent = () => {
     );
   };
   function getHeaderTitle() {
-    if (dataItem && isDetail) {
-      return "Thông tin nhân viên";
-    }
-    if (dataItem) {
-      return "Sửa nhân viên";
-    }
-    return "Thêm nhân viên";
+    // if (dataItem && isDetail) {
+    //   return "Thông tin nhân viên";
+    // }
+    // if (dataItem) {
+    //   return "Sửa nhân viên";
+    // }
+    return "Xếp lịch cho nhân viên";
   }
   const handleDelete = async () => {
     setLoading(true);
     // await collections.removeEmployee(dataItem._id);
-    message.success("Xoá thành công");
+    message.success("Xoá lịch thành công");
     setLoading(false);
     dispatch(actions.formActions.hideDelete());
     dispatch(actions.formActions.closeForm());
@@ -515,9 +515,7 @@ const ModalContent = () => {
       <div className="toolBarCont">
         {isDetail ? (
           <>
-            <h3 className="title">
-              Xếp lịch cho nhân viên: {dataItem.full_name}
-            </h3>
+            <h3 className="title">{dataItem.full_name}</h3>
           </>
         ) : (
           <>
@@ -587,9 +585,9 @@ const ModalContent = () => {
             paddingBottom: "1%",
             color: "#fff",
           }}
-          onClick={dataItem && isDetail === true ? deleteItem : handleClose}
+          onClick={handleClose}
         >
-          {dataItem && isDetail === true ? "Xoá " : "Hủy"}
+          Hủy
         </Button>
       </div>
       <AlertDialog
