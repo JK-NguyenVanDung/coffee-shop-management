@@ -158,7 +158,9 @@ const ModalContent = () => {
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Xếp lịch nhân viên thành công");
 
-    setLoading(false);
+    setTimeout(function () {
+      setLoading(false);
+    }, 1000);
   };
 
   const start = startOfWeek(date ? Date.parse(date) : new Date(), {
@@ -207,7 +209,9 @@ const ModalContent = () => {
     setLoading(true);
     // await collections.removeEmployee(dataItem._id);
     message.success("Xoá lịch thành công");
-    setLoading(false);
+    setTimeout(function () {
+      setLoading(false);
+    }, 1000);
     dispatch(actions.formActions.hideDelete());
     dispatch(actions.formActions.closeForm());
     dispatch(actions.formActions.changeLoad(!loadData));
@@ -233,7 +237,6 @@ const ModalContent = () => {
 
   const handleCheckbox = (e, item, day) => {
     let clone = JSON.parse(JSON.stringify(newWeekSchedule));
-
     if (e.target.checked === true) {
       clone.shifts[item.id].days[day].push(select);
     } else {
@@ -275,7 +278,7 @@ const ModalContent = () => {
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox disabled={isDetail} />
           </div>
         );
       },
@@ -393,7 +396,6 @@ const ModalContent = () => {
     try {
       setLoading(true);
       // const response = await collections.getSchedules();
-      setLoading(true);
       // const response = await collections.getSchedules();
       // const employees = await employeesCollections.getEmployees();
       // dispatch(actions.scheduleActions.setListEmployees(employees));
@@ -401,6 +403,7 @@ const ModalContent = () => {
       dispatch(actions.scheduleActions.setNewWeekSchedule(defaultValue));
       setShowList(true);
       setLoading(false);
+
       // setPagination({
       //   totalDocs: response.metadata.count,
       // });
@@ -410,9 +413,13 @@ const ModalContent = () => {
   };
 
   function setSelectedEmployee(e) {
+    setLoading(true);
     dispatch(actions.formActions.changeLoad(!loadData));
 
     setSelect(e.target.value);
+    setTimeout(function () {
+      setLoading(false);
+    }, 3000);
   }
 
   useEffect(() => {
@@ -424,6 +431,7 @@ const ModalContent = () => {
   // }, [loadData]);
 
   useEffect(() => {
+    // setLoading(true);
     let currentIndex = 0;
 
     const tempDate = date ? date : new Date();
@@ -476,6 +484,7 @@ const ModalContent = () => {
     } else {
       dispatch(actions.scheduleActions.setNewWeekSchedule(defaultValue));
     }
+    // setLoading(false);
   }, [checkOnload, dataList, date]);
   useEffect(() => {
     setData(
