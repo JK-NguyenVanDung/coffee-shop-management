@@ -313,7 +313,6 @@ const ModalContent = () => {
   };
 
   function handleSelect(value) {
-    console.log(value);
     setUnit(validateUnit(value));
   }
   function handlePayment(value) {

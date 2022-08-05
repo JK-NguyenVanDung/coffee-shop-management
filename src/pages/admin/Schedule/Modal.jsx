@@ -22,7 +22,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { IconButton, Typography } from "@mui/material";
-import * as collections from "../../../api/Collections/employees";
+import * as collections from "../../../api/Collections/schedule";
 import * as employeesCollections from "../../../api/Collections/employees";
 import Checkbox from "@mui/material/Checkbox";
 
@@ -72,12 +72,16 @@ const ModalContent = () => {
   const newWeekSchedule = useAppSelector(
     (state) => state.schedule.newWeekSchedule
   );
+
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
 
   const employeeList = useAppSelector((state) => state.schedule.listEmployees);
 
-  const date = useAppSelector((state) => state.schedule.currentDate);
+  const date = useAppSelector((state) => state.schedule.modalCurrentDate);
+
+  const begin_at = useAppSelector((state) => state.schedule.modalFirtWeekday);
+  const end_at = useAppSelector((state) => state.schedule.modalLastWeekday);
 
   const [select, setSelect] = useState("");
 
@@ -103,32 +107,59 @@ const ModalContent = () => {
     dispatch(actions.formActions.showDelete());
   };
 
-  let response = {
+  let defaultValue = {
     _id: "",
-    confirmed: false,
+    status: false,
     shifts: [
       {
-        _id: "0",
+        _id: 0,
         shift: "Ca sáng",
         days: [[], [], [], [], [], [], []],
       },
       {
-        _id: "1",
+        _id: 1,
         shift: "Ca chiều",
         days: [[], [], [], [], [], [], []],
       },
       {
-        _id: "2",
+        _id: 2,
         shift: "Ca tối",
         days: [[], [], [], [], [], [], []],
       },
     ],
-    startDay: "",
-    endDay: "",
+    begin_at: "",
+    end_at: "",
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
 
-  const handleOk = async () => {};
+  const handleOk = async () => {
+    setLoading(true);
+    const obj = {
+      morning: newWeekSchedule.shifts[0],
+      afternoon: newWeekSchedule.shifts[1],
+      night: newWeekSchedule.shifts[2],
+      begin_at: begin_at,
+      end_at: end_at,
+      status: false,
+    };
+
+    // console.log(obj);
+    let duplicated = false;
+
+    if (newWeekSchedule._id === "") {
+      const response = await collections.addSchedule(obj);
+      if (response) {
+        await collections.editSchedule({ _id: response._id, body: obj });
+      }
+    } else {
+      await collections.editSchedule({ _id: newWeekSchedule._id, body: obj });
+    }
+    handleClose();
+    dispatch(actions.formActions.changeLoad(!loadData));
+    message.success("Thêm thành công");
+
+    setLoading(false);
+  };
 
   const start = startOfWeek(date ? Date.parse(date) : new Date(), {
     weekStartsOn: 1,
@@ -174,7 +205,7 @@ const ModalContent = () => {
   }
   const handleDelete = async () => {
     setLoading(true);
-    await collections.removeEmployee(dataItem._id);
+    // await collections.removeEmployee(dataItem._id);
     message.success("Xoá thành công");
     setLoading(false);
     dispatch(actions.formActions.hideDelete());
@@ -183,12 +214,17 @@ const ModalContent = () => {
   };
 
   const checkedDate = (item, day) => {
-    let clone = JSON.parse(JSON.stringify(newWeekSchedule));
-    let cur = clone.shifts[item.id].days[day];
-    if (cur.length > 0) {
-      for (let i = 0; i < cur.length; i++) {
-        if (cur[i] === select) {
-          return true;
+    if (select) {
+      if (newWeekSchedule.shifts.length === 3) {
+        let clone = JSON.parse(JSON.stringify(newWeekSchedule));
+
+        let cur = clone.shifts[item.id].days[day];
+        if (cur.length > 0) {
+          for (let i = 0; i < cur.length; i++) {
+            if (cur[i] === select) {
+              return true;
+            }
+          }
         }
       }
     }
@@ -357,11 +393,12 @@ const ModalContent = () => {
     try {
       setLoading(true);
       // const response = await collections.getSchedules();
-      const employees = await employeesCollections.getEmployees();
-      dispatch(actions.scheduleActions.setListEmployees(employees));
-
-      console.log(response);
-      dispatch(actions.scheduleActions.setNewWeekSchedule(response));
+      setLoading(true);
+      // const response = await collections.getSchedules();
+      // const employees = await employeesCollections.getEmployees();
+      // dispatch(actions.scheduleActions.setListEmployees(employees));
+      // dispatch(actions.scheduleActions.setListAll(response));
+      dispatch(actions.scheduleActions.setNewWeekSchedule(defaultValue));
       setShowList(true);
       setLoading(false);
       // setPagination({
@@ -380,12 +417,66 @@ const ModalContent = () => {
 
   useEffect(() => {
     fetchData();
-    dispatch(actions.scheduleActions.setCurrent(test.toUTCString()));
+    dispatch(actions.scheduleActions.setModalCurrent(test.toUTCString()));
   }, []);
-  useEffect(() => {
-    fetchData();
-  }, [loadData]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [loadData]);
 
+  useEffect(() => {
+    let currentIndex = 0;
+
+    const tempDate = date ? date : new Date();
+
+    const start = startOfWeek(Date.parse(tempDate), {
+      weekStartsOn: 1,
+    });
+
+    for (let i = 0; i < dataList.length; i++) {
+      let temp = new Date(dataList[i].begin_at).toLocaleDateString();
+      if (temp == start.toLocaleDateString()) {
+        currentIndex = i;
+        break;
+      } else {
+        currentIndex = -1;
+      }
+    }
+    let existedSchedule = dataList[currentIndex];
+    if (currentIndex !== -1) {
+      let temp = {
+        _id: existedSchedule._id,
+        status: existedSchedule.status,
+        shifts: [
+          {
+            _id: 0,
+            shift: "Ca sáng",
+            days: existedSchedule.morning.days
+              ? existedSchedule.morning.days
+              : [[], [], [], [], [], [], []],
+          },
+          {
+            _id: 1,
+            shift: "Ca chiều",
+            days: existedSchedule.afternoon.days
+              ? existedSchedule.afternoon.days
+              : [[], [], [], [], [], [], []],
+          },
+          {
+            _id: 2,
+            shift: "Ca tối",
+            days: existedSchedule.night.days
+              ? existedSchedule.night.days
+              : [[], [], [], [], [], [], []],
+          },
+        ],
+        begin_at: existedSchedule.begin_at,
+        end_at: existedSchedule.end_at,
+      };
+      dispatch(actions.scheduleActions.setNewWeekSchedule(temp));
+    } else {
+      dispatch(actions.scheduleActions.setNewWeekSchedule(defaultValue));
+    }
+  }, [checkOnload, dataList, date]);
   useEffect(() => {
     setData(
       showList && newWeekSchedule
@@ -410,7 +501,7 @@ const ModalContent = () => {
           })
         : []
     );
-  }, [showList, date]);
+  }, [showList, newWeekSchedule]);
 
   return (
     <div className="ModalEmployeeCont">
@@ -454,8 +545,8 @@ const ModalContent = () => {
                 </Select>
               </FormControl>
             </div>
-            <div style={{ width: "30%" }}>
-              <CustomDay />
+            <div style={{ width: "30%" }} className="dateCont">
+              <CustomDay isModal={true} />
             </div>
           </>
         )}

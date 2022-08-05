@@ -9,7 +9,7 @@ const slice = createSlice({
         info: {
             name: "test"
         },
-        name: "a"
+      
 
     },
     reducers: {
