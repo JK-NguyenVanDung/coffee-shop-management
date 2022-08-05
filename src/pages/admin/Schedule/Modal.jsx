@@ -78,10 +78,17 @@ const ModalContent = () => {
 
   const employeeList = useAppSelector((state) => state.schedule.listEmployees);
 
-  const date = useAppSelector((state) => state.schedule.modalCurrentDate);
+  //modal add
+  const date = useAppSelector((state) =>
+    isDetail ? state.schedule.currentDate : state.schedule.modalCurrentDate
+  );
 
-  const begin_at = useAppSelector((state) => state.schedule.modalFirtWeekday);
-  const end_at = useAppSelector((state) => state.schedule.modalLastWeekday);
+  const begin_at = useAppSelector((state) =>
+    isDetail ? state.schedule.firstWeekday : state.schedule.modalFirtWeekday
+  );
+  const end_at = useAppSelector((state) =>
+    isDetail ? state.schedule.lastWeekday : state.schedule.modalLastWeekday
+  );
 
   const [select, setSelect] = useState("");
 
@@ -271,14 +278,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 0)}
               checked={checkedDate(item, 0)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} />
+            <Checkbox />
           </div>
         );
       },
@@ -289,14 +295,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 1)}
               checked={checkedDate(item, 1)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -307,14 +312,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 2)}
               checked={checkedDate(item, 2)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -325,14 +329,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 3)}
               checked={checkedDate(item, 3)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -343,14 +346,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 4)}
               checked={checkedDate(item, 4)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -361,14 +363,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 5)}
               checked={checkedDate(item, 5)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -379,14 +380,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 6)}
               checked={checkedDate(item, 6)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -400,6 +400,7 @@ const ModalContent = () => {
       // const employees = await employeesCollections.getEmployees();
       // dispatch(actions.scheduleActions.setListEmployees(employees));
       // dispatch(actions.scheduleActions.setListAll(response));
+      isDetail && setSelect(dataItem._id);
       dispatch(actions.scheduleActions.setNewWeekSchedule(defaultValue));
       setShowList(true);
       setLoading(false);
@@ -524,18 +525,20 @@ const ModalContent = () => {
       <div className="toolBarCont">
         {isDetail ? (
           <>
-            <h3 className="title">{dataItem.full_name}</h3>
+            <h3 className="title">
+              Chỉnh lịch cho nhân viên {dataItem.full_name} vào tuần{" "}
+              {new Date(begin_at).toLocaleDateString("vi-VN")} -
+              {new Date(end_at).toLocaleDateString("vi-VN")}
+            </h3>
           </>
         ) : (
           <>
             <div style={{ width: "30%", marginRight: "5%" }}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Chọn nhân viên
-                </InputLabel>
+                <InputLabel id="simple">Chọn nhân viên</InputLabel>
                 <Select
                   size="small"
-                  labelId="demo-simple-select-label"
+                  labelId="simple"
                   id="demo-simple-select"
                   value={select}
                   label="Chọn nhân viên"
@@ -577,7 +580,7 @@ const ModalContent = () => {
             color: "#fff",
           }}
           disabled={loading}
-          onClick={isDetail === true ? editItem : handleOk}
+          onClick={handleOk}
         >
           Lưu
         </Button>
@@ -598,11 +601,6 @@ const ModalContent = () => {
           Hủy
         </Button>
       </div>
-      <AlertDialog
-        children={`Xác nhận xoá ${dataItem ? dataItem.full_name : null} ?`}
-        title="Xoá nhân viên"
-        onAccept={handleDelete}
-      />
     </div>
   );
 };

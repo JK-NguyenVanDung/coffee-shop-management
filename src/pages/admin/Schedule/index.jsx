@@ -477,8 +477,9 @@ const Schedule = () => {
 
   const handleOpen = () => {
     dispatch(actions.scheduleActions.setDetail(null));
-    dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
+
+    dispatch(actions.formActions.showForm());
   };
   async function handleEdit(item) {
     dispatch(actions.formActions.showForm());
