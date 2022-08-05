@@ -63,15 +63,18 @@ function Login() {
       setLoading(true);
       try {
         const response = await collections.login(values);
-        dispatch(actions.authActions.login(response.accessToken));
-        localStorage.setItem("Bearer", `Bearer ${response.accessToken}`);
-        // setToken(response.access_token);
-        // dispatch(loginSuccess(token));
-        // console.log(response.data.token);
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-        message.success("Đăng nhập thành công");
+        if (response.success) {
+          dispatch(actions.authActions.login(response.accessToken));
+          localStorage.setItem("Bearer", `Bearer ${response.accessToken}`);
+          // setToken(response.access_token);
+          // dispatch(loginSuccess(token));
+          console.log(response);
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
+          message.success("Đăng nhập thành công");
+        } else {
+        }
       } catch (error) {
         setTimeout(() => {
           setLoading(false);
