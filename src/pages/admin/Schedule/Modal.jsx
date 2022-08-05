@@ -504,7 +504,7 @@ const ModalContent = () => {
   }, [showList, newWeekSchedule]);
 
   return (
-    <div className="ModalEmployeeCont">
+    <div className="ModalScheduleCont">
       {modalError && <AlertModal chilren={errorText.formValidation} />}
       <div className="headerCont">
         <h2>{getHeaderTitle()}</h2>
@@ -519,7 +519,6 @@ const ModalContent = () => {
           </>
         ) : (
           <>
-            <h3 className="title"> Xếp lịch cho nhân viên:</h3>
             <div style={{ width: "30%", marginRight: "5%" }}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
