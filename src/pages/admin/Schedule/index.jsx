@@ -84,6 +84,13 @@ const Schedule = () => {
   //   });
   // };
 
+  const deleteSchedule = () => {
+    setLoading(true);
+    collections.removeSchedule(weekDetail._id);
+    dispatch(actions.formActions.changeLoad(!loadData));
+    message.success("Xoá thành công");
+    setLoading(false);
+  };
   const start = startOfWeek(date ? Date.parse(date) : new Date(), {
     weekStartsOn: 1,
   });
@@ -183,17 +190,6 @@ const Schedule = () => {
                 </div>
               );
             })}
-            <Button
-              onClick={() => logOut(item, item.tuesday)}
-              size="large"
-              sx={{
-                color: "#111",
-                p: 2,
-                minWidth: "100%",
-              }}
-            >
-              Thêm nhân viên
-            </Button>
           </div>
         );
       },
@@ -337,175 +333,12 @@ const Schedule = () => {
   const fetchData = async (value) => {
     try {
       setLoading(true);
-      // const response = await collections.getSchedules();
+      const response = await collections.getSchedules();
       const employees = await employeesCollections.getEmployees();
       dispatch(actions.scheduleActions.setListEmployees(employees));
-
-      const response = [
-        {
-          _id: "sadsadsadsad",
-
-          shifts: [
-            {
-              _id: "0",
-              shift: "Ca sáng",
-              days: [
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                  "62d68b7a83d7ce588288fb16",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-              ],
-            },
-            {
-              _id: "1",
-              shift: "Ca chiều",
-
-              days: [
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                  "62d68b7a83d7ce588288fb16",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-              ],
-            },
-            {
-              _id: "2",
-
-              shift: "Ca tối",
-              days: [
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                  "62d68b7a83d7ce588288fb16",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-
-                [
-                  "62d4272c4ff9d853e14b2f85",
-                  "62d439a84ff9d853e14b2faf",
-                  "62d68b7a83d7ce588288fb14",
-                ],
-              ],
-            },
-          ],
-          confirmed: false,
-          startDay: "8/03/2022",
-          endDay: "8/07/2022",
-          createdAt: "2022-07-22T03:17:22.831Z",
-          updatedAt: "2022-07-22T03:17:22.831Z",
-        },
-      ];
       dispatch(actions.scheduleActions.setListAll(response));
       setShowList(true);
       setLoading(false);
-      // setPagination({
-      //   totalDocs: response.metadata.count,
-      // });
     } catch (error) {
       //history.replace("/");
     }
@@ -531,40 +364,109 @@ const Schedule = () => {
     const start = startOfWeek(Date.parse(tempDate), {
       weekStartsOn: 1,
     });
+
     for (let i = 0; i < dataList.length; i++) {
-      if (dataList[i].startDay === start.toLocaleDateString()) {
+      let temp = new Date(dataList[i].begin_at).toLocaleDateString();
+      if (temp == start.toLocaleDateString()) {
         currentIndex = i;
         break;
       } else {
-        currentIndex = 0;
+        currentIndex = -1;
       }
     }
+    console.log("index" + currentIndex);
     dispatch(actions.scheduleActions.setWeekDetail(dataList[currentIndex]));
-
+    console.log(weekDetail);
+  }, [checkOnload, dataList, date]);
+  useEffect(() => {
     setData(
       showList && weekDetail
-        ? weekDetail.shifts.map((item, index) => {
-            return {
-              shift: item.shift,
-              monday: item.days[0],
+        ? [
+            {
+              _id: 0,
+              shift: "Ca sáng",
+              monday: weekDetail.morning.days[0]
+                ? weekDetail.morning.days[0]
+                : [],
+              tuesday: weekDetail.morning.days[1]
+                ? weekDetail.morning.days[1]
+                : [],
 
-              tuesday: item.days[1],
+              wednesday: weekDetail.morning.days[2]
+                ? weekDetail.morning.days[2]
+                : [],
 
-              wednesday: item.days[2],
+              thursday: weekDetail.morning.days[3]
+                ? weekDetail.morning.days[3]
+                : [],
 
-              thursday: item.days[3],
+              friday: weekDetail.morning.days[4]
+                ? weekDetail.morning.days[4]
+                : [],
 
-              friday: item.days[4],
+              saturday: weekDetail.morning.days[5]
+                ? weekDetail.morning.days[5]
+                : [],
 
-              saturday: item.days[5],
+              sunday: weekDetail.morning.days[6]
+                ? weekDetail.morning.days[6]
+                : [],
+            },
+            {
+              _id: 2,
+              shift: "Ca chiều",
+              monday: weekDetail.afternoon.days[0]
+                ? weekDetail.afternoon.days[0]
+                : [],
+              tuesday: weekDetail.afternoon.days[1]
+                ? weekDetail.afternoon.days[1]
+                : [],
 
-              sunday: item.days[6],
-              id: item._id,
-            };
-          })
+              wednesday: weekDetail.afternoon.days[2]
+                ? weekDetail.afternoon.days[2]
+                : [],
+
+              thursday: weekDetail.afternoon.days[3]
+                ? weekDetail.afternoon.days[3]
+                : [],
+
+              friday: weekDetail.afternoon.days[4]
+                ? weekDetail.afternoon.days[4]
+                : [],
+
+              saturday: weekDetail.afternoon.days[5]
+                ? weekDetail.afternoon.days[5]
+                : [],
+
+              sunday: weekDetail.afternoon.days[6]
+                ? weekDetail.afternoon.days[6]
+                : [],
+            },
+            {
+              _id: 3,
+              shift: "Ca tối",
+              monday: weekDetail.night.days[0] ? weekDetail.night.days[0] : [],
+              tuesday: weekDetail.night.days[1] ? weekDetail.night.days[1] : [],
+              wednesday: weekDetail.night.days[2]
+                ? weekDetail.night.days[2]
+                : [],
+
+              thursday: weekDetail.night.days[3]
+                ? weekDetail.night.days[3]
+                : [],
+
+              friday: weekDetail.night.days[4] ? weekDetail.night.days[4] : [],
+
+              saturday: weekDetail.night.days[5]
+                ? weekDetail.night.days[5]
+                : [],
+
+              sunday: weekDetail.night.days[6] ? weekDetail.night.days[6] : [],
+            },
+          ]
         : []
     );
-  }, [showList, checkOnload, dataList, date]);
+  }, [showList, weekDetail]); // checkOnload, dataList, date
 
   const dispatch = useAppDispatch();
   const getDetail = (id) => {
@@ -575,8 +477,9 @@ const Schedule = () => {
 
   const handleOpen = () => {
     dispatch(actions.scheduleActions.setDetail(null));
-    dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
+
+    dispatch(actions.formActions.showForm());
   };
   async function handleEdit(item) {
     dispatch(actions.formActions.showForm());
@@ -584,12 +487,12 @@ const Schedule = () => {
 
     dispatch(actions.scheduleActions.setDetail(item.id));
   }
-  async function handleDelete(item) {
-    setLoading(true);
-    await collections.removeSchedule(item.id);
-    dispatch(actions.formActions.changeLoad(!loadData));
-    message.success("Xoá thành công");
-    setLoading(false);
+  async function confirmSchedule() {
+    // setLoading(true);
+    // await collections.removeSchedule(item.id);
+    // dispatch(actions.formActions.changeLoad(!loadData));
+    // message.success("Xoá thành công");
+    // setLoading(false);
   }
   function cancel(e) {
     // message.error('Click on No');
@@ -619,6 +522,7 @@ const Schedule = () => {
           endIcon={<PendingActionsOutlinedIcon />}
           style={{ marginRight: "1%", color: "#fff" }}
           size="small"
+          onClick={() => confirmSchedule()}
         >
           DUYỆT LỊCH
         </Button>
@@ -628,6 +532,7 @@ const Schedule = () => {
           endIcon={<DeleteSweepIcon />}
           style={{ marginRight: "1%", color: "#fff" }}
           size="small"
+          onClick={() => deleteSchedule()}
         >
           XOÁ LỊCH
         </Button>
@@ -637,7 +542,7 @@ const Schedule = () => {
           style={{ width: "85%", height: "90vh" }}
         />
 
-        <div className="dishSearch">
+        <div className="dateCont">
           {/* <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Chọn tuần</InputLabel>
             <Select
@@ -653,7 +558,7 @@ const Schedule = () => {
             </Select>
           </FormControl> */}
 
-          <CustomDay />
+          <CustomDay isModal={false} />
         </div>
       </div>
       <div>

@@ -25,15 +25,7 @@ import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
 import { numbToCurrency } from "../../../helper/currency";
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-};
+
 const Inventory = () => {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.inventories.listAll);
@@ -217,8 +209,6 @@ const Inventory = () => {
   //   // test.current = 2;
   //   fetchData(postList);
   // }, [loadData]);
-
-  const onSearch = (value) => console.log(value);
 
   return (
     <>

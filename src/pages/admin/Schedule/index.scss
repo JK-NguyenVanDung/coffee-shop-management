@@ -8,19 +8,21 @@
 
 // Thêm nhân viên
 
-.ModalEmployeeCont{
+.ModalScheduleCont{
 .headerCont {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-left: 4%;
-    padding-right: 3%;
+    padding-left: 0%;
+    padding-right: 0%;
 }
     
 }
-
+ #simple{
+       top: -7px;
+    }
 .toolBarCont{
     margin-top: 2vh;
     margin-bottom: 3vh;
@@ -33,6 +35,7 @@
         padding-left: 10px;
         padding-right: 20px;
     }
+   
 }
 .form{
     height: 90vh;
@@ -224,4 +227,7 @@
     width: 100%;
     align-items: center;
     justify-content:center;
+}
+.dateCont .MuiOutlinedInput-input{
+pointer-events: none; 
 }

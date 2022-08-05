@@ -78,23 +78,42 @@ const CustomPickersDay = styled(PickersDay, {
   }),
 }));
 
-export const CustomDay = () => {
+export const CustomDay = ({ isModal }) => {
   const [value, setValue] = React.useState(new Date());
   const [date, setDate] = useState("");
-  const start = startOfWeek(value);
-  const end = endOfWeek(value);
+  const start = startOfWeek(value, {
+    weekStartsOn: 1,
+  });
+  const end = endOfWeek(value, {
+    weekStartsOn: 1,
+  });
   const dispatch = useAppDispatch();
 
   function setDateFromPicker() {
     let date = `${format(start, "dd/MM/yyyy")} - ${format(end, "dd/MM/yyyy")}`;
-    console.log(date);
     setDate(date);
   }
 
   useEffect(() => {
-    dispatch(actions.scheduleActions.setCurrent(value.toUTCString()));
-    dispatch(actions.scheduleActions.setStart(value.toUTCString()));
-    dispatch(actions.scheduleActions.setLast(value.toUTCString()));
+    if (value) {
+      if (isModal) {
+        dispatch(
+          actions.scheduleActions.setModalCurrent(value.toLocaleDateString())
+        );
+        dispatch(
+          actions.scheduleActions.setModalStart(start.toLocaleDateString())
+        );
+        dispatch(
+          actions.scheduleActions.setModalLast(end.toLocaleDateString())
+        );
+      } else {
+        dispatch(
+          actions.scheduleActions.setCurrent(value.toLocaleDateString())
+        );
+        dispatch(actions.scheduleActions.setStart(start.toLocaleDateString()));
+        dispatch(actions.scheduleActions.setLast(end.toLocaleDateString()));
+      }
+    }
   }, [value]);
   const renderWeekPickerDay = (date, selectedDates, pickersDayProps) => {
     if (!value) {
@@ -135,7 +154,12 @@ export const CustomDay = () => {
         }}
         renderDay={renderWeekPickerDay}
         renderInput={(params) => (
-          <TextField {...params} style={{ width: "100%" }} size="small" />
+          <TextField
+            {...params}
+            style={{ width: "100%" }}
+            size="small"
+            disabled
+          />
         )}
         inputFormat="'Tuần của' dd/MM/yyyy"
       />

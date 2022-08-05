@@ -22,7 +22,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { IconButton, Typography } from "@mui/material";
-import * as collections from "../../../api/Collections/employees";
+import * as collections from "../../../api/Collections/schedule";
 import * as employeesCollections from "../../../api/Collections/employees";
 import Checkbox from "@mui/material/Checkbox";
 
@@ -72,12 +72,23 @@ const ModalContent = () => {
   const newWeekSchedule = useAppSelector(
     (state) => state.schedule.newWeekSchedule
   );
+
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
 
   const employeeList = useAppSelector((state) => state.schedule.listEmployees);
 
-  const date = useAppSelector((state) => state.schedule.currentDate);
+  //modal add
+  const date = useAppSelector((state) =>
+    isDetail ? state.schedule.currentDate : state.schedule.modalCurrentDate
+  );
+
+  const begin_at = useAppSelector((state) =>
+    isDetail ? state.schedule.firstWeekday : state.schedule.modalFirtWeekday
+  );
+  const end_at = useAppSelector((state) =>
+    isDetail ? state.schedule.lastWeekday : state.schedule.modalLastWeekday
+  );
 
   const [select, setSelect] = useState("");
 
@@ -103,32 +114,61 @@ const ModalContent = () => {
     dispatch(actions.formActions.showDelete());
   };
 
-  let response = {
+  let defaultValue = {
     _id: "",
-    confirmed: false,
+    status: false,
     shifts: [
       {
-        _id: "0",
+        _id: 0,
         shift: "Ca sáng",
         days: [[], [], [], [], [], [], []],
       },
       {
-        _id: "1",
+        _id: 1,
         shift: "Ca chiều",
         days: [[], [], [], [], [], [], []],
       },
       {
-        _id: "2",
+        _id: 2,
         shift: "Ca tối",
         days: [[], [], [], [], [], [], []],
       },
     ],
-    startDay: "",
-    endDay: "",
+    begin_at: "",
+    end_at: "",
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
 
-  const handleOk = async () => {};
+  const handleOk = async () => {
+    setLoading(true);
+    const obj = {
+      morning: newWeekSchedule.shifts[0],
+      afternoon: newWeekSchedule.shifts[1],
+      night: newWeekSchedule.shifts[2],
+      begin_at: begin_at,
+      end_at: end_at,
+      status: false,
+    };
+
+    // console.log(obj);
+    let duplicated = false;
+
+    if (newWeekSchedule._id === "") {
+      const response = await collections.addSchedule(obj);
+      if (response) {
+        await collections.editSchedule({ _id: response._id, body: obj });
+      }
+    } else {
+      await collections.editSchedule({ _id: newWeekSchedule._id, body: obj });
+    }
+    handleClose();
+    dispatch(actions.formActions.changeLoad(!loadData));
+    message.success("Xếp lịch nhân viên thành công");
+
+    setTimeout(function () {
+      setLoading(false);
+    }, 1000);
+  };
 
   const start = startOfWeek(date ? Date.parse(date) : new Date(), {
     weekStartsOn: 1,
@@ -164,31 +204,38 @@ const ModalContent = () => {
     );
   };
   function getHeaderTitle() {
-    if (dataItem && isDetail) {
-      return "Thông tin nhân viên";
-    }
-    if (dataItem) {
-      return "Sửa nhân viên";
-    }
-    return "Thêm nhân viên";
+    // if (dataItem && isDetail) {
+    //   return "Thông tin nhân viên";
+    // }
+    // if (dataItem) {
+    //   return "Sửa nhân viên";
+    // }
+    return "Xếp lịch cho nhân viên";
   }
   const handleDelete = async () => {
     setLoading(true);
-    await collections.removeEmployee(dataItem._id);
-    message.success("Xoá thành công");
-    setLoading(false);
+    // await collections.removeEmployee(dataItem._id);
+    message.success("Xoá lịch thành công");
+    setTimeout(function () {
+      setLoading(false);
+    }, 1000);
     dispatch(actions.formActions.hideDelete());
     dispatch(actions.formActions.closeForm());
     dispatch(actions.formActions.changeLoad(!loadData));
   };
 
   const checkedDate = (item, day) => {
-    let clone = JSON.parse(JSON.stringify(newWeekSchedule));
-    let cur = clone.shifts[item.id].days[day];
-    if (cur.length > 0) {
-      for (let i = 0; i < cur.length; i++) {
-        if (cur[i] === select) {
-          return true;
+    if (select) {
+      if (newWeekSchedule.shifts.length === 3) {
+        let clone = JSON.parse(JSON.stringify(newWeekSchedule));
+
+        let cur = clone.shifts[item.id].days[day];
+        if (cur.length > 0) {
+          for (let i = 0; i < cur.length; i++) {
+            if (cur[i] === select) {
+              return true;
+            }
+          }
         }
       }
     }
@@ -197,7 +244,6 @@ const ModalContent = () => {
 
   const handleCheckbox = (e, item, day) => {
     let clone = JSON.parse(JSON.stringify(newWeekSchedule));
-
     if (e.target.checked === true) {
       clone.shifts[item.id].days[day].push(select);
     } else {
@@ -232,14 +278,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 0)}
               checked={checkedDate(item, 0)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox />
           </div>
         );
       },
@@ -250,14 +295,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 1)}
               checked={checkedDate(item, 1)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -268,14 +312,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 2)}
               checked={checkedDate(item, 2)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -286,14 +329,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 3)}
               checked={checkedDate(item, 3)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -304,14 +346,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 4)}
               checked={checkedDate(item, 4)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -322,14 +363,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 5)}
               checked={checkedDate(item, 5)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -340,14 +380,13 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
-              disabled={isDetail}
               onChange={(e) => handleCheckbox(e, item, 6)}
               checked={checkedDate(item, 6)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox disabled={isDetail} onChange={handleEmptyCheckbox()} />
+            <Checkbox onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -357,13 +396,15 @@ const ModalContent = () => {
     try {
       setLoading(true);
       // const response = await collections.getSchedules();
-      const employees = await employeesCollections.getEmployees();
-      dispatch(actions.scheduleActions.setListEmployees(employees));
-
-      console.log(response);
-      dispatch(actions.scheduleActions.setNewWeekSchedule(response));
+      // const response = await collections.getSchedules();
+      // const employees = await employeesCollections.getEmployees();
+      // dispatch(actions.scheduleActions.setListEmployees(employees));
+      // dispatch(actions.scheduleActions.setListAll(response));
+      isDetail && setSelect(dataItem._id);
+      dispatch(actions.scheduleActions.setNewWeekSchedule(defaultValue));
       setShowList(true);
       setLoading(false);
+
       // setPagination({
       //   totalDocs: response.metadata.count,
       // });
@@ -373,19 +414,79 @@ const ModalContent = () => {
   };
 
   function setSelectedEmployee(e) {
+    setLoading(true);
     dispatch(actions.formActions.changeLoad(!loadData));
 
     setSelect(e.target.value);
+    setTimeout(function () {
+      setLoading(false);
+    }, 3000);
   }
 
   useEffect(() => {
     fetchData();
-    dispatch(actions.scheduleActions.setCurrent(test.toUTCString()));
+    dispatch(actions.scheduleActions.setModalCurrent(test.toUTCString()));
   }, []);
-  useEffect(() => {
-    fetchData();
-  }, [loadData]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [loadData]);
 
+  useEffect(() => {
+    // setLoading(true);
+    let currentIndex = 0;
+
+    const tempDate = date ? date : new Date();
+
+    const start = startOfWeek(Date.parse(tempDate), {
+      weekStartsOn: 1,
+    });
+
+    for (let i = 0; i < dataList.length; i++) {
+      let temp = new Date(dataList[i].begin_at).toLocaleDateString();
+      if (temp == start.toLocaleDateString()) {
+        currentIndex = i;
+        break;
+      } else {
+        currentIndex = -1;
+      }
+    }
+    let existedSchedule = dataList[currentIndex];
+    if (currentIndex !== -1) {
+      let temp = {
+        _id: existedSchedule._id,
+        status: existedSchedule.status,
+        shifts: [
+          {
+            _id: 0,
+            shift: "Ca sáng",
+            days: existedSchedule.morning.days
+              ? existedSchedule.morning.days
+              : [[], [], [], [], [], [], []],
+          },
+          {
+            _id: 1,
+            shift: "Ca chiều",
+            days: existedSchedule.afternoon.days
+              ? existedSchedule.afternoon.days
+              : [[], [], [], [], [], [], []],
+          },
+          {
+            _id: 2,
+            shift: "Ca tối",
+            days: existedSchedule.night.days
+              ? existedSchedule.night.days
+              : [[], [], [], [], [], [], []],
+          },
+        ],
+        begin_at: existedSchedule.begin_at,
+        end_at: existedSchedule.end_at,
+      };
+      dispatch(actions.scheduleActions.setNewWeekSchedule(temp));
+    } else {
+      dispatch(actions.scheduleActions.setNewWeekSchedule(defaultValue));
+    }
+    // setLoading(false);
+  }, [checkOnload, dataList, date]);
   useEffect(() => {
     setData(
       showList && newWeekSchedule
@@ -410,10 +511,10 @@ const ModalContent = () => {
           })
         : []
     );
-  }, [showList, date]);
+  }, [showList, newWeekSchedule]);
 
   return (
-    <div className="ModalEmployeeCont">
+    <div className="ModalScheduleCont">
       {modalError && <AlertModal chilren={errorText.formValidation} />}
       <div className="headerCont">
         <h2>{getHeaderTitle()}</h2>
@@ -425,20 +526,19 @@ const ModalContent = () => {
         {isDetail ? (
           <>
             <h3 className="title">
-              Xếp lịch cho nhân viên: {dataItem.full_name}
+              Chỉnh lịch cho nhân viên {dataItem.full_name} vào tuần{" "}
+              {new Date(begin_at).toLocaleDateString("vi-VN")} -
+              {new Date(end_at).toLocaleDateString("vi-VN")}
             </h3>
           </>
         ) : (
           <>
-            <h3 className="title"> Xếp lịch cho nhân viên:</h3>
             <div style={{ width: "30%", marginRight: "5%" }}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Chọn nhân viên
-                </InputLabel>
+                <InputLabel id="simple">Chọn nhân viên</InputLabel>
                 <Select
                   size="small"
-                  labelId="demo-simple-select-label"
+                  labelId="simple"
                   id="demo-simple-select"
                   value={select}
                   label="Chọn nhân viên"
@@ -454,8 +554,8 @@ const ModalContent = () => {
                 </Select>
               </FormControl>
             </div>
-            <div style={{ width: "30%" }}>
-              <CustomDay />
+            <div style={{ width: "30%" }} className="dateCont">
+              <CustomDay isModal={true} />
             </div>
           </>
         )}
@@ -480,7 +580,7 @@ const ModalContent = () => {
             color: "#fff",
           }}
           disabled={loading}
-          onClick={isDetail === true ? editItem : handleOk}
+          onClick={handleOk}
         >
           Lưu
         </Button>
@@ -496,16 +596,11 @@ const ModalContent = () => {
             paddingBottom: "1%",
             color: "#fff",
           }}
-          onClick={dataItem && isDetail === true ? deleteItem : handleClose}
+          onClick={handleClose}
         >
-          {dataItem && isDetail === true ? "Xoá " : "Hủy"}
+          Hủy
         </Button>
       </div>
-      <AlertDialog
-        children={`Xác nhận xoá ${dataItem ? dataItem.full_name : null} ?`}
-        title="Xoá nhân viên"
-        onAccept={handleDelete}
-      />
     </div>
   );
 };
