@@ -8,15 +8,15 @@
 
 // Thêm nhân viên
 
-.ModalEmployeeCont{
+.ModalScheduleCont{
 .headerCont {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-left: 4%;
-    padding-right: 3%;
+    padding-left: 0%;
+    padding-right: 0%;
 }
     
 }
@@ -32,6 +32,11 @@
     .title{
         padding-left: 10px;
         padding-right: 20px;
+    }
+    #demo-simple-select-label{
+        margin-bottom: 7px !important;
+        padding-bottom: 7px !important;
+        bottom: 10px!important;
     }
 }
 .form{
