@@ -366,8 +366,8 @@ const Schedule = () => {
     });
 
     for (let i = 0; i < dataList.length; i++) {
-      let temp = new Date(dataList[i].begin_at).toLocaleDateString();
-      if (temp == start.toLocaleDateString()) {
+      let temp = new Date(dataList[i].begin_at).toLocaleDateString("vi-VN");
+      if (temp == start.toLocaleDateString("vi-VN")) {
         currentIndex = i;
         break;
       } else {

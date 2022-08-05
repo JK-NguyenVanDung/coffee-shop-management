@@ -97,21 +97,13 @@ export const CustomDay = ({ isModal }) => {
   useEffect(() => {
     if (value) {
       if (isModal) {
-        dispatch(
-          actions.scheduleActions.setModalCurrent(value.toLocaleDateString())
-        );
-        dispatch(
-          actions.scheduleActions.setModalStart(start.toLocaleDateString())
-        );
-        dispatch(
-          actions.scheduleActions.setModalLast(end.toLocaleDateString())
-        );
+        dispatch(actions.scheduleActions.setModalCurrent(value.toDateString()));
+        dispatch(actions.scheduleActions.setModalStart(start.toDateString()));
+        dispatch(actions.scheduleActions.setModalLast(end.toDateString()));
       } else {
-        dispatch(
-          actions.scheduleActions.setCurrent(value.toLocaleDateString())
-        );
-        dispatch(actions.scheduleActions.setStart(start.toLocaleDateString()));
-        dispatch(actions.scheduleActions.setLast(end.toLocaleDateString()));
+        dispatch(actions.scheduleActions.setCurrent(value.toDateString()));
+        dispatch(actions.scheduleActions.setStart(start.toDateString()));
+        dispatch(actions.scheduleActions.setLast(end.toDateString()));
       }
     }
   }, [value]);

@@ -151,8 +151,8 @@ const ModalContent = () => {
       morning: newWeekSchedule.shifts[0] ? newWeekSchedule.shifts[0] : [],
       afternoon: newWeekSchedule.shifts[1] ? newWeekSchedule.shifts[1] : [],
       night: newWeekSchedule.shifts[2] ? newWeekSchedule.shifts[2] : [],
-      begin_at: start.toUTCString(),
-      end_at: end.toUTCString,
+      begin_at: begin_at,
+      end_at: end_at,
       status: false,
     };
     const editObj = {
@@ -462,19 +462,17 @@ const ModalContent = () => {
     });
 
     for (let i = 0; i < dataList.length; i++) {
-      let temp = new Date(dataList[i].begin_at).toLocaleDateString();
-      if (temp == start.toLocaleDateString()) {
-        console.log(dataList.length);
+      let temp = new Date(dataList[i].begin_at).toLocaleDateString("vi-VN");
+
+      if (temp == start.toLocaleDateString("vi-VN")) {
         currentIndex = i;
         break;
       } else {
-        console.log(dataList.length);
-
         currentIndex = -1;
       }
     }
     let existedSchedule = dataList[currentIndex];
-    console.log(dataList.length);
+    // console.log("why" + start.toLocaleDateString("vi-VN"));
     if (currentIndex !== -1 && dataList.length > 0) {
       let temp = {
         _id: existedSchedule._id,
