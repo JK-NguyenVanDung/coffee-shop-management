@@ -47,7 +47,6 @@ function Notification(props) {
 
       // localStorage.setItem("items", JSON.stringify(items));
 
-      console.log(items.length);
       setUpdate(!update);
       setInputItem("");
     }

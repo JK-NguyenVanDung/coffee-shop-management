@@ -62,13 +62,12 @@ function Login() {
     const fetchAuth = async () => {
       setLoading(true);
       try {
-        console.log(values);
         const response = await collections.login(values);
         dispatch(actions.authActions.login(response.accessToken));
         localStorage.setItem("Bearer", `Bearer ${response.accessToken}`);
         // setToken(response.access_token);
         // dispatch(loginSuccess(token));
-        console.log(response.data.token);
+        // console.log(response.data.token);
         setTimeout(() => {
           setLoading(false);
         }, 1000);

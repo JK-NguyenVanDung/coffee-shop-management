@@ -25,15 +25,6 @@ import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-};
 const Category = () => {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.categories.listAll);

@@ -13,18 +13,26 @@ const slice = createSlice({
         lastWeekday: null,
         weekDetail: null,
         newWeekSchedule: null,
+        existedSchedule: null,
+        modalCurrentDate: null,
+        modalFirtWeekday: null,
+        modalLastWeekday: null,
     },
     reducers: {
         setNewWeekSchedule(state, actions) {
             state.newWeekSchedule = actions.payload;
-            console.log("idontknowdude")
+
+
+
+        },
+        setExistedSchedule(state, actions) {
+            state.existedSchedule = actions.payload;
 
             console.log(actions.payload)
 
         },
         setWeekDetail(state, actions) {
             state.weekDetail = actions.payload;
-            console.log(actions.payload)
         },
         setDetail(state, actions) {
             let data = [...state.listEmployees];
@@ -53,7 +61,14 @@ const slice = createSlice({
         setLast(state, actions) {
             state.lastWeekday = actions.payload;
         },
-        
+        setModalCurrent(state, actions) {
+            state.modalCurrentDate = actions.payload;
+        },    setModalStart(state, actions) {
+            state.modalFirtWeekday = actions.payload;
+        },
+        setModalLast(state, actions) {
+            state.modalLastWeekday = actions.payload;
+        },
     }
 })
 export const scheduleReducer = slice.reducer;

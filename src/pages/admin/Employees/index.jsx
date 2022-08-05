@@ -23,7 +23,7 @@ import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
-import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
+import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -252,14 +252,12 @@ const Employees = () => {
     // message.error('Click on No');
   }
 
-  const onSearch = (value) => console.log(value);
-
   return (
     <>
       <div className="dishSearchCont">
         <Button
           variant="contained"
-          endIcon={<PendingActionsOutlinedIcon  />}
+          endIcon={<PendingActionsOutlinedIcon />}
           style={{ marginRight: "1%", backgroundColor: "#111", color: "#fff" }}
           size="small"
         >

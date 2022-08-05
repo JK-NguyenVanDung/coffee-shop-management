@@ -22,7 +22,6 @@ axiosConfig.interceptors.request.use(async (config) => {
   if (auth) {
     customHeaders.Authorization = auth;
   }
-  console.log(auth);
 
   return {
     ...config,
