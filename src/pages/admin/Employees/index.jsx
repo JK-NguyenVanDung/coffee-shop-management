@@ -38,6 +38,7 @@ const Employees = () => {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.employees.listAll);
   const [showList, setShowList] = useState(false);
+  const info = useAppSelector((state) => state.auth.info);
 
   const [selectionType, setSelectionType] = useState("checkbox");
   const [search, setSearch] = useState("");
@@ -152,6 +153,7 @@ const Employees = () => {
                 color: "#fff",
               }}
               size="small"
+              onClick={() => handleTimeSheet(item)}
             >
               CHẤM CÔNG
             </Button>
@@ -248,6 +250,11 @@ const Employees = () => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
   };
+  async function handleTimeSheet() {
+    dispatch(actions.formActions.showForm());
+    dispatch(actions.formActions.setDetail(false));
+    // dispatch(actions.employeesActions.setDetail(item.id));
+  }
   async function handleEdit(item) {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
