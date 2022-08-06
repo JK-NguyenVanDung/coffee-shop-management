@@ -596,7 +596,7 @@ const ModalContent = () => {
       </Form>
       <AlertDialog
         children={`Xác nhận xoá ${dataItem ? dataItem.name : null} ?`}
-        title="Xoá nhân viên"
+        title="Xoá hàng hóa"
         onAccept={handleDelete}
       />
     </div>
