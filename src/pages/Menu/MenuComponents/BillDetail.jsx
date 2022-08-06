@@ -81,7 +81,6 @@ const BillDetail = () => {
     try {
       setLoading(true);
       let data = {
-        account_id: info._id,
         details: orderList,
         price_total: totalBill,
         payment_type: paymentMethod,
@@ -112,7 +111,7 @@ const BillDetail = () => {
       label: "Ngày tạo",
       content: currentDate(),
     },
-    { label: "Người tạo", content: user ? user : "N/A" },
+    { label: "Người tạo", content: info.full_name ? info.full_name : "N/A" },
     {
       label: "Tổng đơn",
       content: numbToCurrency(total) ? numbToCurrency(total) : "N/A",
