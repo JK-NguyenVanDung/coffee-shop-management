@@ -7,10 +7,13 @@ const slice = createSlice({
         detail: null,
         listAll: [],
         loadData: false,
-
+        lock: false,
     },
-    reducers: {
-
+    reducers: { 
+        lockPage(state) {
+ 
+            state.lock = true;
+        },
         setDetail(state, actions) {
             let data = [...state.listAll];
             let index = data.findIndex((item)=> item._id === actions.payload)
