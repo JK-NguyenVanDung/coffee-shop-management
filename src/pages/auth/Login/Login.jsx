@@ -46,6 +46,14 @@ function Login() {
     };
     notification.success(args);
   };
+  const errorNotification = () => {
+    const args = {
+      message: "Lỗi đăng nhập",
+      description: "Sai email đăng nhập hoặc mật khẩu",
+      duration: 2,
+    };
+    notification.error(args);
+  };
   const navigate = useNavigate();
   useEffect(() => {
     if (token) {
@@ -63,19 +71,20 @@ function Login() {
       setLoading(true);
       try {
         const response = await collections.login(values);
-        if (response.success) {
-          dispatch(actions.authActions.login(response.accessToken));
-          localStorage.setItem("Bearer", `Bearer ${response.accessToken}`);
-          // setToken(response.access_token);
-          // dispatch(loginSuccess(token));
-          console.log(response);
-          setTimeout(() => {
-            setLoading(false);
-          }, 1000);
-          message.success("Đăng nhập thành công");
-        } else {
-        }
+        dispatch(actions.authActions.login(response.accessToken));
+        dispatch(actions.authActions.setInfo(response.account));
+
+        localStorage.setItem("Bearer", `Bearer ${response.accessToken}`);
+        // setToken(response.access_token);
+        // dispatch(loginSuccess(token));
+        // console.log(response);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+        message.success("Đăng nhập thành công");
       } catch (error) {
+        errorNotification();
+
         setTimeout(() => {
           setLoading(false);
         }, 1000);

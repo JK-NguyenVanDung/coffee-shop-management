@@ -34,7 +34,7 @@ const test = {
 
 export default function HeaderProFile() {
   // const getProFile = useAppSelector((state) => state.showProfile.data);
-  const info = test; //useAppSelector((state) => state.auth.info);
+  const info = useAppSelector((state) => state.auth.info);
   const getProFile = {
     name: info ? info.full_name : "Admin",
     avatar: info
@@ -120,7 +120,7 @@ export default function HeaderProFile() {
           <div className="ant-dropdown-link">
             <IconButton onClick={() => setShow(!show)}>
               <Avatar
-                src={show ? getProFile.avatar : ""}
+                src={getProFile.avatar}
                 alt="avatar"
                 style={{ cursor: "pointer" }}
               />
