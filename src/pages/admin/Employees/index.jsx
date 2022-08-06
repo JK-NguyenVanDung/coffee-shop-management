@@ -199,17 +199,17 @@ const Employees = () => {
     try {
       setLoading(true);
       const response = await collections.getEmployees();
-      if (response.success) {
-        dispatch(actions.employeesActions.setListAll(response));
-      } else {
-        dispatch(actions.employeesActions.lockPage());
-        errorNotification({
-          type: "Lỗi quyền truy cập",
-          message: "Bạn không đủ quyền để thực hiện việc này",
-        });
-      }
+      // if (!response.success) {
+      //   dispatch(actions.employeesActions.lockPage());
+      //   errorNotification({
+      //     type: "Lỗi quyền truy cập",
+      //     message: "Bạn không đủ quyền để thực hiện việc này",
+      //   });
+      // } else {
+      dispatch(actions.employeesActions.setListAll(response));
+      // }
 
-      // setShowList(true);
+      setShowList(true);
       setLoading(false);
       // setPagination({
       //   totalDocs: response.metadata.count,
@@ -222,7 +222,7 @@ const Employees = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData();
-  }, [checkOnload]);
+  }, [checkOnload, showList]);
 
   useEffect(() => {
     fetchData();
@@ -290,7 +290,7 @@ const Employees = () => {
     <>
       <div className="dishSearchCont">
         <Button
-          disabled={lock}
+          // disabled={lock}
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
