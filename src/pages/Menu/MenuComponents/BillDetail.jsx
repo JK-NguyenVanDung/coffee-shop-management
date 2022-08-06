@@ -63,7 +63,8 @@ const BillDetail = () => {
   let orderList = useAppSelector((state) => state.menu.orderList);
   let open = useAppSelector((state) => state.menu.openDetail);
 
-  let user = "test";
+  const info = useAppSelector((state) => state.auth.info);
+
   let totalBill = useAppSelector((state) => state.menu.totalBill);
   let total = useAppSelector((state) => state.menu.total);
   let printBill = useAppSelector((state) => state.menu.printBill);
@@ -80,7 +81,7 @@ const BillDetail = () => {
     try {
       setLoading(true);
       let data = {
-        account_id: user,
+        account_id: info._id,
         details: orderList,
         price_total: totalBill,
         payment_type: paymentMethod,
