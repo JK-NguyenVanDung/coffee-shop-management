@@ -245,6 +245,7 @@ const ModalContent = () => {
   };
 
   const checkedDate = (item, day) => {
+    console.log(item);
     if (select) {
       if (newWeekSchedule.shifts.length === 3) {
         let clone = JSON.parse(JSON.stringify(newWeekSchedule));
@@ -298,13 +299,14 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
+              disabled={item.status}
               onChange={(e) => handleCheckbox(e, item, 0)}
               checked={checkedDate(item, 0)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox />
+            <Checkbox disabled={item.status} />
           </div>
         );
       },
@@ -315,13 +317,14 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
+              disabled={item.status}
               onChange={(e) => handleCheckbox(e, item, 1)}
               checked={checkedDate(item, 1)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox onChange={handleEmptyCheckbox()} />
+            <Checkbox disabled={item.status} onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -332,13 +335,14 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
+              disabled={item.status}
               onChange={(e) => handleCheckbox(e, item, 2)}
               checked={checkedDate(item, 2)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox onChange={handleEmptyCheckbox()} />
+            <Checkbox disabled={item.status} onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -349,13 +353,14 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
+              disabled={item.status}
               onChange={(e) => handleCheckbox(e, item, 3)}
               checked={checkedDate(item, 3)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox onChange={handleEmptyCheckbox()} />
+            <Checkbox disabled={item.status} onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -366,13 +371,14 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
+              disabled={item.status}
               onChange={(e) => handleCheckbox(e, item, 4)}
               checked={checkedDate(item, 4)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox onChange={handleEmptyCheckbox()} />
+            <Checkbox disabled={item.status} onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -383,13 +389,14 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
+              disabled={item.status}
               onChange={(e) => handleCheckbox(e, item, 5)}
               checked={checkedDate(item, 5)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox onChange={handleEmptyCheckbox()} />
+            <Checkbox disabled={item.status} onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -400,13 +407,14 @@ const ModalContent = () => {
         return item ? (
           <div className="userCont">
             <Checkbox
+              disabled={item.status}
               onChange={(e) => handleCheckbox(e, item, 6)}
               checked={checkedDate(item, 6)}
             />
           </div>
         ) : (
           <div>
-            <Checkbox onChange={handleEmptyCheckbox()} />
+            <Checkbox disabled={item.status} onChange={handleEmptyCheckbox()} />
           </div>
         );
       },
@@ -514,6 +522,7 @@ const ModalContent = () => {
       showList && newWeekSchedule
         ? newWeekSchedule.shifts.map((item, index) => {
             return {
+              status: newWeekSchedule.status,
               id: item._id,
               shift: item.shift,
               monday: item.days[0],

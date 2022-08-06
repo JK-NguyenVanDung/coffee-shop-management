@@ -517,7 +517,7 @@ const Schedule = () => {
           THÊM LỊCH NV
         </Button>
         <Button
-          disabled={!weekDetail}
+          disabled={!weekDetail || weekDetail.status}
           color="primary"
           variant="contained"
           endIcon={<PendingActionsOutlinedIcon />}
@@ -525,7 +525,7 @@ const Schedule = () => {
           size="small"
           onClick={() => confirmSchedule()}
         >
-          DUYỆT LỊCH
+          {weekDetail && weekDetail.status ? "ĐÃ DUYỆT" : "DUYỆT LỊCH"}
         </Button>
         <Button
           disabled={!weekDetail}
