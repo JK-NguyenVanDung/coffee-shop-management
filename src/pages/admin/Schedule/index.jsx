@@ -488,11 +488,11 @@ const Schedule = () => {
     dispatch(actions.scheduleActions.setDetail(item.id));
   }
   async function confirmSchedule() {
-    // setLoading(true);
-    // await collections.removeSchedule(item.id);
-    // dispatch(actions.formActions.changeLoad(!loadData));
-    // message.success("Xoá thành công");
-    // setLoading(false);
+    setLoading(true);
+    await collections.confirmSchedule(weekDetail._id);
+    dispatch(actions.formActions.changeLoad(!loadData));
+    message.success("Duyệt lịch thành công");
+    setLoading(false);
   }
   function cancel(e) {
     // message.error('Click on No');
@@ -517,6 +517,7 @@ const Schedule = () => {
           THÊM LỊCH NV
         </Button>
         <Button
+          disabled={!weekDetail}
           color="primary"
           variant="contained"
           endIcon={<PendingActionsOutlinedIcon />}
@@ -527,6 +528,7 @@ const Schedule = () => {
           DUYỆT LỊCH
         </Button>
         <Button
+          disabled={!weekDetail}
           variant="contained"
           color="error"
           endIcon={<DeleteSweepIcon />}

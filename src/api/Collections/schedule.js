@@ -32,3 +32,11 @@ export const addSchedule = async (body) => {
       throw err.message;
     }
   };
+  export const confirmSchedule = async (id) => {
+    try {
+      const response = await api.put(`/Schedules/${id}/confirm`);
+      return response;
+    } catch (err) {
+      throw err.message;
+    }
+  };
