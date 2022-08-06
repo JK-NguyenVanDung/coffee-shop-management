@@ -503,7 +503,7 @@ const ModalContent = () => {
       </Form>
       <AlertDialog
         children={`Xác nhận xoá ${dataItem ? dataItem.name : null} ?`}
-        title="Xoá nhân viên"
+        title="Xoá món"
         onAccept={handleDelete}
       />
     </div>

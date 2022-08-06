@@ -617,7 +617,7 @@ const ModalContent = () => {
                       disabled={isDetail}
                       value="1"
                       control={<Radio size="small" color="info" />}
-                      label="Còn làm"
+                      label="Đang làm"
                       style={{
                         backgroundColor: colors.success,
                         borderRadius: 12,
@@ -682,7 +682,7 @@ const ModalContent = () => {
             </div>
           </div>
         </div>
-        <div className="BtnAdd">
+        <div className="btnAdd">
           <Button
             size="Large"
             color={dataItem ? "primary" : "success"}
