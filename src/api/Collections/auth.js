@@ -10,6 +10,16 @@ export const login = (body) => {
         throw err.message;
       }
 }
+export const logout = () => {
+  try {
+      const response =  api.post(`/auth/logout`);
+      return response;
+    } catch (err) {
+      console.log(err)
+
+      throw err.message;
+    }
+}
 export const getInfo= async() => {
     try {
         const response = await api.get(`/GetInfo`);

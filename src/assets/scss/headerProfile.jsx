@@ -14,6 +14,7 @@ import Bell from "../../assets/img/bell.svg";
 import ActiveBell from "../../assets/img/bell_active.svg";
 
 import { IconButton } from "@mui/material/";
+import * as collections from "../../api/Collections/auth";
 
 import Notification from "../../components/MenuHeader/Notification";
 
@@ -33,7 +34,7 @@ const test = {
 
 export default function HeaderProFile() {
   // const getProFile = useAppSelector((state) => state.showProfile.data);
-  const info = test; //useAppSelector((state) => state.auth.info);
+  const info = useAppSelector((state) => state.auth.info);
   const getProFile = {
     name: info ? info.full_name : "Admin",
     avatar: info
@@ -50,7 +51,11 @@ export default function HeaderProFile() {
   //     setShow(true);
   //   }
   // });
-  const logout = () => {
+  const token = useAppSelector((state) => state.auth.token);
+
+  const logout = async () => {
+    console.log(token);
+    const response = await collections.logout(token);
     dispatch(actions.authActions.logout());
     localStorage.removeItem("Bearer");
     navigate(`../`);
@@ -115,7 +120,7 @@ export default function HeaderProFile() {
           <div className="ant-dropdown-link">
             <IconButton onClick={() => setShow(!show)}>
               <Avatar
-                src={show ? getProFile.avatar : ""}
+                src={getProFile.avatar}
                 alt="avatar"
                 style={{ cursor: "pointer" }}
               />
