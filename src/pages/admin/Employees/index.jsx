@@ -23,7 +23,7 @@ import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
-import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
+import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -146,7 +146,11 @@ const Employees = () => {
             <Button
               variant="contained"
               endIcon={<PendingActionsOutlinedIcon />}
-              style={{ marginRight: "5%", backgroundColor: "#111", color: "#fff" }}
+              style={{
+                marginRight: "5%",
+                backgroundColor: "#111",
+                color: "#fff",
+              }}
               size="small"
             >
               CHẤM CÔNG
@@ -212,22 +216,22 @@ const Employees = () => {
     setData(
       showList
         ? dataList.map((item, index) => {
-          return {
-            id: item._id,
-            email: item.email,
-            phone_number: item.phone_number,
-            password: item.password,
-            address: item.address,
-            account_status: item.account_status,
-            role: item.role,
-            full_name: item.full_name,
-            id_card: item.id_card,
-            date_of_birth: item.date_of_birth,
-            avatar: item.avatar,
-            createdAt: item.createdAt,
-            updatedAt: item.updatedAt,
-          };
-        })
+            return {
+              id: item._id,
+              email: item.email,
+              phone_number: item.phone_number,
+              password: item.password,
+              address: item.address,
+              account_status: item.account_status,
+              role: item.role,
+              full_name: item.full_name,
+              id_card: item.id_card,
+              date_of_birth: item.date_of_birth,
+              avatar: item.avatar,
+              createdAt: item.createdAt,
+              updatedAt: item.updatedAt,
+            };
+          })
         : []
     );
   }, [showList, checkOnload, dataList]);
@@ -261,12 +265,9 @@ const Employees = () => {
     // message.error('Click on No');
   }
 
-  const onSearch = (value) => console.log(value);
-
   return (
     <>
       <div className="dishSearchCont">
-
         <Button
           onClick={handleOpen}
           variant="contained"
@@ -296,7 +297,6 @@ const Employees = () => {
       </div>
       <div>
         <Table
-
           loading={loading}
           columns={columns}
           dataSource={data}

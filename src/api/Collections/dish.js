@@ -1,4 +1,5 @@
 import api from "../axiosConfig";
+
 const v1 = "/v1/admin";
 export const getDishes = async () => {
   try {

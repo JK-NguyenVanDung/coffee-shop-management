@@ -22,7 +22,7 @@ const style = {
   p: 4,
 };
 
-const FormModal = ({ children }) => {
+const FormModal = (props) => {
   const dispatch = useAppDispatch();
   const open = useAppSelector((state) => state.form.show);
   const enabled = useAppSelector((state) => state.form.enabled);
@@ -38,7 +38,9 @@ const FormModal = ({ children }) => {
         aria-describedby="modal-modal-description"
         bodyStyle={!enabled && { overflowY: "inherit", maxHeight: "90vh" }}
       >
-        <Box sx={style}>{children}</Box>
+        <Box sx={[style, props.style ? props.style : null]}>
+          {props.children}
+        </Box>
       </Modal>
     </>
   );

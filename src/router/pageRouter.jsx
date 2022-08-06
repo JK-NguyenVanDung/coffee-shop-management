@@ -5,11 +5,14 @@ import Bills from "../pages/admin/Bills";
 import Employees from "../pages/admin/Employees";
 import Food_and_drink from "../pages/admin/Food-and-drink";
 import Category from "../pages/admin/Category";
-// import KeyData from "../pages/admin/Keyword";
+import Schedule from "../pages/admin/Schedule";
 import Inventory from "../pages/admin/Inventory";
 import Search from "../pages/Menu/MenuComponents/Search";
 import SiderDemo from "../pages/admin";
 import MenuHeader from "../components/MenuHeader/MenuHeader";
+import Login from "../pages/auth/Login/Login";
+import { useAppDispatch, useAppSelector } from "../hook/useRedux";
+import { Navigate } from "react-router-dom";
 
 export const AdminRouter = {
   // ADMIN: {
@@ -38,6 +41,9 @@ export const AdminRouter = {
   },
   CATEGORY: {
     path: "/category",
+  },
+  SCHEDULE: {
+    path: "/schedule",
   },
 };
 
@@ -90,9 +96,17 @@ const routes = [
     headerItem: <MenuHeader switch={false} />,
     element: <Search />,
   },
+  {
+    path: AdminRouter.SCHEDULE.path,
+    exact: false,
+    headerItem: null,
+    element: <Schedule />,
+  },
 ];
 
 const MakeRoutes = () => {
+  const token = useAppSelector((state) => state.auth.token);
+
   return (
     <Routes>
       {routes.map((route, index) => {
@@ -102,13 +116,24 @@ const MakeRoutes = () => {
             exact={route.exact}
             path={route.path}
             element={
-              <SiderDemo headerItem={route.headerItem}>
-                {route.element}
-              </SiderDemo>
+              token ? (
+                <SiderDemo headerItem={route.headerItem}>
+                  {route.element}
+                </SiderDemo>
+              ) : (
+                <Navigate to="/" replace />
+              )
             }
           />
         );
       })}
+      {/* <Route
+          path="/admin"
+          render={() => {
+            return token ? <AuthRouter /> : <Redirect to="/" />;
+          }}
+        /> */}
+      <Route path="/" element={<Login />} />
     </Routes>
   );
 };

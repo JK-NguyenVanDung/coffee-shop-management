@@ -240,7 +240,6 @@ const ModalContent = () => {
       .catch((info) => {
         dispatch(actions.formActions.showError());
         setLoading(false);
-        console.log(info);
       });
   };
 
@@ -288,7 +287,14 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
-          <div style={{ width: "30%", display: "flet", flexDirection: "column", justifyContent: "flet-start" }}>
+          <div
+            style={{
+              width: "30%",
+              display: "flet",
+              flexDirection: "column",
+              justifyContent: "flet-start",
+            }}
+          >
             <h4>{labels.avatar}</h4>
             <div className="avatarCont">
               {/* <ImgCrop rotate> */}
@@ -463,7 +469,7 @@ const ModalContent = () => {
         <div className="btnDish">
           <Button
             size="Large"
-            color="success"
+            color={dataItem ? "primary" : "success"}
             variant="contained"
             style={{
               paddingLeft: "15%",
@@ -472,11 +478,13 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
+            disabled={loading}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem && isDetail === true ? "Sửa" : "Lưu"}{" "}
+            {dataItem && isDetail === true ? "Sửa" : "Lưu"}
           </Button>
           <Button
+            disabled={loading}
             size="Large"
             color="error"
             variant="contained"

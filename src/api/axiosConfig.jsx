@@ -15,12 +15,12 @@ const axiosConfig = axios.create({
 axiosConfig.interceptors.request.use(async (config) => {
   const customHeaders = {};
 
-  let auth = localStorage.getItem("persist:root");
-  let stringParse = JSON.parse(auth);
-  const accessToken = JSON.parse(stringParse.auth).token;
+  let auth = localStorage.getItem("Bearer");
+  // let stringParse = JSON.parse(auth);
+  // const accessToken = JSON.parse(stringParse.auth).token;
 
-  if (accessToken) {
-    customHeaders.Authorization = accessToken;
+  if (auth) {
+    customHeaders.Authorization = auth;
   }
 
   return {
@@ -34,6 +34,7 @@ axiosConfig.interceptors.request.use(async (config) => {
 axiosConfig.interceptors.response.use(
   (response) => {
     if (response && response.data) {
+      console.log(response);
       return response.data;
     }
     return response;

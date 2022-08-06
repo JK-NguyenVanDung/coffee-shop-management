@@ -28,41 +28,33 @@ import ModalContent from "./Modal";
 import { CloseOutlined } from "@ant-design/icons";
 import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-};
 const Bills = () => {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.bills.listAll);
   const [showList, setShowList] = useState(false);
+  const [selectionType, setSelectionType] = useState("checkbox");
 
   const [search, setSearch] = useState("");
 
   const [postList, setPostList] = useState({ page: 1, per_page: 10 });
-  const checkOnload = useAppSelector((state) => state.form.loadData);
 
   const loadData = useAppSelector((state) => state.form.loadData);
   const [data, setData] = useState([]);
   const onChangeSearch = async (value) => {
     const reg = new RegExp(value, "gi");
-    const filteredData = map(dataList, (record) => {
-      const idMatch = get(record, "_id").match(reg);
-      const employeMatch = get(record, "account_id").match(reg);
-
-      if (!idMatch || !employeMatch) {
+    const temp = data;
+    const filteredData = map(temp, (record) => {
+      const nameMatch = get(record, "createdAt").match(reg);
+      if (!nameMatch) {
         return null;
       }
       return record;
     }).filter((record) => !!record);
 
     setSearch(value);
-    setData(value ? filteredData : dataList);
+    value
+      ? setData(filteredData)
+      : dispatch(actions.formActions.changeLoad(!loadData));
   };
   // const emitEmpty = () => {
   //   this.setState({
@@ -72,16 +64,10 @@ const Bills = () => {
   // };
   const columns = [
     {
-      title: "ID Đơn hàng",
-      dataIndex: "_id",
-      width: GIRD12.COL1,
-      key: "_id",
-    },
-    {
       title: "Đơn hàng",
-      dataIndex: "name",
-      width: GIRD12.COL4,
-      key: "name",
+      dataIndex: "details",
+      width: GIRD12.COL6,
+      key: "details",
     },
     {
       title: "Ngày tạo",
@@ -168,12 +154,12 @@ const Bills = () => {
                 style={{ marginRight: "7%", color: "#fff" }}
                 size="small"
                 color="primary"
-                onClick={() => handleEdit(item)}
+                onClick={() => handlePrint(item)}
               >
                 In
               </Button>
               <Popconfirm
-                title={`Bạn có muốn xoá ${item.name}`}
+                title={`Bạn có muốn xoá đơn ${item.createdAt}`}
                 onConfirm={() => handleDelete(item)}
                 onCancel={cancel}
                 okText="Có"
@@ -213,45 +199,60 @@ const Bills = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData(postList);
-  }, [loadData, postList]);
-
-  useEffect(() => {
-    fetchData(postList);
-  }, []);
+  }, [loadData]);
 
   useEffect(() => {
     setData(
       showList
         ? dataList.map((item, index) => {
-          return {
-            _id: item._id,
-            name: item.name,
-            account_id: item.account_id,
-            price_total: item.price_total,
-            details: item.details.map((item) => {
-              return `${item.name +
-                ", " +
-                numbToCurrency(item.price) +
-                ", x" +
-                item.amount
+            return {
+              key: item._id,
+              _id: item._id,
+              account_id: item.account_id,
+              price_total: numbToCurrency(item.price_total),
+              details: item.details.map((item) => {
+                return `${
+                  item.name +
+                  ", " +
+                  numbToCurrency(item.price) +
+                  ", x" +
+                  item.amount +
+                  "\n"
                 }`;
-            }),
-            payment_type: item.payment_type,
-            createdAt: moment(new Date(item.createdAt)).format(
-              "h:mma - DD/MM/YYYY"
-            ),
-          };
-        })
+              }),
+
+              payment_type: item.payment_type,
+              createdAt: moment(new Date(item.createdAt)).format(
+                "h:mma - DD/MM/YYYY"
+              ),
+            };
+          })
         : []
     );
   }, [showList, dataList]);
 
   const dispatch = useAppDispatch();
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      // console.log(
+      //   `selectedRowKeys: ${selectedRowKeys}`,
+      //   "selectedRows: ",
+      //   selectedRows
+      // );
+
+      dispatch(actions.billsActions.setDetail(selectedRowKeys));
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === "Disabled User",
+      // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
   const getDetail = (item) => {
     dispatch(actions.formActions.showForm());
-    dispatch(actions.formActions.setDetail(true));
+    dispatch(actions.formActions.setDetail(false));
 
-    dispatch(actions.billsActions.setDetail(item.id));
+    dispatch(actions.billsActions.setDetail(item._id));
   };
 
   const handleOpen = () => {
@@ -259,15 +260,15 @@ const Bills = () => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
   };
-  async function handleEdit(item) {
+  async function handlePrint(item) {
     dispatch(actions.formActions.showForm());
-    dispatch(actions.formActions.setDetail(false));
+    dispatch(actions.formActions.setDetail(true));
 
-    dispatch(actions.billsActions.setDetail(item.id));
+    dispatch(actions.billsActions.setDetail(item._id));
   }
   async function handleDelete(item) {
     setLoading(true);
-    await collections.removeBill(item.id);
+    await collections.removeBill(item._id);
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Xoá thành công");
 
@@ -276,10 +277,6 @@ const Bills = () => {
   function cancel(e) {
     // message.error('Click on No');
   }
-  useEffect(() => {
-    // test.current = 2;
-    fetchData(postList);
-  }, [loadData]);
 
   const onSearch = (value) => console.log(value);
 
@@ -289,10 +286,15 @@ const Bills = () => {
         <Button
           variant="contained"
           endIcon={<CloseOutlined />}
-          style={{ marginRight: "1%", backgroundColor: "#B2431E", color: "#fff" , paddingTop: "1%" }}
-          size="small"
+          style={{
+            marginRight: "1%",
+            backgroundColor: "#B2431E",
+            color: "#fff",
+            paddingTop: "1%",
+          }}
+          size="medium"
         >
-          XÓA ĐƠN
+          XÓA 3 THÁNG ĐƠN
         </Button>
         <FormModal children={<ModalContent />} />
 

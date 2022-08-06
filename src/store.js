@@ -2,7 +2,6 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { reducers } from "./redux";
 import storage from 'redux-persist/lib/storage'
 import { persistStore, persistReducer } from 'redux-persist'
-import { PersistConfig } from "redux-persist/es/types";
 const config = combineReducers({
     auth: reducers.authReducers,
     menu: reducers.menuReducer,
@@ -10,7 +9,7 @@ const config = combineReducers({
     employees: reducers.employeesReducer,
     dishes: reducers.dishesReducer,
     categories: reducers.categoriesReducer,
-    // banner: reducers.bannerReducer,
+    schedule: reducers.scheduleReducer,
     bills: reducers.billsReducer,
     inventories: reducers.inventoriesReducer,
     // order: reducers.orderReducer,

@@ -173,7 +173,7 @@ const slice = createSlice({
         increaseAmount(state,actions){
             let temp = actions.payload;
             state.orderList.map(item=>{
-                if(item.id === temp){
+                if(item._id === temp){
                     item.amount +=1;
                 }
             })
@@ -181,7 +181,7 @@ const slice = createSlice({
         decreaseAmount(state,actions){
             let temp = actions.payload;
             state.orderList.map(item=>{
-                if(item.id === temp){
+                if(item._id === temp){
                    if(item.amount >1) {
                     item.amount-=1};
                 }

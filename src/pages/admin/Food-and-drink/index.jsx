@@ -249,7 +249,7 @@ const FoodAndDrink = () => {
         >
           THÊM MÓN
         </Button>
-        <FormModal children={<ModalContent />} />
+        <FormModal children={<ModalContent />} style={{ width: "70%" }} />
 
         <div className="dishSearch">
           <SearchTable

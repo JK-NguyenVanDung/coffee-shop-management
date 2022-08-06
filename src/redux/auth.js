@@ -9,12 +9,13 @@ const slice = createSlice({
         info: {
             name: "test"
         },
-        name: "a"
+      
 
     },
     reducers: {
 
-        Login(state, actions) {
+        login(state, actions) { 
+            console.log(actions.payload);
             state.token = actions.payload
         },
         logout(state) {

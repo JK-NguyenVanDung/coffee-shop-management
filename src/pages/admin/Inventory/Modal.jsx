@@ -313,7 +313,6 @@ const ModalContent = () => {
   };
 
   function handleSelect(value) {
-    console.log(value);
     setUnit(validateUnit(value));
   }
   function handlePayment(value) {
@@ -563,7 +562,7 @@ const ModalContent = () => {
         <div className="btnInventory">
           <Button
             size="Large"
-            color="success"
+            color={dataItem ? "primary" : "success"}
             variant="contained"
             style={{
               paddingLeft: "15%",
@@ -572,11 +571,13 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
+            disabled={loading}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
-            {dataItem && isDetail === true ? "Sửa" : "Lưu"}{" "}
+            {dataItem && isDetail === true ? "Sửa" : "Lưu"}
           </Button>
           <Button
+            disabled={loading}
             size="Large"
             color="error"
             variant="contained"
