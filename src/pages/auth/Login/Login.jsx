@@ -63,7 +63,9 @@ function Login() {
     }
   }, [token]);
   useEffect(() => {
-    openNotification();
+    if (!token) {
+      openNotification();
+    }
   }, []);
 
   const onFinish = (values) => {
