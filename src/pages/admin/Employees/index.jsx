@@ -172,7 +172,7 @@ const Employees = () => {
               Sửa
             </Button>
             <Popconfirm
-              title={`Bạn có muốn xoá ${item.full_name}`}
+              title={`Bạn có muốn xoá ${item.full_name} không ?`}
               onConfirm={() => handleDelete(item)}
               onCancel={cancel}
               okText="Có"

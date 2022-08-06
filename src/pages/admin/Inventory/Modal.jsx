@@ -562,7 +562,7 @@ const ModalContent = () => {
         <div className="btnInventory">
           <Button
             size="Large"
-            color={dataItem ? "primary" : "success"}
+            color="primary"
             variant="contained"
             style={{
               paddingLeft: "15%",
