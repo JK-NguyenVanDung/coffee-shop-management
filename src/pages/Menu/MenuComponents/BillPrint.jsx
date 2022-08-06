@@ -32,7 +32,7 @@ const BillPrint = () => {
   let orderList = useAppSelector((state) => state.menu.orderList);
   let openPrint = useAppSelector((state) => state.menu.openPrint);
 
-  let user = "test";
+  const info = useAppSelector((state) => state.auth.info);
   let totalBill = useAppSelector((state) => state.menu.totalBill);
   let total = useAppSelector((state) => state.menu.total);
   let printBill = useAppSelector((state) => state.menu.printBill);
@@ -64,7 +64,7 @@ const BillPrint = () => {
       label: "Ngày tạo:",
       content: currentDate(),
     },
-    { label: "Thu ngân", content: user ? user : "N/A" },
+    { label: "Thu ngân", content: info ? info.full_name : "N/A" },
   ];
   const billContent2 = {
     label: "Tên món",

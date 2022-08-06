@@ -24,7 +24,7 @@ import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
-
+import errorNotification from "../../../helper/errorNotification";
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(
@@ -37,6 +37,8 @@ const rowSelection = {
 const Employees = () => {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.employees.listAll);
+  const lock = useAppSelector((state) => state.employees.lock);
+
   const [showList, setShowList] = useState(false);
   const info = useAppSelector((state) => state.auth.info);
 
@@ -145,6 +147,7 @@ const Employees = () => {
         return (
           <>
             <Button
+              disabled={lock}
               variant="contained"
               endIcon={<PendingActionsOutlinedIcon />}
               style={{
@@ -158,6 +161,7 @@ const Employees = () => {
               CHẤM CÔNG
             </Button>
             <Button
+              disabled={lock}
               variant="contained"
               endIcon={<EditIcon />}
               style={{ marginRight: "5%", color: "#fff" }}
@@ -176,6 +180,7 @@ const Employees = () => {
               placement="left"
             >
               <Button
+                disabled={lock}
                 variant="contained"
                 endIcon={<DeleteSweepIcon />}
                 size="small"
@@ -194,8 +199,17 @@ const Employees = () => {
     try {
       setLoading(true);
       const response = await collections.getEmployees();
-      dispatch(actions.employeesActions.setListAll(response));
-      setShowList(true);
+      if (response.success) {
+        dispatch(actions.employeesActions.setListAll(response));
+      } else {
+        dispatch(actions.employeesActions.lockPage());
+        errorNotification({
+          type: "Lỗi quyền truy cập",
+          message: "Bạn không đủ quyền để thực hiện việc này",
+        });
+      }
+
+      // setShowList(true);
       setLoading(false);
       // setPagination({
       //   totalDocs: response.metadata.count,
@@ -207,16 +221,16 @@ const Employees = () => {
 
   useEffect(() => {
     // test.current = 2;
-    fetchData(postList);
-  }, [checkOnload, postList]);
+    fetchData();
+  }, [checkOnload]);
 
   useEffect(() => {
-    fetchData(postList);
+    fetchData();
   }, []);
 
   useEffect(() => {
     setData(
-      showList
+      showList && dataList
         ? dataList.map((item, index) => {
             return {
               id: item._id,
@@ -276,6 +290,7 @@ const Employees = () => {
     <>
       <div className="dishSearchCont">
         <Button
+          disabled={lock}
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}

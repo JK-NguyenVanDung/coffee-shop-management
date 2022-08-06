@@ -111,7 +111,7 @@ const BillDetail = () => {
       label: "Ngày tạo",
       content: currentDate(),
     },
-    { label: "Người tạo", content: info.full_name ? info.full_name : "N/A" },
+    { label: "Người tạo", content: info ? info.full_name : "N/A" },
     {
       label: "Tổng đơn",
       content: numbToCurrency(total) ? numbToCurrency(total) : "N/A",
