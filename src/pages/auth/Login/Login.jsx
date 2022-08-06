@@ -134,7 +134,7 @@ function Login() {
                     {
                       required: true,
                       type: "email",
-                      message: "Please input your email!",
+                      message: "Vui lòng nhập email!",
                     },
                   ]}
                 >
@@ -151,7 +151,7 @@ function Login() {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your password!",
+                      message: "Vui lòng nhập mật khẩu!",
                     },
                   ]}
                 >

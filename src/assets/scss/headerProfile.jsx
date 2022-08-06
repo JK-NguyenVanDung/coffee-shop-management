@@ -17,7 +17,7 @@ import { IconButton } from "@mui/material/";
 import * as collections from "../../api/Collections/auth";
 
 import Notification from "../../components/MenuHeader/Notification";
-
+import avatar from "../../assets/img/avatar.png";
 const test = {
   email: "spottran2001@gmail.com",
   sdt: "03112323123",
@@ -37,9 +37,7 @@ export default function HeaderProFile() {
   const info = useAppSelector((state) => state.auth.info);
   const getProFile = {
     name: info ? info.full_name : "Admin",
-    avatar: info
-      ? info.avatar
-      : "https://truyenhinh.fpt.vn/wp-content/uploads/52426857_529098130918556_505237438482874368_n.jpg",
+    avatar: info && info.avatar ? info.avatar : avatar,
   };
   const [show, setShow] = useState(false);
   const [showNoti, setShowNoti] = useState(false);
@@ -119,11 +117,7 @@ export default function HeaderProFile() {
         <Dropdown overlay={menu} overlayStyle={{ width: "20rem" }}>
           <div className="ant-dropdown-link">
             <IconButton onClick={() => setShow(!show)}>
-              <Avatar
-                src={getProFile.avatar}
-                alt="avatar"
-                style={{ cursor: "pointer" }}
-              />
+              <Avatar src={avatar} alt="avatar" style={{ cursor: "pointer" }} />
             </IconButton>
           </div>
         </Dropdown>
