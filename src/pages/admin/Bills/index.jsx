@@ -159,7 +159,7 @@ const Bills = () => {
                 In
               </Button>
               <Popconfirm
-                title={`Bạn có muốn xoá đơn ${item.createdAt}`}
+                title={`Bạn có muốn xoá đơn ${item.createdAt} không ?`}
                 onConfirm={() => handleDelete(item)}
                 onCancel={cancel}
                 okText="Có"

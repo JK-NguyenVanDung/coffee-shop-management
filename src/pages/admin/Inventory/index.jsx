@@ -107,7 +107,7 @@ const Inventory = () => {
               Sửa
             </Button>
             <Popconfirm
-              title={`Bạn có muốn xoá ${item.name}`}
+              title={`Bạn có muốn xoá ${item.name} không ?`}
               onConfirm={() => handleDelete(item)}
               onCancel={cancel}
               okText="Có"

@@ -250,7 +250,7 @@ const ModalContent = () => {
         <div className="BtnCategory">
           <Button
             size="Large"
-            color="success"
+            color="primary"
             variant="contained"
             style={{
               paddingLeft: "15%",
