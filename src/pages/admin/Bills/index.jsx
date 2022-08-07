@@ -19,6 +19,9 @@ import { menuText } from "../../../helper/Text";
 
 import FormModal from "../../../components/FormElements/FormModal";
 import * as collections from "../../../api/Collections/bill";
+
+import * as eCollections from "../../../api/Collections/employees";
+
 import { GIRD12 } from "../../../helper/constant";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
@@ -27,10 +30,13 @@ import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
 import { CloseOutlined } from "@ant-design/icons";
 import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
+import { getDisplayName } from "@mui/utils";
 
 const Bills = () => {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.bills.listAll);
+  const employeesList = useAppSelector((state) => state.employees.listAll);
+
   const [showList, setShowList] = useState(false);
   const [selectionType, setSelectionType] = useState("checkbox");
 
@@ -185,7 +191,11 @@ const Bills = () => {
     try {
       setLoading(true);
       const response = await collections.getBills();
+      const employees = await eCollections.getEmployees();
+
       dispatch(actions.billsActions.setListAll(response));
+      dispatch(actions.employeesActions.setListAll(employees));
+
       setShowList(true);
       setLoading(false);
       // setPagination({
@@ -201,6 +211,11 @@ const Bills = () => {
     fetchData(postList);
   }, [loadData]);
 
+  function getUserName(id) {
+    let emp = employeesList.filter((item) => item._id === id);
+    return emp[0].full_name;
+  }
+
   useEffect(() => {
     setData(
       showList
@@ -208,7 +223,7 @@ const Bills = () => {
             return {
               key: item._id,
               _id: item._id,
-              account_id: item.account_id,
+              account_id: getUserName(item.account_id),
               price_total: numbToCurrency(item.price_total),
               details: item.details.map((item) => {
                 return `${
