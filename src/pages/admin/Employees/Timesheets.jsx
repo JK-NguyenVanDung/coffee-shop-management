@@ -3,12 +3,8 @@ import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
 import {
   Input,
-  Table,
   Form,
-  Popconfirm,
-  Upload,
   message,
-  Tooltip,
   Select,
 } from "antd";
 
@@ -18,28 +14,19 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
 import "./index.scss";
-import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import EditIcon from "@mui/icons-material/Edit";
+
 import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import ConstructionIcon from "@mui/icons-material/Construction";
 import { CloseOutlined } from "@ant-design/icons";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 
-import { TextField, FormControl } from "@mui/material/";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { TextField, FormControl, CardContent } from "@mui/material/";
+
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/employees";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
-import LockOpenRoundedIcon from "@mui/icons-material/LockOpenRounded";
-import LockRoundedIcon from "@mui/icons-material/LockRounded";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { colors } from "../../../helper/Color";
 import { errorText } from "../../../helper/Text";
@@ -399,9 +386,12 @@ const TimeSheets = () => {
     admin_payment: "Thanh toán của Admin",
     salary_total: "Tổng lương",
     work_time: "Giờ làm (h/tuần)",
-    total_time: "Tổng giờ làm (h)",
-    rate: "Rate/ giờ",
+    total_time1: "Tổng giờ làm (trên hệ thống)",
+    total_time2: "Tổng giờ làm (nếu có sai số)",
+    rate: "Rate/ giờ (VND)",
     month: "Bảng lương tháng",
+    bonus: "Lương thưởng + (VND)",
+    punish: "Phạt lương - (VND)",
   };
   const data = [
     { year: "1991", value: 3 },
@@ -470,6 +460,7 @@ const TimeSheets = () => {
           <div style={{ width: "40%" }}>
             <h4>{labels.employee_name}</h4>
             <Form.Item
+              style={{ paddingBottom: "5%" }}
               name="Tên nhân viên"
               rules={[
                 {
@@ -489,6 +480,7 @@ const TimeSheets = () => {
               {labels.communications}
             </h4>
             <Form.Item
+              style={{ paddingBottom: "5%" }}
               name="Thông tin liên lạc"
               rules={[
                 {
@@ -503,38 +495,44 @@ const TimeSheets = () => {
             >
               <Input disabled placeholder="Nhập thông tin liên lạc" />
             </Form.Item>
-            <h4>{labels.position}</h4>
-            <Form.Item
-              name="Chức vụ"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống chức vụ`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled placeholder="Nhập chức vụ" />
-            </Form.Item>
-            <h4>{labels.status}</h4>
-            <Form.Item
-              name="Tình trạng"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống tình trạng`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled placeholder="Nhập tình trạng" />
-            </Form.Item>
+            <div className="leftConts">
+              <div className="cont1">
+                <h4>{labels.position}</h4>
+                <Form.Item
+                  name="Chức vụ"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống chức vụ`,
+                    },
+                    {
+                      pattern: new RegExp(/^\w/),
+                      message: errorText.space,
+                    },
+                  ]}
+                >
+                  <Input disabled placeholder="Nhập chức vụ" />
+                </Form.Item>
+              </div>
+              <div className="cont2">
+                <h4>{labels.status}</h4>
+                <Form.Item
+                  name="Tình trạng"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống tình trạng`,
+                    },
+                    {
+                      pattern: new RegExp(/^\w/),
+                      message: errorText.space,
+                    },
+                  ]}
+                >
+                  <Input disabled placeholder="Nhập tình trạng" />
+                </Form.Item>
+              </div>
+            </div>
             <h4>{labels.admin_payment}</h4>
             <div style={{ marginBottom: "5%" }}>
               <div className="PositionAdd">
@@ -564,6 +562,44 @@ const TimeSheets = () => {
                 </div>
               </div>
             </div>
+            <div className="leftConts">
+              <div className="cont1">
+                <h4>{labels.bonus}</h4>
+                <Form.Item
+                  name="Lương thưởng"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống lương thưởng`,
+                    },
+                    {
+                      pattern: new RegExp(/^\w/),
+                      message: errorText.space,
+                    },
+                  ]}
+                >
+                  <Input disabled placeholder="Nhập lương thưởng" />
+                </Form.Item>
+              </div>
+              <div className="cont2">
+                <h4>{labels.punish}</h4>
+                <Form.Item
+                  name="Phạt lương"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống phạt lương`,
+                    },
+                    {
+                      pattern: new RegExp(/^\w/),
+                      message: errorText.space,
+                    },
+                  ]}
+                >
+                  <Input disabled placeholder="Nhập phạt lương" />
+                </Form.Item>
+              </div>
+            </div>
             <h4>{labels.salary_total}</h4>
             <Form.Item
               name="Tổng lương"
@@ -581,14 +617,14 @@ const TimeSheets = () => {
               <Input disabled placeholder="Nhập tổng lương" />
             </Form.Item>
           </div>
-          <div>
+          <div style={{ width: "50%" }}>
             <h4>{labels.work_time}</h4>
             <Line {...config} />
             <div className="workCont">
-              <div className="total_time">
-                <h4>{labels.total_time}</h4>
+              <div className="total_time1">
+                <h4>{labels.total_time1}</h4>
                 <Form.Item
-                  name="Tổng giờ làm"
+                  name="Tổng giờ làm (trên hệ thống)"
                   rules={[
                     {
                       required: true,
@@ -603,14 +639,14 @@ const TimeSheets = () => {
                   <Input disabled placeholder="Nhập tổng giờ làm" />
                 </Form.Item>
               </div>
-              <div className="rate">
-                <h4>{labels.rate}</h4>
+              <div className="total_time2">
+                <h4>{labels.total_time2}</h4>
                 <Form.Item
-                  name="Rate/giờ"
+                  name="Tổng giờ làm (nếu có sai số)"
                   rules={[
                     {
                       required: true,
-                      message: `Không được để trống rate/giờ`,
+                      message: `Không được để trống tổng giờ làm`,
                     },
                     {
                       pattern: new RegExp(/^\w/),
@@ -618,12 +654,42 @@ const TimeSheets = () => {
                     },
                   ]}
                 >
-                  <Input disabled placeholder="Nhập rate/giờ" />
+                  <Input disabled placeholder="Nhập tổng giờ làm" />
                 </Form.Item>
               </div>
+
+
             </div>
+            <h4>{labels.rate}</h4>
+            <Form.Item
+              name="Rate/giờ"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống rate/giờ`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <Input disabled placeholder="Nhập rate/giờ" />
+            </Form.Item>
           </div>
         </div>
+        <CardContent>
+          <div className="noteSalary">
+            <TextField
+              placeholder="Nhập ghi chú của quản lý ở đây"
+              label="Ghi chú"
+              multiline
+              rows={2}
+              maxRows={4}
+              fullWidth
+            />
+          </div>
+        </CardContent>
         <div className="btnTimekeeping">
           <Button
             size="Large"
@@ -636,7 +702,7 @@ const TimeSheets = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            // onClick={dataItem && isDetail === true ? editItem : handleOk}
+          // onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
             Xuất File
           </Button>
@@ -651,17 +717,13 @@ const TimeSheets = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            // onClick={dataItem && isDetail === true ? editItem : handleOk}
+          // onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
             Hủy
           </Button>
         </div>
       </Form>
-      <AlertDialog
-        children={`Xác nhận xoá ${dataItem ? dataItem.full_name : null} ?`}
-        title="Xoá nhân viên"
-        onAccept={handleDelete}
-      />
+
     </div>
   );
 };

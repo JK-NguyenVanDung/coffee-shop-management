@@ -223,10 +223,11 @@
     width: 80%;
 }
 .paidCont {
-    width: 95%;
+    width: 97%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding-bottom: 5%;
 }
 .btnTimekeeping {
     width: 100%;
@@ -234,7 +235,6 @@
     flex-direction: row;
     justify-content: space-around;
     margin-top: 5vh;
-
     margin-bottom: 10vh;
 }
 .workCont {
@@ -243,20 +243,43 @@
     flex-direction: row;
     justify-content: space-between;
     margin-right: 10%;
+    padding-bottom: 3.5%;
 }
-.total_time {
+.total_time1 {
+    width: 60%;
     display: flex;
     flex-direction: column;
     padding-right: 4%;
 }
-.rate {
+.total_time2 {
+    width: 60%;
     display: flex;
     flex-direction: column;
 }
 
 .selectCont{
-    padding-left:7%;
-
-    padding-right: 7%;
-    padding-bottom: 30px;
+    padding-left:2.5%;
+    padding-right: 2.5%;
+    padding-bottom: 3%;
+}
+.leftConts {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 5%;
+}
+.cont1 {
+    display: flex;
+    flex-direction: column;
+    padding-right: 8%;
+}
+.cont2 {
+    display: flex;
+    flex-direction: column;
+}
+.noteSalary {
+    width: 100%;
+    padding-top: 2%;
+    padding-left: 1%;
+    padding-right: 2.5%;
 }
