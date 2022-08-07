@@ -4,9 +4,10 @@ const slice = createSlice({
     name: 'form',
     initialState: {
         show: false,
+
         loadData: false,
         loadData1: false,
-        formAddCategory: false,
+        secondForm: false,
         nameMenu: null,
         formType: "",
         enabled: true,
@@ -49,11 +50,11 @@ const slice = createSlice({
 
             state.nameMenu = actions.payload
         },
-        showFormAddCategory(state) {
-            state.formAddCategory = true;
+        showSecondForm(state) {
+            state.secondForm = true;
         },
-        closeFormAddCategory(state) {
-            state.formAddCategory = false
+        closeSecondForm(state) {
+            state.secondForm = false
         },
         changeLoad(state, actions) {
             state.loadData = actions.payload;

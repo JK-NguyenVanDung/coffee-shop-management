@@ -24,10 +24,17 @@ const style = {
 
 const FormModal = (props) => {
   const dispatch = useAppDispatch();
-  const open = useAppSelector((state) => state.form.show);
+  const open = useAppSelector((state) =>
+    !props.type ? state.form.show : state.form.secondForm
+  );
   const enabled = useAppSelector((state) => state.form.enabled);
 
-  const handleClose = () => dispatch(actions.formActions.closeForm());
+  const handleClose = () =>
+    dispatch(
+      !props.type
+        ? actions.formActions.closeForm()
+        : actions.formActions.closeSecondForm()
+    );
 
   return (
     <>

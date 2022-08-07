@@ -23,6 +23,8 @@ import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
 import SearchTable from "../../../components/Table/SearchTable";
 import ModalContent from "./Modal";
+import TimeSheets from "./Timesheets";
+
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import errorNotification from "../../../helper/errorNotification";
 const rowSelection = {
@@ -265,7 +267,7 @@ const Employees = () => {
     dispatch(actions.formActions.setDetail(false));
   };
   async function handleTimeSheet() {
-    dispatch(actions.formActions.showForm());
+    dispatch(actions.formActions.showSecondForm());
     dispatch(actions.formActions.setDetail(false));
     // dispatch(actions.employeesActions.setDetail(item.id));
   }
@@ -304,6 +306,7 @@ const Employees = () => {
           THÊM NHÂN VIÊN
         </Button>
         <FormModal children={<ModalContent />} />
+        <FormModal type={true} children={<TimeSheets />} />
 
         <div className="dishSearch">
           <SearchTable

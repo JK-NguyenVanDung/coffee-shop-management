@@ -70,7 +70,7 @@ const radioBtnstyles = (theme) => ({
   checked: {},
 });
 
-const ModalContent = () => {
+const TimeSheets = () => {
   const [loading, setLoading] = useState(false);
   const dataItem = useAppSelector((state) => state.employees.detail);
   const [date, setDate] = React.useState(new Date("2001-08-18"));
@@ -369,8 +369,6 @@ const ModalContent = () => {
     return "Bảng chấm công";
   }
 
-
-  
   const handleDelete = async () => {
     setLoading(true);
     await collections.removeEmployee(dataItem._id);
@@ -390,7 +388,7 @@ const ModalContent = () => {
     work_time: "Giờ làm (h/tuần)",
     total_time: "Tổng giờ làm (h)",
     rate: "Rate/ giờ",
-  }
+  };
   return (
     <div className="ModalCont">
       {modalError && <AlertModal chilren={errorText.formValidation} />}
@@ -473,7 +471,6 @@ const ModalContent = () => {
             <h4>{labels.admin_payment}</h4>
             <div style={{ marginBottom: "5%" }}>
               <div className="PositionAdd">
-
                 <div className="paidCont">
                   <FormControlLabel
                     control={
@@ -498,7 +495,6 @@ const ModalContent = () => {
                     label="Chưa thanh toán"
                   />
                 </div>
-
               </div>
             </div>
             <h4>{labels.salary_total}</h4>
@@ -520,7 +516,7 @@ const ModalContent = () => {
           </div>
           <div>
             <h4>{labels.work_time}</h4>
-            <img src="Analitcs Report.png" height="150px" width="100%"/>
+            <img src="Analitcs Report.png" height="150px" width="100%" />
             <div className="workCont">
               <div className="total_time">
                 <h4>{labels.total_time}</h4>
@@ -573,7 +569,7 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-          // onClick={dataItem && isDetail === true ? editItem : handleOk}
+            // onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
             Xuất File
           </Button>
@@ -588,7 +584,7 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-          // onClick={dataItem && isDetail === true ? editItem : handleOk}
+            // onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
             Hủy
           </Button>
@@ -602,4 +598,4 @@ const ModalContent = () => {
     </div>
   );
 };
-export default ModalContent;
+export default TimeSheets;
