@@ -233,6 +233,9 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin-top: 5vh;
+
+    margin-bottom: 10vh;
 }
 .workCont {
     width: 100%;
@@ -249,4 +252,11 @@
 .rate {
     display: flex;
     flex-direction: column;
+}
+
+.selectCont{
+    padding-left:7%;
+
+    padding-right: 7%;
+    padding-bottom: 30px;
 }

@@ -306,7 +306,11 @@ const Employees = () => {
           THÊM NHÂN VIÊN
         </Button>
         <FormModal children={<ModalContent />} />
-        <FormModal type={true} children={<TimeSheets />} />
+        <FormModal
+          type={true}
+          children={<TimeSheets />}
+          style={{ width: "80%" }}
+        />
 
         <div className="dishSearch">
           <SearchTable

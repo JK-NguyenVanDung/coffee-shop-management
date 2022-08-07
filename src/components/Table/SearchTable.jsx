@@ -16,7 +16,7 @@ const SearchTable = (props) => {
         size="large"
         className="tableSearch"
         addonBefore={
-          <IconButton>
+          <IconButton onClick={props.onChange}>
             <SearchRoundedIcon />
           </IconButton>
         }

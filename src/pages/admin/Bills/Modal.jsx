@@ -50,6 +50,7 @@ const ModalContent = () => {
   const isDetail = useAppSelector((state) => state.form.detail);
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
+  const employeesList = useAppSelector((state) => state.employees.listAll);
 
   const [details, setDetails] = useState([]);
 
@@ -82,6 +83,7 @@ const ModalContent = () => {
   }
   useEffect(() => {
     form.resetFields();
+
     const setForm = () => {
       form.setFieldsValue({
         //truyền data khi bấm vào => dataItem.
@@ -90,7 +92,7 @@ const ModalContent = () => {
           "h:mma - DD/MM/YYYY"
         ),
         price_total: numbToCurrency(dataItem.price_total),
-        account_id: dataItem.account_id,
+        account_id: getUserName(dataItem.account_id),
         payment_type: getPayment(dataItem.payment_type),
         vat: 0,
       });
@@ -103,7 +105,10 @@ const ModalContent = () => {
   }, [dataItem]);
   const { Bill, manager } = role;
   const error = [Bill, manager].filter((v) => v).length !== 1;
-
+  function getUserName(id) {
+    let emp = employeesList.filter((item) => item._id === id);
+    return emp[0].full_name;
+  }
   const handleOk = async () => {
     form
       .validateFields()

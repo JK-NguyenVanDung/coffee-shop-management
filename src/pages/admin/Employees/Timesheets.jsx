@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Table, Form, Popconfirm, Upload, message, Tooltip } from "antd";
+import {
+  Input,
+  Table,
+  Form,
+  Popconfirm,
+  Upload,
+  message,
+  Tooltip,
+  Select,
+} from "antd";
+
+import { Line } from "@ant-design/charts";
+
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -38,6 +50,7 @@ import moment from "moment";
 
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
+const { Option } = Select;
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -363,9 +376,9 @@ const TimeSheets = () => {
     setPhone(validatePhone(value.target.value));
   };
   function getHeaderTitle() {
-    if (dataItem) {
-      return "Sửa nhân viên";
-    }
+    // if (dataItem) {
+    //   return "Sửa nhân viên";
+    // }
     return "Bảng chấm công";
   }
 
@@ -388,6 +401,47 @@ const TimeSheets = () => {
     work_time: "Giờ làm (h/tuần)",
     total_time: "Tổng giờ làm (h)",
     rate: "Rate/ giờ",
+    month: "Bảng lương tháng",
+  };
+  const data = [
+    { year: "1991", value: 3 },
+    { year: "1992", value: 4 },
+    { year: "1993", value: 3.5 },
+    { year: "1994", value: 5 },
+    { year: "1995", value: 4.9 },
+    { year: "1996", value: 6 },
+    { year: "1997", value: 7 },
+    { year: "1998", value: 9 },
+    { year: "1999", value: 13 },
+  ];
+  const config = {
+    data,
+    height: 400,
+    xField: "year",
+    yField: "value",
+    point: {
+      size: 5,
+      shape: "diamond | circule",
+    },
+    tooltip: {
+      formatter: (data) => {
+        return {
+          name: "",
+          value: "",
+        };
+      },
+      customContent: (name, data) =>
+        `<div>${data?.map((item) => {
+          return `<div class="tooltip-chart" >
+              <span class="tooltip-item-name">${item?.name}</span>
+              <span class="tooltip-item-value">${item?.value}</span>
+            </div>`;
+        })}</div>`,
+      showMarkers: true,
+      showContent: true,
+      position: "right | left",
+      showCrosshairs: true,
+    },
   };
   return (
     <div className="ModalCont">
@@ -399,6 +453,19 @@ const TimeSheets = () => {
         </IconButton>
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
+        <div className="selectCont">
+          <h4>{labels.month}</h4>
+
+          <div>
+            <Select
+              dropdownStyle={{ zIndex: 2000 }}
+              placeholder="Nhập loại menu"
+              defaultValue="8"
+            >
+              <Option value="8">Tháng 8</Option>
+            </Select>
+          </div>
+        </div>
         <div className="bodyCont">
           <div style={{ width: "40%" }}>
             <h4>{labels.employee_name}</h4>
@@ -516,7 +583,7 @@ const TimeSheets = () => {
           </div>
           <div>
             <h4>{labels.work_time}</h4>
-            <img src="Analitcs Report.png" height="150px" width="100%" />
+            <Line {...config} />
             <div className="workCont">
               <div className="total_time">
                 <h4>{labels.total_time}</h4>

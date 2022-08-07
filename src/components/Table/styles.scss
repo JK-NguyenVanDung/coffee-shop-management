@@ -2,6 +2,7 @@
 
   .tableSearch{
     width: 100% !important; 
+
     .ant-input-affix-wrapper{
       border-radius: 8px !important; 
       width: 100% !important; 
@@ -16,12 +17,16 @@
         z-index: 1 !important;
         border-radius: 8px !important; 
         position: absolute !important;
-        top:1px !important;
+   
+       
         left: 0px !important;
         border:none;
         width: 40px !important;
         height: 1rem !important;
         background: none !important;
+         
+        top: 5% !important;
+        bottom: 5% !important;
       }
       .ant-input-group-addon:hover{
         color: #111 !important;
