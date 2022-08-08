@@ -40,9 +40,8 @@ const Employees = () => {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.employees.listAll);
   const lock = useAppSelector((state) => state.employees.lock);
-
   const [showList, setShowList] = useState(false);
-  const info = useAppSelector((state) => state.auth.info);
+  const accessRight = useAppSelector((state) => state.auth.accessRight);
 
   const [selectionType, setSelectionType] = useState("checkbox");
   const [search, setSearch] = useState("");
@@ -149,7 +148,7 @@ const Employees = () => {
         return (
           <>
             <Button
-              disabled={lock}
+              disabled={accessRight == false}
               variant="contained"
               endIcon={<PendingActionsOutlinedIcon />}
               style={{
@@ -163,7 +162,7 @@ const Employees = () => {
               CHẤM CÔNG
             </Button>
             <Button
-              disabled={lock}
+              disabled={accessRight == false}
               variant="contained"
               endIcon={<EditIcon />}
               style={{ marginRight: "5%", color: "#fff" }}
@@ -182,7 +181,7 @@ const Employees = () => {
               placement="left"
             >
               <Button
-                disabled={lock}
+                disabled={accessRight == false}
                 variant="contained"
                 endIcon={<DeleteSweepIcon />}
                 size="small"
@@ -201,13 +200,7 @@ const Employees = () => {
     try {
       setLoading(true);
       const response = await collections.getEmployees();
-      // if (!response.success) {
-      //   dispatch(actions.employeesActions.lockPage());
-      //   errorNotification({
-      //     type: "Lỗi quyền truy cập",
-      //     message: "Bạn không đủ quyền để thực hiện việc này",
-      //   });
-      // } else {
+
       dispatch(actions.employeesActions.setListAll(response));
       // }
 
@@ -231,6 +224,8 @@ const Employees = () => {
   }, []);
 
   useEffect(() => {
+    console.log(accessRight);
+
     setData(
       showList && dataList
         ? dataList.map((item, index) => {
@@ -292,13 +287,13 @@ const Employees = () => {
     <>
       <div className="dishSearchCont">
         <Button
-          // disabled={lock}
+          disabled={accessRight === false}
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
+          color="success"
           style={{
             marginRight: "1%",
-            backgroundColor: "#4BB984",
             color: "#fff",
           }}
           size="small"

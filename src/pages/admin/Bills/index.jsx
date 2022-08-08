@@ -36,6 +36,7 @@ const Bills = () => {
   const [loading, setLoading] = useState(false);
   const dataList = useAppSelector((state) => state.bills.listAll);
   const employeesList = useAppSelector((state) => state.employees.listAll);
+  const accessRight = useAppSelector((state) => state.auth.accessRight);
 
   const [showList, setShowList] = useState(false);
   const [selectionType, setSelectionType] = useState("checkbox");
@@ -173,6 +174,7 @@ const Bills = () => {
                 placement="left"
               >
                 <Button
+                  disabled={!accessRight}
                   variant="contained"
                   endIcon={<DeleteSweepIcon />}
                   size="small"
@@ -299,11 +301,12 @@ const Bills = () => {
     <>
       <div className="dishSearchCont">
         <Button
+          disabled={!accessRight}
           variant="contained"
+          color="error"
           endIcon={<CloseOutlined />}
           style={{
             marginRight: "1%",
-            backgroundColor: "#B2431E",
             color: "#fff",
             paddingTop: "1%",
           }}
