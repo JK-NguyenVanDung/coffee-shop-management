@@ -63,6 +63,7 @@ const Schedule = () => {
   const employeeList = useAppSelector((state) => state.schedule.listEmployees);
   const weekDetail = useAppSelector((state) => state.schedule.weekDetail);
   const date = useAppSelector((state) => state.schedule.currentDate);
+  const accessRight = useAppSelector((state) => state.auth.accessRight);
 
   const [select, setSelect] = useState("");
 
@@ -504,6 +505,7 @@ const Schedule = () => {
     <>
       <div className="dishSearchCont">
         <Button
+          disabled={!accessRight}
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
@@ -514,10 +516,10 @@ const Schedule = () => {
           }}
           size="small"
         >
-          THÊM LỊCH NV
+          XẾP LỊCH NHÂN VIÊN
         </Button>
         <Button
-          disabled={!weekDetail || weekDetail.status}
+          disabled={!weekDetail || weekDetail.status || !accessRight}
           color="primary"
           variant="contained"
           endIcon={<PendingActionsOutlinedIcon />}
@@ -528,7 +530,7 @@ const Schedule = () => {
           {weekDetail && weekDetail.status ? "ĐÃ DUYỆT" : "DUYỆT LỊCH"}
         </Button>
         <Button
-          disabled={!weekDetail}
+          disabled={!weekDetail || !accessRight}
           variant="contained"
           color="error"
           endIcon={<DeleteSweepIcon />}
