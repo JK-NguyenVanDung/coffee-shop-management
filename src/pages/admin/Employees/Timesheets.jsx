@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import {
-  Input,
-  Form,
-  message,
-  Select,
-} from "antd";
+import { Input, Form, message, Select } from "antd";
 
 import { Line } from "@ant-design/charts";
 
@@ -20,7 +15,12 @@ import { CloseOutlined } from "@ant-design/icons";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-import { TextField, FormControl, CardContent } from "@mui/material/";
+import {
+  TextField,
+  FormControl,
+  CardContent,
+  InputLabel,
+} from "@mui/material/";
 
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/employees";
@@ -117,7 +117,7 @@ const TimeSheets = () => {
   const [form] = Form.useForm();
 
   const handleOpen = () => dispatch(actions.formActions.showForm());
-  const handleClose = () => dispatch(actions.formActions.closeForm());
+  const handleClose = () => dispatch(actions.formActions.closeSecondForm());
   const handleCheckbox = (event) => {
     if (event.target.name === "employee") setRole(true);
     else setRole(false);
@@ -619,12 +619,12 @@ const TimeSheets = () => {
           </div>
           <div style={{ width: "50%" }}>
             <h4>{labels.work_time}</h4>
-            <Line {...config} />
+            <Line {...config} style={{ marginBottom: 6 }} />
             <div className="workCont">
               <div className="total_time1">
                 <h4>{labels.total_time1}</h4>
                 <Form.Item
-                  name="Tổng giờ làm (trên hệ thống)"
+                  name="system_total"
                   rules={[
                     {
                       required: true,
@@ -642,7 +642,7 @@ const TimeSheets = () => {
               <div className="total_time2">
                 <h4>{labels.total_time2}</h4>
                 <Form.Item
-                  name="Tổng giờ làm (nếu có sai số)"
+                  name="total_margin"
                   rules={[
                     {
                       required: true,
@@ -657,8 +657,6 @@ const TimeSheets = () => {
                   <Input disabled placeholder="Nhập tổng giờ làm" />
                 </Form.Item>
               </div>
-
-
             </div>
             <h4>{labels.rate}</h4>
             <Form.Item
@@ -685,7 +683,10 @@ const TimeSheets = () => {
               label="Ghi chú"
               multiline
               rows={2}
+              id="my-input"
               maxRows={4}
+              variant="outlined"
+              onChange={() => {}}
               fullWidth
             />
           </div>
@@ -702,7 +703,7 @@ const TimeSheets = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-          // onClick={dataItem && isDetail === true ? editItem : handleOk}
+            // onClick={handleOk}
           >
             Xuất File
           </Button>
@@ -717,13 +718,12 @@ const TimeSheets = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-          // onClick={dataItem && isDetail === true ? editItem : handleOk}
+            onClick={() => handleClose()}
           >
             Hủy
           </Button>
         </div>
       </Form>
-
     </div>
   );
 };

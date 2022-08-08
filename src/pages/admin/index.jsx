@@ -37,16 +37,24 @@ const { SubMenu } = Menu;
 export default function SiderDemos({ children, headerItem = null }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const menu = MENU;
 
   const nameMenu = useAppSelector((state) =>
     state.form.nameMenu ? state.form.nameMenu : "Menu"
   );
+  useEffect(() => {
+    for (let i = 0; i < menu.length; i++) {
+      if (location.pathname === menu[i].path) {
+        dispatch(actions.formActions.setNameMenu(menu[i].title));
+        break;
+      }
+    }
+  }, []);
   const dispatch = useAppDispatch();
   const { Header, Sider, Content } = Layout;
   const [collapsed, setCollapsed] = useState(false);
   const [exercises, setExercises] = useState([]);
   const [role, setRole] = useState(0);
-  const menu = MENU;
   const toggle = () => {
     setCollapsed(!collapsed);
   };
@@ -72,6 +80,7 @@ export default function SiderDemos({ children, headerItem = null }) {
           mode="inline"
           defaultSelectedKeys={["1"]}
           style={{ border: "none" }}
+          selectedKeys={[location.pathname]}
         >
           <div className="centerCont">
             {collapsed ? (
@@ -91,8 +100,8 @@ export default function SiderDemos({ children, headerItem = null }) {
               <>
                 {item.children.length <= 0 && (
                   <Menu.Item
-                    key={item.id}
-                    icon={<item.icon />}
+                    key={item.path}
+                    icon={<item.icon fontSize="large" />}
                     onClick={() => {
                       navigate(`${item.path}`);
                       dispatch(actions.formActions.setNameMenu(item.title));
