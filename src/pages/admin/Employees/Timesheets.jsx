@@ -138,65 +138,40 @@ const TimeSheets = () => {
     form
       .validateFields()
       .then(async (values) => {
-        if (checkCustomValidation()) {
-          setLoading(true);
-          const temp = [];
-          if (dataItem) {
-            await collections.editEmployee({
-              _id: dataItem._id,
-              body: {
-                email: values.email.replace(/\s/g, "").replace(/ /g, ""),
-                phone_number: values.phone_number
-                  .replace(/\s/g, "")
-                  .replace(/ /g, ""),
-                password: values.password.replace(/\s/g, "").replace(/ /g, ""),
-                address: values.address,
-                account_status: Number(status),
-                role: role ? 0 : 1,
-                full_name: values.full_name,
-                id_card: values.id_card,
-                date_of_birth:
-                  date.getMonth() +
-                  1 +
-                  "/" +
-                  date.getDate() +
-                  "/" +
-                  date.getFullYear(),
-              },
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thay đổi thành công");
+        setLoading(true);
+        const temp = [];
+        // if (dataItem) {
+        //   // await collections.editEmployee({
+        //   //   _id: dataItem._id,
+        //   //   body: {
 
-            setLoading(false);
-          } else {
-            await collections.addEmployee({
-              email: values.email.replace(/\s/g, ""),
-              phone_number: values.phone_number.replace(/\s/g, ""),
-              password: values.password.replace(/\s/g, ""),
-              address: values.address,
-              account_status: Number(status),
-              role: role ? 0 : 1,
-              full_name: values.full_name,
-              id_card: values.id_card,
-              date_of_birth:
-                date.getMonth() +
-                1 +
-                "/" +
-                date.getDate() +
-                "/" +
-                date.getFullYear(),
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thêm thành công");
+        //   //   },
+        //   // });
 
-            setLoading(false);
-          }
-        } else {
-          dispatch(actions.formActions.showError());
-          setLoading(false);
-        }
+        // } else {
+        //   await collections.addEmployee({
+        //     email: values.email.replace(/\s/g, ""),
+        //     phone_number: values.phone_number.replace(/\s/g, ""),
+        //     password: values.password.replace(/\s/g, ""),
+        //     address: values.address,
+        //     account_status: Number(status),
+        //     role: role ? 0 : 1,
+        //     full_name: values.full_name,
+        //     id_card: values.id_card,
+        //     date_of_birth:
+        //       date.getMonth() +
+        //       1 +
+        //       "/" +
+        //       date.getDate() +
+        //       "/" +
+        //       date.getFullYear(),
+        //   });
+        //   handleClose();
+        //   dispatch(actions.formActions.changeLoad(!loadData));
+        //   message.success("Thêm thành công");
+
+        //   setLoading(false);
+        // }
       })
 
       .catch((info) => {
@@ -204,6 +179,11 @@ const TimeSheets = () => {
 
         setLoading(false);
       });
+    handleClose();
+    dispatch(actions.formActions.changeLoad(!loadData));
+    message.success("In thành công");
+
+    setLoading(false);
   };
 
   const validatePhone = (value) => {
@@ -387,10 +367,6 @@ const TimeSheets = () => {
                     {
                       required: true,
                       message: `Không được để trống tình trạng`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
                     },
                   ]}
                 >
