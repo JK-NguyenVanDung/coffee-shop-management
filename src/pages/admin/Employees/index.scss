@@ -243,7 +243,7 @@
     flex-direction: row;
     justify-content: space-between;
     margin-right: 10%;
-    padding-bottom: 3.5%;
+    padding-bottom: 3vh;
 }
 .total_time1 {
     width: 60%;
@@ -269,17 +269,23 @@
     padding-bottom: 5%;
 }
 .cont1 {
+    width: 90%;
     display: flex;
     flex-direction: column;
-    padding-right: 8%;
+    justify-content: flex-start;
+    padding-right: 10%;
 }
 .cont2 {
+    width: 90%;
+
     display: flex;
+    justify-content: flex-start;
+
     flex-direction: column;
 }
 .noteSalary {
     width: 100%;
     padding-top: 2%;
     padding-left: 1%;
-    padding-right: 2.5%;
+    padding-right: 1%;
 }

@@ -28,6 +28,7 @@ import ConstructionIcon from "@mui/icons-material/Construction";
 import { map, includes, sortBy, uniqBy, each, result, get } from "lodash";
 
 import { menuText } from "../../../helper/Text";
+import AlertDialog from "../../../components/AlertDialog";
 
 import FormModal from "../../../components/FormElements/FormModal";
 import * as collections from "../../../api/Collections/schedule";
@@ -63,6 +64,7 @@ const Schedule = () => {
   const employeeList = useAppSelector((state) => state.schedule.listEmployees);
   const weekDetail = useAppSelector((state) => state.schedule.weekDetail);
   const date = useAppSelector((state) => state.schedule.currentDate);
+  const accessRight = useAppSelector((state) => state.auth.accessRight);
 
   const [select, setSelect] = useState("");
 
@@ -83,12 +85,18 @@ const Schedule = () => {
   //     search: "",
   //   });
   // };
-
+  const [dialogType, setDialogType] = useState(true);
+  const openDialog = (type) => {
+    type === "delete" ? setDialogType(true) : setDialogType(false);
+    dispatch(actions.formActions.showDelete());
+  };
   const deleteSchedule = () => {
     setLoading(true);
     collections.removeSchedule(weekDetail._id);
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Xoá thành công");
+    dispatch(actions.formActions.hideDelete());
+
     setLoading(false);
   };
   const start = startOfWeek(date ? Date.parse(date) : new Date(), {
@@ -492,6 +500,8 @@ const Schedule = () => {
     await collections.confirmSchedule(weekDetail._id);
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Duyệt lịch thành công");
+    dispatch(actions.formActions.hideDelete());
+
     setLoading(false);
   }
   function cancel(e) {
@@ -504,6 +514,7 @@ const Schedule = () => {
     <>
       <div className="dishSearchCont">
         <Button
+          disabled={!accessRight}
           onClick={handleOpen}
           variant="contained"
           endIcon={<AddIcon />}
@@ -514,30 +525,51 @@ const Schedule = () => {
           }}
           size="small"
         >
-          THÊM LỊCH NV
+          XẾP LỊCH NHÂN VIÊN
         </Button>
         <Button
-          disabled={!weekDetail || weekDetail.status}
+          disabled={!weekDetail || weekDetail.status || !accessRight}
           color="primary"
           variant="contained"
           endIcon={<PendingActionsOutlinedIcon />}
           style={{ marginRight: "1%", color: "#fff" }}
           size="small"
-          onClick={() => confirmSchedule()}
+          onClick={() => openDialog("confirm")}
         >
           {weekDetail && weekDetail.status ? "ĐÃ DUYỆT" : "DUYỆT LỊCH"}
         </Button>
         <Button
-          disabled={!weekDetail}
+          disabled={!weekDetail || !accessRight}
           variant="contained"
           color="error"
           endIcon={<DeleteSweepIcon />}
           style={{ marginRight: "1%", color: "#fff" }}
           size="small"
-          onClick={() => deleteSchedule()}
+          onClick={() => openDialog("delete")}
         >
           XOÁ LỊCH
         </Button>
+        {weekDetail ? (
+          dialogType ? (
+            <AlertDialog
+              children={`Xác nhận xoá lịch tuần ${new Date(
+                weekDetail.begin_at
+              ).toLocaleDateString("vi-VN")} -
+          ${new Date(weekDetail.end_at).toLocaleDateString("vi-VN")}`}
+              title="Xoá lịch"
+              onAccept={deleteSchedule}
+            />
+          ) : (
+            <AlertDialog
+              children={`Xác nhận duyệt lịch tuần ${new Date(
+                weekDetail.begin_at
+              ).toLocaleDateString("vi-VN")} -
+        ${new Date(weekDetail.end_at).toLocaleDateString("vi-VN")}`}
+              title="Duyệt lịch"
+              onAccept={confirmSchedule}
+            />
+          )
+        ) : null}
 
         <FormModal
           children={<ModalContent />}

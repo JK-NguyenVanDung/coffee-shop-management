@@ -75,7 +75,11 @@ function Login() {
         const response = await collections.login(values);
         dispatch(actions.authActions.login(response.accessToken));
         dispatch(actions.authActions.setInfo(response.account));
-
+        if (response.account.role === 0) {
+          dispatch(actions.authActions.setEmpAuth());
+        } else {
+          dispatch(actions.authActions.setAdminAuth());
+        }
         localStorage.setItem("Bearer", `Bearer ${response.accessToken}`);
         // setToken(response.access_token);
         // dispatch(loginSuccess(token));

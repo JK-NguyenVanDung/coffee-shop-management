@@ -9,11 +9,17 @@ const slice = createSlice({
         info: {
             name: "test"
         },
-      
+        accessRight: false,
 
     },
     reducers: {
+        setAdminAuth(state){
+            state.accessRight = true;
+        },
+        setEmpAuth(state){
+            state.accessRight =false;
 
+        },
         login(state, actions) { 
             console.log(actions.payload);
             state.token = actions.payload

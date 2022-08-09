@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import {
-  Input,
-  Form,
-  message,
-  Select,
-} from "antd";
+import { Input, Form, message, Select, InputNumber } from "antd";
 
 import { Line } from "@ant-design/charts";
 
@@ -20,7 +15,12 @@ import { CloseOutlined } from "@ant-design/icons";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-import { TextField, FormControl, CardContent } from "@mui/material/";
+import {
+  TextField,
+  FormControl,
+  CardContent,
+  InputLabel,
+} from "@mui/material/";
 
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/employees";
@@ -38,37 +38,7 @@ import moment from "moment";
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
 const { Option } = Select;
-
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-
-  const isLt2M = file.size / 1024 / 1024 < 2;
-
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-
-  return isJpgOrPng && isLt2M;
-};
-
-const radioBtnstyles = (theme) => ({
-  radio: {
-    "&$checked": {
-      color: "#4B8DF8",
-    },
-  },
-  checked: {},
-});
+const { TextArea } = Input;
 
 const TimeSheets = () => {
   const [loading, setLoading] = useState(false);
@@ -79,56 +49,45 @@ const TimeSheets = () => {
   const loadData = useAppSelector((state) => state.form.loadData);
   const modalError = useAppSelector((state) => state.form.modalError);
   const isDetail = useAppSelector((state) => state.form.detail);
-  const [fileList, setFileList] = useState([]);
+
+  const [note, setNote] = useState("");
+  const [paid, setPaid] = useState(false);
+
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
-  const [email, setEmail] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [phone, setPhone] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [password, setPassword] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [ID_card, setID_card] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
+  const [bonus, setBonus] = useState(0);
+  const [punish, setPunish] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [miscalculation, setMiscalculation] = useState(0);
+  const [payrate, setPayrate] = useState(0);
 
-  const handleChange = (newValue) => {
-    setDate(newValue);
-  };
-  const handleStatus = (e) => {
-    setStatus(e.target.value);
-  };
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
   const handleOpen = () => dispatch(actions.formActions.showForm());
-  const handleClose = () => dispatch(actions.formActions.closeForm());
+  const handleClose = () => dispatch(actions.formActions.closeSecondForm());
   const handleCheckbox = (event) => {
-    if (event.target.name === "employee") setRole(true);
-    else setRole(false);
+    if (event.target.name === "paid") setPaid(true);
+    else setPaid(false);
   };
   const deleteItem = () => {
     dispatch(actions.formActions.showDelete());
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
+  function getStatus(item) {
+    if (item === 1) {
+      return "Còn làm";
+    } else if (item === 0) {
+      return "Tạm nghỉ";
+    }
+    return "Đã nghỉ";
+  }
+
+  function endOfMonth() {
+    return false;
+  }
   useEffect(() => {
     form.resetFields();
-    setFileList(null);
 
     const setForm = () => {
       form.setFieldsValue({
@@ -138,138 +97,81 @@ const TimeSheets = () => {
         address: dataItem.address,
         full_name: dataItem.full_name,
         id_card: dataItem.id_card,
+        userInfo:
+          "CMND: " +
+          dataItem.id_card +
+          ", Địa chỉ: " +
+          dataItem.address +
+          ", SĐT: " +
+          dataItem.phone_number,
+        role: dataItem.role === 0 ? "Nhân viên" : "Quản lý",
+        status: getStatus(dataItem.account_status),
+        system_total: 12,
+        bonus: 0,
+        punish: 0,
+        payrate: 0,
+        total_margin: 12,
       });
       // nếu không có dữ liệu đặc biệt thì xoá
-      setFileList([dataItem.avatar]);
-      setRole(dataItem.role === 0 ? true : false);
-      setStatus(dataItem.account_status);
-      setDate(new Date(dataItem.date_of_birth));
+      // setRole(dataItem.role === 0 ? true : false);
+      // setStatus(dataItem.account_status);
+      // setDate(new Date(dataItem.date_of_birth));
     };
 
     if (dataItem) {
       setForm();
     }
   }, [dataItem]);
-  const { employee, manager } = role;
-  const error = [employee, manager].filter((v) => v).length !== 1;
-  const UploadButton = () => {
-    return (
-      <div style={fileList === null ? { width: "19.5rem", height: "50%" } : {}}>
-        <div style={{ padding: 2 }}>
-          {loading ? <LoadingOutlined /> : <PlusOutlined />}
-          Upload
-        </div>
-      </div>
-    );
-  };
 
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
-  const onPreview = async (file) => {
-    let src = file.url;
-
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-
-        reader.onload = () => resolve(reader.result);
-      });
-    }
-
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
-  };
-  const handleCancel = () => {
-    form.setFieldsValue({ email: "asdasd" });
-  };
-
-  function disablePassword() {
-    setDisablePass(!disablePass);
-  }
-
+  useEffect(() => {
+    let final = miscalculation * payrate;
+    final -= punish;
+    final += bonus;
+    console.log(final);
+    setTotal(final);
+  }, [miscalculation, payrate, bonus, punish]);
   function checkCustomValidation() {
-    if (
-      email.error ||
-      phone.error ||
-      password.error ||
-      ID_card.error ||
-      fileList.length < 1
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   }
+
   const handleOk = async () => {
     form
       .validateFields()
       .then(async (values) => {
-        if (checkCustomValidation()) {
-          setLoading(true);
-          const temp = [];
-          if (dataItem) {
-            await collections.editEmployee({
-              _id: dataItem._id,
-              body: {
-                email: values.email.replace(/\s/g, "").replace(/ /g, ""),
-                phone_number: values.phone_number
-                  .replace(/\s/g, "")
-                  .replace(/ /g, ""),
-                password: values.password.replace(/\s/g, "").replace(/ /g, ""),
-                address: values.address,
-                account_status: Number(status),
-                role: role ? 0 : 1,
-                full_name: values.full_name,
-                id_card: values.id_card,
-                date_of_birth:
-                  date.getMonth() +
-                  1 +
-                  "/" +
-                  date.getDate() +
-                  "/" +
-                  date.getFullYear(),
-                avatar: fileList[0].name,
-              },
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thay đổi thành công");
+        setLoading(true);
+        const temp = [];
+        // if (dataItem) {
+        //   // await collections.editEmployee({
+        //   //   _id: dataItem._id,
+        //   //   body: {
 
-            setLoading(false);
-          } else {
-            await collections.addEmployee({
-              email: values.email.replace(/\s/g, ""),
-              phone_number: values.phone_number.replace(/\s/g, ""),
-              password: values.password.replace(/\s/g, ""),
-              address: values.address,
-              account_status: Number(status),
-              role: role ? 0 : 1,
-              full_name: values.full_name,
-              id_card: values.id_card,
-              date_of_birth:
-                date.getMonth() +
-                1 +
-                "/" +
-                date.getDate() +
-                "/" +
-                date.getFullYear(),
-              avatar: fileList[0].name,
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thêm thành công");
+        //   //   },
+        //   // });
 
-            setLoading(false);
-          }
-        } else {
-          dispatch(actions.formActions.showError());
-          setLoading(false);
-        }
+        // } else {
+        //   await collections.addEmployee({
+        //     email: values.email.replace(/\s/g, ""),
+        //     phone_number: values.phone_number.replace(/\s/g, ""),
+        //     password: values.password.replace(/\s/g, ""),
+        //     address: values.address,
+        //     account_status: Number(status),
+        //     role: role ? 0 : 1,
+        //     full_name: values.full_name,
+        //     id_card: values.id_card,
+        //     date_of_birth:
+        //       date.getMonth() +
+        //       1 +
+        //       "/" +
+        //       date.getDate() +
+        //       "/" +
+        //       date.getFullYear(),
+        //   });
+        //   handleClose();
+        //   dispatch(actions.formActions.changeLoad(!loadData));
+        //   message.success("Thêm thành công");
+
+        //   setLoading(false);
+        // }
       })
 
       .catch((info) => {
@@ -277,73 +179,17 @@ const TimeSheets = () => {
 
         setLoading(false);
       });
-  };
-  function isVietnamesePhoneNumberValid(number) {
-    return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(
-      number
-    );
-  }
-  function isEmail(email) {
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-  }
-  const validateEmail = (value) => {
-    if (!isEmail(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.email,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const validateID_card = (value) => {
-    const reg = /^[0-9]{9}([0-9]{3})?$/;
-    if (!reg.test(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.id_card,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const handleID_card = (value) => {
-    setID_card(validateID_card(value.target.value));
-  };
+    handleClose();
+    dispatch(actions.formActions.changeLoad(!loadData));
+    message.success("In thành công");
 
-  const validatePassword = (value) => {
-    const reg =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$/;
-    if (!reg.test(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.password,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const handlePassword = (value) => {
-    setPassword(validatePassword(value.target.value));
+    setLoading(false);
   };
 
   const validatePhone = (value) => {
-    if (!isVietnamesePhoneNumberValid(value)) {
+    if (true) {
       return {
         value: value,
-        validateStatus: "error",
         errorMsg: errorText.phone2,
         error: true,
       };
@@ -351,17 +197,15 @@ const TimeSheets = () => {
     return {
       value: value,
       error: false,
-
-      validateStatus: "success",
     };
   };
 
-  const handleEmail = (value) => {
-    setEmail(validateEmail(value.target.value));
-  };
-  const handlePhone = (value) => {
-    setPhone(validatePhone(value.target.value));
-  };
+  // const handleBonus = (value) => {
+  //   setBonus(validateBonus(value));
+  // };
+  // const handlePunish = (value) => {
+  //   setPunish(validatePunish(value));
+  // };
   function getHeaderTitle() {
     // if (dataItem) {
     //   return "Sửa nhân viên";
@@ -379,9 +223,9 @@ const TimeSheets = () => {
     dispatch(actions.formActions.changeLoad(!loadData));
   };
   const labels = {
-    employee_name: "Tên nhân viên",
-    communications: "Thông tin liên lạc",
-    position: "Chức vụ",
+    full_name: "Tên nhân viên",
+    userInfo: "Thông tin liên lạc",
+    role: "Chức vụ",
     status: "Tình trạng",
     admin_payment: "Thanh toán của Admin",
     salary_total: "Tổng lương",
@@ -458,10 +302,9 @@ const TimeSheets = () => {
         </div>
         <div className="bodyCont">
           <div style={{ width: "40%" }}>
-            <h4>{labels.employee_name}</h4>
+            <h4>{labels.full_name}</h4>
             <Form.Item
-              style={{ paddingBottom: "5%" }}
-              name="Tên nhân viên"
+              name="full_name"
               rules={[
                 {
                   required: true,
@@ -476,12 +319,9 @@ const TimeSheets = () => {
               <Input disabled placeholder="Nhập họ tên" />
             </Form.Item>
 
-            <h4 style={{ marginTop: fileList !== null ? "4.5%" : 0 }}>
-              {labels.communications}
-            </h4>
+            <h4>{labels.userInfo}</h4>
             <Form.Item
-              style={{ paddingBottom: "5%" }}
-              name="Thông tin liên lạc"
+              name="userInfo"
               rules={[
                 {
                   required: true,
@@ -493,13 +333,18 @@ const TimeSheets = () => {
                 },
               ]}
             >
-              <Input disabled placeholder="Nhập thông tin liên lạc" />
+              <TextArea
+                disabled
+                placeholder="Nhập thông tin liên lạc"
+                rows={3}
+                maxLength={6}
+              />
             </Form.Item>
             <div className="leftConts">
               <div className="cont1">
-                <h4>{labels.position}</h4>
+                <h4>{labels.role}</h4>
                 <Form.Item
-                  name="Chức vụ"
+                  name="role"
                   rules={[
                     {
                       required: true,
@@ -517,15 +362,11 @@ const TimeSheets = () => {
               <div className="cont2">
                 <h4>{labels.status}</h4>
                 <Form.Item
-                  name="Tình trạng"
+                  name="status"
                   rules={[
                     {
                       required: true,
                       message: `Không được để trống tình trạng`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
                     },
                   ]}
                 >
@@ -542,7 +383,7 @@ const TimeSheets = () => {
                       <Checkbox
                         disabled={isDetail}
                         onChange={handleCheckbox}
-                        checked={role}
+                        checked={paid}
                       />
                     }
                     name="paid"
@@ -553,7 +394,7 @@ const TimeSheets = () => {
                       <Checkbox
                         disabled={isDetail}
                         onChange={handleCheckbox}
-                        checked={!role}
+                        checked={!paid}
                       />
                     }
                     name="unpaid"
@@ -566,42 +407,60 @@ const TimeSheets = () => {
               <div className="cont1">
                 <h4>{labels.bonus}</h4>
                 <Form.Item
-                  name="Lương thưởng"
+                  name="bonus"
                   rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống lương thưởng`,
-                    },
                     {
                       pattern: new RegExp(/^\w/),
                       message: errorText.space,
                     },
                   ]}
                 >
-                  <Input disabled placeholder="Nhập lương thưởng" />
+                  <InputNumber
+                    formatter={
+                      bonus === 0
+                        ? null
+                        : (value) =>
+                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000}
+                    style={{ minWidth: "100%" }}
+                    onChange={(e) => setBonus(e)}
+                    disabled={endOfMonth()}
+                    placeholder="(Không bắt buộc)"
+                  />
                 </Form.Item>
               </div>
               <div className="cont2">
                 <h4>{labels.punish}</h4>
                 <Form.Item
-                  name="Phạt lương"
+                  name="punish"
                   rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống phạt lương`,
-                    },
                     {
                       pattern: new RegExp(/^\w/),
                       message: errorText.space,
                     },
                   ]}
                 >
-                  <Input disabled placeholder="Nhập phạt lương" />
+                  <InputNumber
+                    formatter={
+                      punish === 0
+                        ? null
+                        : (value) =>
+                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000}
+                    style={{ minWidth: "100%" }}
+                    onChange={(e) => setPunish(e)}
+                    disabled={endOfMonth()}
+                    placeholder="(Không bắt buộc)"
+                  />
                 </Form.Item>
               </div>
             </div>
             <h4>{labels.salary_total}</h4>
-            <Form.Item
+            {/* <Form.Item
               name="Tổng lương"
               rules={[
                 {
@@ -613,36 +472,37 @@ const TimeSheets = () => {
                   message: errorText.space,
                 },
               ]}
-            >
-              <Input disabled placeholder="Nhập tổng lương" />
-            </Form.Item>
+            > */}
+            <Input
+              disabled={true}
+              value={total + " VNĐ"}
+              style={{ minWidth: "100%" }}
+              placeholder={`0 VNĐ`}
+            />
+            {/* </Form.Item> */}
           </div>
           <div style={{ width: "50%" }}>
             <h4>{labels.work_time}</h4>
-            <Line {...config} />
+            <Line {...config} style={{ marginBottom: 10, height: "56vh" }} />
             <div className="workCont">
               <div className="total_time1">
                 <h4>{labels.total_time1}</h4>
                 <Form.Item
-                  name="Tổng giờ làm (trên hệ thống)"
+                  name="system_total"
                   rules={[
                     {
                       required: true,
                       message: `Không được để trống tổng giờ làm`,
                     },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
-                    },
                   ]}
                 >
-                  <Input disabled placeholder="Nhập tổng giờ làm" />
+                  <Input disabled={true} placeholder="Nhập tổng giờ làm" />
                 </Form.Item>
               </div>
               <div className="total_time2">
                 <h4>{labels.total_time2}</h4>
                 <Form.Item
-                  name="Tổng giờ làm (nếu có sai số)"
+                  name="total_margin"
                   rules={[
                     {
                       required: true,
@@ -654,15 +514,26 @@ const TimeSheets = () => {
                     },
                   ]}
                 >
-                  <Input disabled placeholder="Nhập tổng giờ làm" />
+                  <InputNumber
+                    formatter={
+                      miscalculation === 0
+                        ? null
+                        : (value) =>
+                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000}
+                    style={{ minWidth: "100%" }}
+                    disabled={endOfMonth()}
+                    onChange={(e) => setMiscalculation(e)}
+                    placeholder="Nhập tổng giờ làm"
+                  />
                 </Form.Item>
               </div>
-
-
             </div>
             <h4>{labels.rate}</h4>
             <Form.Item
-              name="Rate/giờ"
+              name="payrate"
               rules={[
                 {
                   required: true,
@@ -674,7 +545,20 @@ const TimeSheets = () => {
                 },
               ]}
             >
-              <Input disabled placeholder="Nhập rate/giờ" />
+              <InputNumber
+                formatter={
+                  payrate === 0
+                    ? null
+                    : (value) =>
+                        `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                min={0}
+                max={1000000000000}
+                style={{ minWidth: "100%" }}
+                disabled={endOfMonth()}
+                onChange={(e) => setPayrate(e)}
+                placeholder="Nhập rate/giờ"
+              />
             </Form.Item>
           </div>
         </div>
@@ -682,10 +566,16 @@ const TimeSheets = () => {
           <div className="noteSalary">
             <TextField
               placeholder="Nhập ghi chú của quản lý ở đây"
-              label="Ghi chú"
+              label="Ghi chú (Không bắt buộc)"
               multiline
               rows={2}
+              id="my-input"
               maxRows={4}
+              value={note}
+              variant="outlined"
+              onChange={(e) => {
+                setNote(e.target.value);
+              }}
               fullWidth
             />
           </div>
@@ -702,7 +592,7 @@ const TimeSheets = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-          // onClick={dataItem && isDetail === true ? editItem : handleOk}
+            onClick={handleOk}
           >
             Xuất File
           </Button>
@@ -717,13 +607,12 @@ const TimeSheets = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-          // onClick={dataItem && isDetail === true ? editItem : handleOk}
+            onClick={() => handleClose()}
           >
             Hủy
           </Button>
         </div>
       </Form>
-
     </div>
   );
 };

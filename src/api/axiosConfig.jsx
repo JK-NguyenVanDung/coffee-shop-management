@@ -35,12 +35,14 @@ axiosConfig.interceptors.response.use(
   (response) => {
     if (response && response.data) {
       console.log(response);
+
       return response.data;
     }
     return response;
   },
   (error) => {
     // Handle errors
+
     const { config, data } = error.response;
     console.log({
       baseUrl: config.baseURL,
@@ -50,6 +52,11 @@ axiosConfig.interceptors.response.use(
       response: data.error,
       token: config.headers && config.headers.Authorization,
     });
+    // if (error.response?.status === 403) {
+    //   localStorage.setItem("access", false);
+    // } else {
+    //   localStorage.setItem("access", true);
+    // }
     if (error.response.data.error.message) {
       throw error.response.data.error.message;
     }
@@ -60,6 +67,7 @@ axiosConfig.interceptors.response.use(
     if (error.response?.status === 404) {
       //  localStorage.clear();
     }
+
     throw error;
   }
 );

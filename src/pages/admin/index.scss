@@ -34,8 +34,10 @@
     // background: #eee;
     padding: 10;
     margin: 10px;
+    display:flex;
+    justify-content: center;
     img {
-        max-width: 100%;
+        max-width: 60%;
         object-fit: contain;
     }
 }
@@ -46,6 +48,13 @@
     padding: 10px;
 }
 .ant-layout-sider-children {
+    padding-top: 20%;
+    .ant-menu-item{
+        margin-bottom: 3vh !important;
+        .MuiSvgIcon{
+            width:50px !important;
+        }
+    }
 }
 .site-layout-background {
     background: #F8F9FD;

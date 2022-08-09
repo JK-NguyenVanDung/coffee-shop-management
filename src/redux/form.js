@@ -54,7 +54,7 @@ const slice = createSlice({
             state.secondForm = true;
         },
         closeSecondForm(state) {
-            state.secondForm = false
+            state.secondForm = false;
         },
         changeLoad(state, actions) {
             state.loadData = actions.payload;
