@@ -2,23 +2,32 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    margin-top: 5vh
 }
 .leftAnalysis {
-    width: 100%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding-right: 30%;
+    margin-right: 3%;
 }
 .rightAnalysis {
-    width: 100%;
+    width: 29%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+
+
+}
+
+.drop-shadow{
+    -webkit-box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
+    box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
 }
 .cards {
-    width: 160%;
+    width: 100%;
     display: flex;
     flex-direction: row;
 }
@@ -30,18 +39,25 @@
 .charts {
     width: 100%;
     padding-bottom: 4%;
+
+}
+.chartCont{
+    padding: 3%;
+    background-color: #fff;
+    border-radius: 12px;
 }
 .chartTitle {
-    width: 160%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 .bankCard {
+    width: 100%;
     border: 2px none #000000;
     padding: 10% 33% 20% 10%;
-    background-color: #fff;
+    background-color: rgb(255, 255, 255);
     border-radius: 12px;
 }
 .cardCont {
