@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Form, message, Select } from "antd";
+import { Input, Form, message, Select, InputNumber } from "antd";
 
 import { Line } from "@ant-design/charts";
 
@@ -55,40 +55,12 @@ const TimeSheets = () => {
 
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
-  const [bonus, setBonus] = useState({
-    value: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [punish, setPunish] = useState({
-    value: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [total, setTotal] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [miscalculation, setMiscalculation] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const [payrate, setPayrate] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-  const handleChange = (newValue) => {
-    setDate(newValue);
-  };
-  const handleStatus = (e) => {
-    setStatus(e.target.value);
-  };
+  const [bonus, setBonus] = useState(0);
+  const [punish, setPunish] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [miscalculation, setMiscalculation] = useState(0);
+  const [payrate, setPayrate] = useState(0);
+
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
@@ -134,6 +106,11 @@ const TimeSheets = () => {
           dataItem.phone_number,
         role: dataItem.role === 0 ? "Nhân viên" : "Quản lý",
         status: getStatus(dataItem.account_status),
+        system_total: 12,
+        bonus: 0,
+        punish: 0,
+        payrate: 0,
+        total_margin: 12,
       });
       // nếu không có dữ liệu đặc biệt thì xoá
       // setRole(dataItem.role === 0 ? true : false);
@@ -146,12 +123,13 @@ const TimeSheets = () => {
     }
   }, [dataItem]);
 
-  function calTotal() {
+  useEffect(() => {
     let final = miscalculation * payrate;
     final -= punish;
     final += bonus;
-    return final;
-  }
+    console.log(final);
+    setTotal(final);
+  }, [miscalculation, payrate, bonus, punish]);
   function checkCustomValidation() {
     return true;
   }
@@ -227,66 +205,11 @@ const TimeSheets = () => {
         setLoading(false);
       });
   };
-  function isVietnamesePhoneNumberValid(number) {
-    return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(
-      number
-    );
-  }
-  function isEmail(email) {
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-  }
-  const validateEmail = (value) => {
-    if (!isEmail(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.email,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-  const validateID_card = (value) => {
-    const reg = /^[0-9]{9}([0-9]{3})?$/;
-    if (!reg.test(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.id_card,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
-
-  const validatePassword = (value) => {
-    const reg =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$/;
-    if (!reg.test(value)) {
-      return {
-        value: value,
-        validateStatus: "error",
-        errorMsg: errorText.password,
-        error: true,
-      };
-    }
-    return {
-      value: value,
-      error: false,
-    };
-  };
 
   const validatePhone = (value) => {
-    if (!isVietnamesePhoneNumberValid(value)) {
+    if (true) {
       return {
         value: value,
-        validateStatus: "error",
         errorMsg: errorText.phone2,
         error: true,
       };
@@ -294,16 +217,14 @@ const TimeSheets = () => {
     return {
       value: value,
       error: false,
-
-      validateStatus: "success",
     };
   };
 
   // const handleBonus = (value) => {
-  //   setBonus(validateBonus(value.target.value));
+  //   setBonus(validateBonus(value));
   // };
   // const handlePunish = (value) => {
-  //   setPunish(validatePunish(value.target.value));
+  //   setPunish(validatePunish(value));
   // };
   function getHeaderTitle() {
     // if (dataItem) {
@@ -509,47 +430,57 @@ const TimeSheets = () => {
             <div className="leftConts">
               <div className="cont1">
                 <h4>{labels.bonus}</h4>
-                {/* <Form.Item
-                  name="Lương thưởng"
+                <Form.Item
+                  name="bonus"
                   rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống lương thưởng`,
-                    },
                     {
                       pattern: new RegExp(/^\w/),
                       message: errorText.space,
                     },
                   ]}
-                > */}
-                <Input
-                  value={bonus.value}
-                  disabled={endOfMonth()}
-                  placeholder="Nhập lương thưởng"
-                />
-                {/* </Form.Item> */}
+                >
+                  <InputNumber
+                    formatter={
+                      bonus === 0
+                        ? null
+                        : (value) =>
+                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000}
+                    style={{ minWidth: "100%" }}
+                    onChange={(e) => setBonus(e)}
+                    disabled={endOfMonth()}
+                    placeholder="(Không bắt buộc)"
+                  />
+                </Form.Item>
               </div>
               <div className="cont2">
                 <h4>{labels.punish}</h4>
-                {/* <Form.Item
-                  name="Phạt lương"
+                <Form.Item
+                  name="punish"
                   rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống phạt lương`,
-                    },
                     {
                       pattern: new RegExp(/^\w/),
                       message: errorText.space,
                     },
                   ]}
-                > */}
-                <Input
-                  disabled={endOfMonth()}
-                  placeholder="Nhập phạt lương"
-                  value={punish.value}
-                />
-                {/* </Form.Item> */}
+                >
+                  <InputNumber
+                    formatter={
+                      punish === 0
+                        ? null
+                        : (value) =>
+                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000}
+                    style={{ minWidth: "100%" }}
+                    onChange={(e) => setPunish(e)}
+                    disabled={endOfMonth()}
+                    placeholder="(Không bắt buộc)"
+                  />
+                </Form.Item>
               </div>
             </div>
             <h4>{labels.salary_total}</h4>
@@ -567,15 +498,16 @@ const TimeSheets = () => {
               ]}
             > */}
             <Input
-              disabled={endOfMonth()}
-              value={total.value}
-              placeholder="Nhập tổng lương"
+              disabled={true}
+              value={total + " VNĐ"}
+              style={{ minWidth: "100%" }}
+              placeholder={`0 VNĐ`}
             />
             {/* </Form.Item> */}
           </div>
           <div style={{ width: "50%" }}>
             <h4>{labels.work_time}</h4>
-            <Line {...config} style={{ marginBottom: 6 }} />
+            <Line {...config} style={{ marginBottom: 10, height: "56vh" }} />
             <div className="workCont">
               <div className="total_time1">
                 <h4>{labels.total_time1}</h4>
@@ -586,10 +518,6 @@ const TimeSheets = () => {
                       required: true,
                       message: `Không được để trống tổng giờ làm`,
                     },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
-                    },
                   ]}
                 >
                   <Input disabled={true} placeholder="Nhập tổng giờ làm" />
@@ -597,7 +525,7 @@ const TimeSheets = () => {
               </div>
               <div className="total_time2">
                 <h4>{labels.total_time2}</h4>
-                {/* <Form.Item
+                <Form.Item
                   name="total_margin"
                   rules={[
                     {
@@ -609,17 +537,26 @@ const TimeSheets = () => {
                       message: errorText.space,
                     },
                   ]}
-                > */}
-                <Input
-                  value={miscalculation.value}
-                  disabled={endOfMonth()}
-                  placeholder="Nhập tổng giờ làm"
-                />
-                {/* </Form.Item> */}
+                >
+                  <InputNumber
+                    formatter={
+                      miscalculation === 0
+                        ? null
+                        : (value) =>
+                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000}
+                    style={{ minWidth: "100%" }}
+                    disabled={endOfMonth()}
+                    onChange={(e) => setMiscalculation(e)}
+                    placeholder="Nhập tổng giờ làm"
+                  />
+                </Form.Item>
               </div>
             </div>
             <h4>{labels.rate}</h4>
-            {/* <Form.Item
+            <Form.Item
               name="payrate"
               rules={[
                 {
@@ -631,27 +568,38 @@ const TimeSheets = () => {
                   message: errorText.space,
                 },
               ]}
-            > */}
-            <Input
-              disabled={endOfMonth()}
-              value={payrate.value}
-              placeholder="Nhập rate/giờ"
-            />
-            {/* </Form.Item> */}
+            >
+              <InputNumber
+                formatter={
+                  payrate === 0
+                    ? null
+                    : (value) =>
+                        `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                min={0}
+                max={1000000000000}
+                style={{ minWidth: "100%" }}
+                disabled={endOfMonth()}
+                onChange={(e) => setPayrate(e)}
+                placeholder="Nhập rate/giờ"
+              />
+            </Form.Item>
           </div>
         </div>
         <CardContent>
           <div className="noteSalary">
             <TextField
               placeholder="Nhập ghi chú của quản lý ở đây"
-              label="Ghi chú"
+              label="Ghi chú (Không bắt buộc)"
               multiline
               rows={2}
               id="my-input"
               maxRows={4}
               value={note}
               variant="outlined"
-              onChange={() => {}}
+              onChange={(e) => {
+                setNote(e.target.value);
+              }}
               fullWidth
             />
           </div>
@@ -668,7 +616,7 @@ const TimeSheets = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            // onClick={handleOk}
+            onClick={handleOk}
           >
             Xuất File
           </Button>
