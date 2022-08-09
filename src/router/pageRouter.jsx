@@ -133,6 +133,8 @@ const MakeRoutes = () => {
             return token ? <AuthRouter /> : <Redirect to="/" />;
           }}
         /> */}
+      <Route path="*" element={<NotFound />} />
+
       <Route path="/" element={<Login />} />
     </Routes>
   );
