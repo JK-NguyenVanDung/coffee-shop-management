@@ -38,37 +38,7 @@ import moment from "moment";
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
 const { Option } = Select;
-
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-
-  const isLt2M = file.size / 1024 / 1024 < 2;
-
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-
-  return isJpgOrPng && isLt2M;
-};
-
-const radioBtnstyles = (theme) => ({
-  radio: {
-    "&$checked": {
-      color: "#4B8DF8",
-    },
-  },
-  checked: {},
-});
+const { TextArea } = Input;
 
 const TimeSheets = () => {
   const [loading, setLoading] = useState(false);
@@ -79,34 +49,40 @@ const TimeSheets = () => {
   const loadData = useAppSelector((state) => state.form.loadData);
   const modalError = useAppSelector((state) => state.form.modalError);
   const isDetail = useAppSelector((state) => state.form.detail);
-  const [fileList, setFileList] = useState([]);
+
+  const [note, setNote] = useState("");
+  const [paid, setPaid] = useState(false);
+
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
-  const [email, setEmail] = useState({
+  const [bonus, setBonus] = useState({
+    value: "",
+    errorMsg: "",
+    error: false,
+  });
+  const [punish, setPunish] = useState({
+    value: "",
+    errorMsg: "",
+    error: false,
+  });
+  const [total, setTotal] = useState({
     value: "",
     validateStatus: "",
     errorMsg: "",
     error: false,
   });
-  const [phone, setPhone] = useState({
+  const [miscalculation, setMiscalculation] = useState({
     value: "",
     validateStatus: "",
     errorMsg: "",
     error: false,
   });
-  const [password, setPassword] = useState({
+  const [payrate, setPayrate] = useState({
     value: "",
     validateStatus: "",
     errorMsg: "",
     error: false,
   });
-  const [ID_card, setID_card] = useState({
-    value: "",
-    validateStatus: "",
-    errorMsg: "",
-    error: false,
-  });
-
   const handleChange = (newValue) => {
     setDate(newValue);
   };
@@ -119,16 +95,27 @@ const TimeSheets = () => {
   const handleOpen = () => dispatch(actions.formActions.showForm());
   const handleClose = () => dispatch(actions.formActions.closeSecondForm());
   const handleCheckbox = (event) => {
-    if (event.target.name === "employee") setRole(true);
-    else setRole(false);
+    if (event.target.name === "paid") setPaid(true);
+    else setPaid(false);
   };
   const deleteItem = () => {
     dispatch(actions.formActions.showDelete());
   };
   const editItem = () => dispatch(actions.formActions.setDetail(false));
+  function getStatus(item) {
+    if (item === 1) {
+      return "Còn làm";
+    } else if (item === 0) {
+      return "Tạm nghỉ";
+    }
+    return "Đã nghỉ";
+  }
+
+  function endOfMonth() {
+    return false;
+  }
   useEffect(() => {
     form.resetFields();
-    setFileList(null);
 
     const setForm = () => {
       form.setFieldsValue({
@@ -138,73 +125,37 @@ const TimeSheets = () => {
         address: dataItem.address,
         full_name: dataItem.full_name,
         id_card: dataItem.id_card,
+        userInfo:
+          "CMND: " +
+          dataItem.id_card +
+          ", Địa chỉ: " +
+          dataItem.address +
+          ", SĐT: " +
+          dataItem.phone_number,
+        role: dataItem.role === 0 ? "Nhân viên" : "Quản lý",
+        status: getStatus(dataItem.account_status),
       });
       // nếu không có dữ liệu đặc biệt thì xoá
-      setFileList([dataItem.avatar]);
-      setRole(dataItem.role === 0 ? true : false);
-      setStatus(dataItem.account_status);
-      setDate(new Date(dataItem.date_of_birth));
+      // setRole(dataItem.role === 0 ? true : false);
+      // setStatus(dataItem.account_status);
+      // setDate(new Date(dataItem.date_of_birth));
     };
 
     if (dataItem) {
       setForm();
     }
   }, [dataItem]);
-  const { employee, manager } = role;
-  const error = [employee, manager].filter((v) => v).length !== 1;
-  const UploadButton = () => {
-    return (
-      <div style={fileList === null ? { width: "19.5rem", height: "50%" } : {}}>
-        <div style={{ padding: 2 }}>
-          {loading ? <LoadingOutlined /> : <PlusOutlined />}
-          Upload
-        </div>
-      </div>
-    );
-  };
 
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
-  const onPreview = async (file) => {
-    let src = file.url;
-
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-
-        reader.onload = () => resolve(reader.result);
-      });
-    }
-
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
-  };
-  const handleCancel = () => {
-    form.setFieldsValue({ email: "asdasd" });
-  };
-
-  function disablePassword() {
-    setDisablePass(!disablePass);
+  function calTotal() {
+    let final = miscalculation * payrate;
+    final -= punish;
+    final += bonus;
+    return final;
   }
-
   function checkCustomValidation() {
-    if (
-      email.error ||
-      phone.error ||
-      password.error ||
-      ID_card.error ||
-      fileList.length < 1
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   }
+
   const handleOk = async () => {
     form
       .validateFields()
@@ -233,7 +184,6 @@ const TimeSheets = () => {
                   date.getDate() +
                   "/" +
                   date.getFullYear(),
-                avatar: fileList[0].name,
               },
             });
             handleClose();
@@ -258,7 +208,6 @@ const TimeSheets = () => {
                 date.getDate() +
                 "/" +
                 date.getFullYear(),
-              avatar: fileList[0].name,
             });
             handleClose();
             dispatch(actions.formActions.changeLoad(!loadData));
@@ -315,9 +264,6 @@ const TimeSheets = () => {
       error: false,
     };
   };
-  const handleID_card = (value) => {
-    setID_card(validateID_card(value.target.value));
-  };
 
   const validatePassword = (value) => {
     const reg =
@@ -334,9 +280,6 @@ const TimeSheets = () => {
       value: value,
       error: false,
     };
-  };
-  const handlePassword = (value) => {
-    setPassword(validatePassword(value.target.value));
   };
 
   const validatePhone = (value) => {
@@ -356,12 +299,12 @@ const TimeSheets = () => {
     };
   };
 
-  const handleEmail = (value) => {
-    setEmail(validateEmail(value.target.value));
-  };
-  const handlePhone = (value) => {
-    setPhone(validatePhone(value.target.value));
-  };
+  // const handleBonus = (value) => {
+  //   setBonus(validateBonus(value.target.value));
+  // };
+  // const handlePunish = (value) => {
+  //   setPunish(validatePunish(value.target.value));
+  // };
   function getHeaderTitle() {
     // if (dataItem) {
     //   return "Sửa nhân viên";
@@ -379,9 +322,9 @@ const TimeSheets = () => {
     dispatch(actions.formActions.changeLoad(!loadData));
   };
   const labels = {
-    employee_name: "Tên nhân viên",
-    communications: "Thông tin liên lạc",
-    position: "Chức vụ",
+    full_name: "Tên nhân viên",
+    userInfo: "Thông tin liên lạc",
+    role: "Chức vụ",
     status: "Tình trạng",
     admin_payment: "Thanh toán của Admin",
     salary_total: "Tổng lương",
@@ -458,10 +401,9 @@ const TimeSheets = () => {
         </div>
         <div className="bodyCont">
           <div style={{ width: "40%" }}>
-            <h4>{labels.employee_name}</h4>
+            <h4>{labels.full_name}</h4>
             <Form.Item
-              style={{ paddingBottom: "5%" }}
-              name="Tên nhân viên"
+              name="full_name"
               rules={[
                 {
                   required: true,
@@ -476,12 +418,9 @@ const TimeSheets = () => {
               <Input disabled placeholder="Nhập họ tên" />
             </Form.Item>
 
-            <h4 style={{ marginTop: fileList !== null ? "4.5%" : 0 }}>
-              {labels.communications}
-            </h4>
+            <h4>{labels.userInfo}</h4>
             <Form.Item
-              style={{ paddingBottom: "5%" }}
-              name="Thông tin liên lạc"
+              name="userInfo"
               rules={[
                 {
                   required: true,
@@ -493,13 +432,18 @@ const TimeSheets = () => {
                 },
               ]}
             >
-              <Input disabled placeholder="Nhập thông tin liên lạc" />
+              <TextArea
+                disabled
+                placeholder="Nhập thông tin liên lạc"
+                rows={3}
+                maxLength={6}
+              />
             </Form.Item>
             <div className="leftConts">
               <div className="cont1">
-                <h4>{labels.position}</h4>
+                <h4>{labels.role}</h4>
                 <Form.Item
-                  name="Chức vụ"
+                  name="role"
                   rules={[
                     {
                       required: true,
@@ -517,7 +461,7 @@ const TimeSheets = () => {
               <div className="cont2">
                 <h4>{labels.status}</h4>
                 <Form.Item
-                  name="Tình trạng"
+                  name="status"
                   rules={[
                     {
                       required: true,
@@ -542,7 +486,7 @@ const TimeSheets = () => {
                       <Checkbox
                         disabled={isDetail}
                         onChange={handleCheckbox}
-                        checked={role}
+                        checked={paid}
                       />
                     }
                     name="paid"
@@ -553,7 +497,7 @@ const TimeSheets = () => {
                       <Checkbox
                         disabled={isDetail}
                         onChange={handleCheckbox}
-                        checked={!role}
+                        checked={!paid}
                       />
                     }
                     name="unpaid"
@@ -565,7 +509,7 @@ const TimeSheets = () => {
             <div className="leftConts">
               <div className="cont1">
                 <h4>{labels.bonus}</h4>
-                <Form.Item
+                {/* <Form.Item
                   name="Lương thưởng"
                   rules={[
                     {
@@ -577,13 +521,17 @@ const TimeSheets = () => {
                       message: errorText.space,
                     },
                   ]}
-                >
-                  <Input disabled placeholder="Nhập lương thưởng" />
-                </Form.Item>
+                > */}
+                <Input
+                  value={bonus.value}
+                  disabled={endOfMonth()}
+                  placeholder="Nhập lương thưởng"
+                />
+                {/* </Form.Item> */}
               </div>
               <div className="cont2">
                 <h4>{labels.punish}</h4>
-                <Form.Item
+                {/* <Form.Item
                   name="Phạt lương"
                   rules={[
                     {
@@ -595,13 +543,17 @@ const TimeSheets = () => {
                       message: errorText.space,
                     },
                   ]}
-                >
-                  <Input disabled placeholder="Nhập phạt lương" />
-                </Form.Item>
+                > */}
+                <Input
+                  disabled={endOfMonth()}
+                  placeholder="Nhập phạt lương"
+                  value={punish.value}
+                />
+                {/* </Form.Item> */}
               </div>
             </div>
             <h4>{labels.salary_total}</h4>
-            <Form.Item
+            {/* <Form.Item
               name="Tổng lương"
               rules={[
                 {
@@ -613,9 +565,13 @@ const TimeSheets = () => {
                   message: errorText.space,
                 },
               ]}
-            >
-              <Input disabled placeholder="Nhập tổng lương" />
-            </Form.Item>
+            > */}
+            <Input
+              disabled={endOfMonth()}
+              value={total.value}
+              placeholder="Nhập tổng lương"
+            />
+            {/* </Form.Item> */}
           </div>
           <div style={{ width: "50%" }}>
             <h4>{labels.work_time}</h4>
@@ -636,12 +592,12 @@ const TimeSheets = () => {
                     },
                   ]}
                 >
-                  <Input disabled placeholder="Nhập tổng giờ làm" />
+                  <Input disabled={true} placeholder="Nhập tổng giờ làm" />
                 </Form.Item>
               </div>
               <div className="total_time2">
                 <h4>{labels.total_time2}</h4>
-                <Form.Item
+                {/* <Form.Item
                   name="total_margin"
                   rules={[
                     {
@@ -653,14 +609,18 @@ const TimeSheets = () => {
                       message: errorText.space,
                     },
                   ]}
-                >
-                  <Input disabled placeholder="Nhập tổng giờ làm" />
-                </Form.Item>
+                > */}
+                <Input
+                  value={miscalculation.value}
+                  disabled={endOfMonth()}
+                  placeholder="Nhập tổng giờ làm"
+                />
+                {/* </Form.Item> */}
               </div>
             </div>
             <h4>{labels.rate}</h4>
-            <Form.Item
-              name="Rate/giờ"
+            {/* <Form.Item
+              name="payrate"
               rules={[
                 {
                   required: true,
@@ -671,9 +631,13 @@ const TimeSheets = () => {
                   message: errorText.space,
                 },
               ]}
-            >
-              <Input disabled placeholder="Nhập rate/giờ" />
-            </Form.Item>
+            > */}
+            <Input
+              disabled={endOfMonth()}
+              value={payrate.value}
+              placeholder="Nhập rate/giờ"
+            />
+            {/* </Form.Item> */}
           </div>
         </div>
         <CardContent>
@@ -685,6 +649,7 @@ const TimeSheets = () => {
               rows={2}
               id="my-input"
               maxRows={4}
+              value={note}
               variant="outlined"
               onChange={() => {}}
               fullWidth
