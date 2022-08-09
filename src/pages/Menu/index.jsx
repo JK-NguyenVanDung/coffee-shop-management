@@ -87,7 +87,11 @@ export const MenuLists = ({ dataList, category }) => {
 
   const executeScroll = () => {
     if (selectedCate === category._id) {
-      myRef.current.scrollIntoView();
+      myRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
     }
   };
   useEffect(() => {

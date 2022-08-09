@@ -576,3 +576,7 @@
         height: 3.2vh;
     }
 }
+
+.ant-menu-inline .ant-menu-selected::after, .ant-menu-inline .ant-menu-item-selected::after {
+opacity: 0 !important;
+}

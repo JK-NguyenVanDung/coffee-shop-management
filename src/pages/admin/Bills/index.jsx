@@ -31,6 +31,7 @@ import ModalContent from "./Modal";
 import { CloseOutlined } from "@ant-design/icons";
 import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
 import { getDisplayName } from "@mui/utils";
+import AlertDialog from "../../../components/AlertDialog";
 
 const Bills = () => {
   const [loading, setLoading] = useState(false);
@@ -296,7 +297,19 @@ const Bills = () => {
   }
 
   const onSearch = (value) => console.log(value);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  function setConfirm() {
+    dispatch(actions.formActions.showDelete());
+  }
+  const deleteThreeMonths = async () => {
+    setLoading(true);
+    await collections.removeThreeMonthBill();
+    dispatch(actions.formActions.changeLoad(!loadData));
+    message.success("Xoá 3 tháng hoá đơn thành công");
+    dispatch(actions.formActions.hideDelete());
 
+    setLoading(false);
+  };
   return (
     <>
       <div className="dishSearchCont">
@@ -311,9 +324,16 @@ const Bills = () => {
             paddingTop: "1%",
           }}
           size="medium"
+          onClick={() => setConfirm()}
         >
           XÓA 3 THÁNG ĐƠN
         </Button>
+        <AlertDialog
+          children="Xác nhận xoá 3 tháng hoá đơn trước?"
+          title="Xoá 3 tháng đơn"
+          onAccept={deleteThreeMonths}
+        />
+
         <FormModal children={<ModalContent />} />
 
         <div className="dishSearch">

@@ -27,6 +27,7 @@ import TimeSheets from "./Timesheets";
 
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import errorNotification from "../../../helper/errorNotification";
+
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(
@@ -261,10 +262,10 @@ const Employees = () => {
     dispatch(actions.formActions.showForm());
     dispatch(actions.formActions.setDetail(false));
   };
-  async function handleTimeSheet() {
+  async function handleTimeSheet(item) {
     dispatch(actions.formActions.showSecondForm());
     dispatch(actions.formActions.setDetail(false));
-    // dispatch(actions.employeesActions.setDetail(item.id));
+    dispatch(actions.employeesActions.setDetail(item.id));
   }
   async function handleEdit(item) {
     dispatch(actions.formActions.showForm());
