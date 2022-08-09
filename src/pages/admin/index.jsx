@@ -23,7 +23,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import React from "react";
-import HeaderProFile from "../../assets/scss/headerProfile";
+import HeaderProFile from "../../components/headerProfile";
 import { MENU } from "./navMenu";
 import "./index.scss";
 //import admin from "../../../../api/Collections/admin";
