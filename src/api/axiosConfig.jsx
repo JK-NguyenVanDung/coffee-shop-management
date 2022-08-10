@@ -48,7 +48,7 @@ axiosConfig.interceptors.response.use(
       baseUrl: config.baseURL,
       url: config.url,
       method: config.method,
-      body: config.data && JSON.parse(config.data),
+      body: config.data, //&& JSON.parse(config.data)
       response: data.error,
       token: config.headers && config.headers.Authorization,
     });

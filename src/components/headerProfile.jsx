@@ -1,6 +1,9 @@
-import { Avatar, Badge, Dropdown, Menu } from "antd";
+import { Avatar, Badge, Dropdown, Menu, message, InputNumber } from "antd";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { UserOutlined } from "@ant-design/icons";
+
 import { useAppDispatch, useAppSelector } from "../hook/useRedux";
 import { actions } from "../redux";
 import {
@@ -15,6 +18,8 @@ import ActiveBell from "../assets/img/bell_active.svg";
 import AccountBalanceRoundedIcon from "@mui/icons-material/AccountBalanceRounded";
 import { IconButton } from "@mui/material/";
 import * as collections from "../api/Collections/auth";
+import * as bankCollections from "../api/Collections/bank";
+
 import Card from "@mui/material/Card";
 
 import Notification from "./MenuHeader/Notification";
@@ -30,9 +35,10 @@ const labels = {
   activity_summary: "Tóm tắt hoạt động",
   bank_card: "Thẻ ngân hàng của tôi",
   target: "Mục tiêu",
-  morning_money: "Tiền sáng",
-  lunch_money: "Tiền trưa",
-  evening_money: "Tiền tối",
+  morning_money: "Tiền sáng (VNĐ)",
+  lunch_money: "Tiền trưa (VNĐ)",
+  evening_money: "Tiền tối (VNĐ)",
+  end_money: "Tiền cuối ngày (VNĐ)",
 };
 const test = {
   email: "spottran2001@gmail.com",
@@ -49,11 +55,13 @@ const test = {
 };
 
 export default function HeaderProFile() {
+  const location = useLocation();
+
   // const getProFile = useAppSelector((state) => state.showProfile.data);
   const info = useAppSelector((state) => state.auth.info);
   const getProFile = {
     name: info ? info.full_name : "Admin",
-    avatar: info && info.avatar ? info.avatar : avatar,
+    avatar: info.avatar,
   };
   const [show, setShow] = useState(false);
   const [showNoti, setShowNoti] = useState(false);
@@ -78,9 +86,98 @@ export default function HeaderProFile() {
   //   history.replace("/admin/profile");
   // };
 
-  const Bank = () => {
+  const Bank = (props) => {
+    const [loading, setLoading] = useState(false);
+    const [form] = Form.useForm();
+    const [dataItem, setDataItem] = useState(null);
+
+    const fetchData = async (value) => {
+      try {
+        setLoading(true);
+        const response = await bankCollections.getBanks();
+        const today = new Date();
+        for (let i = 0; i < response.length; i++) {
+          if (today === response[i].created_at) {
+          }
+        }
+        setDataItem(response);
+        setLoading(false);
+        // setPagination({
+        //   totalDocs: response.metadata.count,
+        // });
+      } catch (error) {
+        //history.replace("/");
+      }
+    };
+
+    useEffect(() => {
+      // test.current = 2;
+      fetchData();
+    }, []);
+
+    useEffect(() => {
+      form.resetFields();
+
+      const setForm = () => {
+        form.setFieldsValue({
+          //truyền data khi bấm vào => dataItem.
+          id: dataItem._id ? dataItem._id : null,
+          // createdAt: moment(new Date(dataItem.createdAt)).format(
+          //   "h:mma - DD/MM/YYYY"
+          // ),
+          morning: dataItem.morning ? dataItem.morning : 0,
+          afternoon: dataItem.afternoon ? dataItem.afternoon : 0,
+          night: dataItem.night ? dataItem.night : 0,
+          proceeds: dataItem.proceeds ? dataItem.proceeds : 0,
+        });
+      };
+
+      if (dataItem) {
+        setForm();
+      }
+    }, [dataItem]);
+    const handleOk = async () => {
+      form
+        .validateFields()
+        .then(async (values) => {
+          setLoading(true);
+          const temp = [];
+          if (dataItem) {
+            await bankCollections.editBank({
+              _id: dataItem._id,
+              body: {
+                morning: values.morning,
+                afternoon: values.afternoon,
+                night: values.night,
+                proceeds: values.proceeds,
+              },
+            });
+            showBankDropDown();
+            message.success("Thay đổi thành công");
+            setLoading(false);
+          } else {
+            await bankCollections.addBank({
+              morning: values.morning,
+              afternoon: values.afternoon,
+              night: values.night,
+              proceeds: values.proceeds,
+            });
+            showBankDropDown();
+            message.success("Thêm thành công");
+
+            setLoading(false);
+          }
+        })
+
+        .catch((info) => {
+          dispatch(actions.formActions.showError());
+
+          setLoading(false);
+        });
+    };
+
     return (
-      <Card sx={{ p: 5, height: "70vh", borderRadius: "12px" }}>
+      <Card sx={{ p: 5, height: "70vh", borderRadius: "12px" }} {...props}>
         <div className="modalCont">
           <div className="headerCont" style={{ padding: 0, paddingBottom: 10 }}>
             <h2>Tiền trong két hôm nay</h2>
@@ -91,12 +188,16 @@ export default function HeaderProFile() {
               <CloseOutlined />
             </IconButton>
           </div>
-          <Form className="form" initialValues={{ modifier: "public" }}>
+          <Form
+            form={form}
+            className="form"
+            initialValues={{ modifier: "public" }}
+          >
             <div className="bodyCont">
               <div style={{ width: "100%" }}>
                 <h4>{labels.morning_money}</h4>
                 <Form.Item
-                  name=""
+                  name="morning"
                   rules={[
                     {
                       required: true,
@@ -108,15 +209,19 @@ export default function HeaderProFile() {
                     },
                   ]}
                 >
-                  <Input
-                    // disabled={isDetail}
-                    dropdownStyle={{ zIndex: 2000 }}
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000} // disabled={isDetail}
                     placeholder="Nhập tiền buổi trưa"
                   />
                 </Form.Item>
                 <h4>{labels.lunch_money}</h4>
                 <Form.Item
-                  name=""
+                  name="afternoon"
                   rules={[
                     {
                       required: true,
@@ -128,15 +233,19 @@ export default function HeaderProFile() {
                     },
                   ]}
                 >
-                  <Input
-                    // disabled={isDetail}
-                    dropdownStyle={{ zIndex: 2000 }}
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000} // disabled={isDetail}
                     placeholder="Nhập tiền buổi trưa"
                   />
                 </Form.Item>
                 <h4>{labels.evening_money}</h4>
                 <Form.Item
-                  name=""
+                  name="night"
                   rules={[
                     {
                       required: true,
@@ -148,10 +257,38 @@ export default function HeaderProFile() {
                     },
                   ]}
                 >
-                  <Input
-                    // disabled={isDetail}
-                    dropdownStyle={{ zIndex: 2000 }}
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000} // disabled={isDetail}
                     placeholder="Nhập tiền buổi tối"
+                  />
+                </Form.Item>
+                <h4>{labels.end_money}</h4>
+                <Form.Item
+                  name="proceeds"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống tiền cuối ngày`,
+                    },
+                    {
+                      pattern: new RegExp(/^\w/),
+                      // message: errorText.space,
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    min={0}
+                    max={1000000000000} // disabled={isDetail}
+                    placeholder="Nhập tiền cuối ngày"
                   />
                 </Form.Item>
               </div>
@@ -168,8 +305,8 @@ export default function HeaderProFile() {
                   paddingBottom: "2%",
                   color: "#fff",
                 }}
-                // disabled={loading}
-                // onClick={dataItem && isDetail === true ? editItem : handleOk}
+                disabled={loading}
+                onClick={handleOk}
               >
                 Lưu
               </Button>
@@ -229,24 +366,26 @@ export default function HeaderProFile() {
   );
   return (
     <div className="right">
-      <div className="mr15">
-        <Dropdown
-          overlay={notiBank}
-          overlayStyle={{ width: "25rem", top: "10vh !important" }}
-          visible={showBank}
-        >
-          <div className="ant-dropdown-link">
-            <IconButton
-              style={{ color: "#000" }}
-              onClick={(e) => showBankDropDown(e)}
-            >
-              <AccountBalanceRoundedIcon
-                sx={{ fontSize: 32, color: "#6D7D93" }}
-              />
-            </IconButton>
-          </div>
-        </Dropdown>
-      </div>
+      {(location.pathname === "/menu" || location.pathname === "/analysis") && (
+        <div className="mr15">
+          <Dropdown
+            overlay={notiBank}
+            overlayStyle={{ width: "25rem", top: "10vh !important" }}
+            visible={showBank}
+          >
+            <div className="ant-dropdown-link">
+              <IconButton
+                style={{ color: "#000" }}
+                onClick={(e) => showBankDropDown(e)}
+              >
+                <AccountBalanceRoundedIcon
+                  sx={{ fontSize: 32, color: showBank ? "#92CAD1" : "#6D7D93" }}
+                />
+              </IconButton>
+            </div>
+          </Dropdown>
+        </div>
+      )}
       <div className="mr15">
         <Dropdown
           overlay={noti}
@@ -270,7 +409,13 @@ export default function HeaderProFile() {
         <Dropdown overlay={menu} overlayStyle={{ width: "20rem" }}>
           <div className="ant-dropdown-link">
             <IconButton onClick={() => setShow(!show)}>
-              <Avatar src={avatar} alt="avatar" style={{ cursor: "pointer" }} />
+              <Avatar
+                src={getProFile.avatar}
+                alt="avatar"
+                icon={<UserOutlined />}
+                fall
+                style={{ cursor: "pointer" }}
+              />
             </IconButton>
           </div>
         </Dropdown>

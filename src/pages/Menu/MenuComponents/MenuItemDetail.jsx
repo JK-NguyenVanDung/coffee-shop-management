@@ -69,6 +69,9 @@ const MenuItemDetail = () => {
     { label: "Trạng thái: ", content: "Còn hàng" },
     // { label: "Thuế VAT: ", content: "10%" },
   ];
+  function addDefaultSrc(ev) {
+    ev.target.src = PlaceHolder;
+  }
   return (
     <>
       {open && (
@@ -79,7 +82,8 @@ const MenuItemDetail = () => {
               <div className="infoImageCont">
                 <img
                   className="infoImage"
-                  src={info.url ? info.url : PlaceHolder}
+                  src={info.avatar}
+                  onError={addDefaultSrc}
                 />
               </div>
               <h1>{info.name}</h1>
@@ -98,7 +102,7 @@ const MenuItemDetail = () => {
                           gutterBottom
                         >
                           {item.label}
-                        </Typography>                    
+                        </Typography>
                         <Typography
                           sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
                           color="text.secondary"

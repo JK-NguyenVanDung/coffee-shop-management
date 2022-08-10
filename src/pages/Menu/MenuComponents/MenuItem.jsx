@@ -40,6 +40,17 @@ export const MenuItem = ({ item }) => {
   function openDetail() {
     dispatch(actions.menuActions.showInfo(item));
   }
+  function isValidHttpUrl(string) {
+    let url;
+
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;
+    }
+
+    return url.protocol === "http:" || url.protocol === "https:";
+  }
   return (
     <div
       onMouseEnter={() => setHover(true)}
@@ -47,14 +58,14 @@ export const MenuItem = ({ item }) => {
       className="itemCont  drop-shadow"
       style={{
         backgroundImage: `linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 30%),url(${
-          item.url ? item.url : PlaceHolder
+          isValidHttpUrl(item.avatar) ? item.avatar : PlaceHolder
         })`,
       }}
       {...bindTap}
     >
       <div>
         <Button
-          color={!item.url ? "secondary" : "info"}
+          color={!isValidHttpUrl(item.avatar) ? "secondary" : "info"}
           style={{ visibility: !hover ? "hidden" : "visible" }}
           onClick={() => openDetail()}
         >

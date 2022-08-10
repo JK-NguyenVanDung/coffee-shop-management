@@ -45,6 +45,7 @@ import ImgCrop from "antd-img-crop";
 
 import NumberInput from "../../../components/FormElements/NumberInput";
 import moment from "moment";
+import * as uploadAPI from "../../../api/Collections/upload";
 
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
@@ -183,8 +184,12 @@ const ModalContent = () => {
       });
       setPayment(getPaymentText(dataItem.payment_type));
       // nếu không có dữ liệu đặc biệt thì xoá
-      setFileList([dataItem.avatar]);
-      // setDate(new Date(dataItem.date_of_birth));
+      setFileList([
+        {
+          uid: dataItem.avatar,
+          url: dataItem.avatar,
+        },
+      ]); // setDate(new Date(dataItem.date_of_birth));
     };
 
     if (dataItem) {
@@ -268,6 +273,10 @@ const ModalContent = () => {
         if (checkCustomValidation()) {
           setLoading(true);
           const temp = [];
+          const fmData = new FormData();
+          fmData.append("file", fileList[0].originFileObj);
+          const res = await uploadAPI.upload(fmData);
+
           if (dataItem) {
             await collections.editInventory({
               _id: dataItem._id,
@@ -278,7 +287,7 @@ const ModalContent = () => {
                 payment_type: getPaymentType(),
                 createdAt: values.createdAt,
                 updatedAt: values.updatedAt,
-                avatar: fileList[0].name,
+                avatar: res.name3,
               },
             });
             handleClose();
@@ -294,7 +303,7 @@ const ModalContent = () => {
               payment_type: getPaymentType(),
               createdAt: values.createdAt,
               updatedAt: values.updatedAt,
-              avatar: fileList[0].name,
+              avatar: res.name3,
             });
             handleClose();
             dispatch(actions.formActions.changeLoad(!loadData));
@@ -401,11 +410,14 @@ const ModalContent = () => {
               {/* <ImgCrop rotate> */}
               <Upload
                 accept="image/*"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                action={"https://localhost:3000"}
                 listType="picture-card"
                 fileList={fileList}
                 maxCount={1}
                 onChange={onChange}
+                beforeUpload={(file) => {
+                  return false;
+                }}
                 onPreview={onPreview}
                 style={{ width: "500px", height: "100%" }}
                 disabled={isDetail}

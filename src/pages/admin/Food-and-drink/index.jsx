@@ -10,6 +10,7 @@ import {
   message,
   Tooltip,
   Switch,
+  Image,
 } from "antd";
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -120,6 +121,13 @@ const FoodAndDrink = () => {
     {
       title: "Ảnh",
       dataIndex: "avatar",
+      render: (item) => {
+        return (
+          <div className="image">
+            <Image width={50} src={item} />
+          </div>
+        );
+      },
     },
     {
       title: "Tên món",

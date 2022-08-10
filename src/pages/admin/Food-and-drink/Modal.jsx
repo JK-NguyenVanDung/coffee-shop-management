@@ -34,6 +34,7 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/dish";
 import * as cateCollections from "../../../api/Collections/category";
+import * as uploadAPI from "../../../api/Collections/upload";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -151,7 +152,12 @@ const ModalContent = () => {
       });
 
       // nếu không có dữ liệu đặc biệt thì xoá
-      setFileList([dataItem.avatar]);
+      setFileList([
+        {
+          uid: dataItem.avatar,
+          url: dataItem.avatar,
+        },
+      ]);
       setStatus(dataItem.account_status);
       // setDate(new Date(dataItem.date_of_birth));
     };
@@ -201,6 +207,10 @@ const ModalContent = () => {
       .then(async (values) => {
         setLoading(true);
         const temp = [];
+        const fmData = new FormData();
+        fmData.append("file", fileList[0].originFileObj);
+        const res = await uploadAPI.upload(fmData);
+
         if (dataItem) {
           await collections.editDish({
             _id: dataItem._id,
@@ -209,7 +219,7 @@ const ModalContent = () => {
               recipe: values.recipe,
               price: values.price,
               active: values.active,
-              avatar: fileList[0].name,
+              avatar: res.name3,
               dish_type: values.dish_type,
               category_type: values.category_type,
             },
@@ -225,7 +235,7 @@ const ModalContent = () => {
             recipe: values.recipe,
             price: values.price,
             active: values.active,
-            avatar: fileList[0].name,
+            avatar: res.name3,
             dish_type: values.dish_type,
             category_type: values.category_type,
           });
@@ -300,11 +310,14 @@ const ModalContent = () => {
               {/* <ImgCrop rotate> */}
               <Upload
                 accept="image/*"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                action={"https://localhost:3000"}
                 listType="picture-card"
                 fileList={fileList}
                 maxCount={1}
                 onChange={onChange}
+                beforeUpload={(file) => {
+                  return false;
+                }}
                 onPreview={onPreview}
                 style={{ width: "500px", height: "100%" }}
                 disabled={isDetail}

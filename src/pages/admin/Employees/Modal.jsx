@@ -23,6 +23,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/employees";
+import * as uploadAPI from "../../../api/Collections/upload";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -52,13 +53,13 @@ const beforeUpload = (file) => {
     message.error("You can only upload JPG/PNG file!");
   }
 
-  const isLt2M = file.size / 1024 / 1024 < 2;
+  const isLt5M = file.size / 1024 / 1024 < 5;
 
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
+  if (!isLt5M) {
+    message.error("Image must smaller than 5MB!");
   }
 
-  return isJpgOrPng && isLt2M;
+  return isJpgOrPng && isLt5M;
 };
 
 const radioBtnstyles = (theme) => ({
@@ -82,6 +83,8 @@ const ModalContent = () => {
   const [fileList, setFileList] = useState([]);
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
+  const [previewFile, setPreviewFile] = useState("");
+  // const uploadImage = useAppSelector((state) => state.form.image);
   const [email, setEmail] = useState({
     value: "",
     validateStatus: "",
@@ -140,7 +143,15 @@ const ModalContent = () => {
         id_card: dataItem.id_card,
       });
       // nếu không có dữ liệu đặc biệt thì xoá
-      setFileList([dataItem.avatar]);
+
+      // ... do something with the file or return it
+
+      setFileList([
+        {
+          uid: dataItem.avatar,
+          url: dataItem.avatar,
+        },
+      ]);
       setRole(dataItem.role === 0 ? true : false);
       setStatus(dataItem.account_status);
       setDate(new Date(dataItem.date_of_birth));
@@ -212,6 +223,10 @@ const ModalContent = () => {
         if (checkCustomValidation()) {
           setLoading(true);
           const temp = [];
+          const fmData = new FormData();
+          fmData.append("file", fileList[0].originFileObj);
+          const res = await uploadAPI.upload(fmData);
+
           if (dataItem) {
             await collections.editEmployee({
               _id: dataItem._id,
@@ -233,7 +248,7 @@ const ModalContent = () => {
                   date.getDate() +
                   "/" +
                   date.getFullYear(),
-                avatar: fileList[0].name,
+                avatar: res.name3,
               },
             });
             handleClose();
@@ -258,7 +273,7 @@ const ModalContent = () => {
                 date.getDate() +
                 "/" +
                 date.getFullYear(),
-              avatar: fileList[0].name,
+              avatar: res.name3,
             });
             handleClose();
             dispatch(actions.formActions.changeLoad(!loadData));
@@ -393,6 +408,10 @@ const ModalContent = () => {
     status: "Tình trạng",
     position: "Chức vụ",
   };
+
+  async function upload(file) {
+    console.log(file);
+  }
   return (
     <div className="ModalCont">
       {modalError && <AlertModal chilren={errorText.formValidation} />}
@@ -410,11 +429,14 @@ const ModalContent = () => {
               {/* <ImgCrop rotate> */}
               <Upload
                 accept="image/*"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                action={"https://localhost:3000"}
                 listType="picture-card"
                 fileList={fileList}
                 maxCount={1}
                 onChange={onChange}
+                beforeUpload={(file) => {
+                  return false;
+                }}
                 onPreview={onPreview}
                 style={{ width: "500px", height: "100%" }}
                 disabled={isDetail}
