@@ -125,7 +125,7 @@ const ModalContent = () => {
   const editItem = () => dispatch(actions.formActions.setDetail(false));
 
   const [unit, setUnit] = useState({
-    value: "",
+    value: listOptions[0],
     validateStatus: "",
     errorMsg: "",
     error: false,
@@ -266,6 +266,11 @@ const ModalContent = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
+  function getValue(values) {
+    return (
+      values.amount + "-" + (unit.value === "" ? listOptions[0] : unit.value)
+    );
+  }
   const handleOk = async () => {
     form
       .validateFields()
@@ -276,13 +281,13 @@ const ModalContent = () => {
           const fmData = new FormData();
           fmData.append("file", fileList[0].originFileObj);
           const res = await uploadAPI.upload(fmData);
-
           if (dataItem) {
             await collections.editInventory({
               _id: dataItem._id,
               body: {
                 name: values.name,
-                amount: values.amount + "-" + unit.value,
+                amount: getValue(values),
+
                 price: values.price,
                 payment_type: getPaymentType(),
                 createdAt: values.createdAt,
