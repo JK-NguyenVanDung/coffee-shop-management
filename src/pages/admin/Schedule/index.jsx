@@ -555,7 +555,7 @@ const Schedule = () => {
               children={`Xác nhận xoá lịch tuần ${new Date(
                 weekDetail.begin_at
               ).toLocaleDateString("vi-VN")} -
-          ${new Date(weekDetail.end_at).toLocaleDateString("vi-VN")}`}
+          ${new Date(weekDetail.end_at).toLocaleDateString("vi-VN")} ?`}
               title="Xoá lịch"
               onAccept={deleteSchedule}
             />
@@ -564,7 +564,7 @@ const Schedule = () => {
               children={`Xác nhận duyệt lịch tuần ${new Date(
                 weekDetail.begin_at
               ).toLocaleDateString("vi-VN")} -
-        ${new Date(weekDetail.end_at).toLocaleDateString("vi-VN")}`}
+        ${new Date(weekDetail.end_at).toLocaleDateString("vi-VN")} ?`}
               title="Duyệt lịch"
               onAccept={confirmSchedule}
             />
