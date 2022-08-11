@@ -55,9 +55,9 @@ const BillPrint = () => {
     dispatch(actions.menuActions.cancelOrder());
   }
   useEffect(() => {
-    let res = collections.getBill(id);
-    console.log(res);
-    setBill(res);
+    // let res = collections.getBill(id);
+    // console.log(res);
+    // setBill(res);
   }, []);
 
   const paymentText = [
