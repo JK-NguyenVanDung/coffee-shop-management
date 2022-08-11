@@ -358,34 +358,36 @@
 }
 
 
+.billLayoutCont{
+    border: 20px solid #614A35;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+
     .billBgCont{
         overflow-y: scroll;
-        border: 20px solid #614A35;
-        background-color: rgb(255, 255, 255);
         width:100%;
-        height: 89vh;
-        border-radius: 20px;
+        height: 74vh;
         padding: 10px;
         padding-top: 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        -webkit-border-radius: 40px;
-        -moz-border-radius: 40px;
-
+      
         background-position: center;
         background-repeat: no-repeat;
         padding-left: 1rem;
         padding-right:  1rem;
 
         .billHeader{
+            width:100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             font-size: large;
-            
         }
         .locationCont {  
             width: 100%;                                                         
@@ -393,6 +395,7 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
+            padding-left:5px;
         }
         .billListCont{
             margin-top: 1rem;
@@ -445,13 +448,15 @@
             width: 100%;
             justify-content: flex-start;
         }
-        .buttonCont{
-            display:flex;
-            width: 100%;
-            margin: 1rem;
-            justify-content: space-evenly;
-        }
+       
     }
+    .buttonCont{
+        display:flex;
+        width: 100%;
+        margin: 1rem;
+        justify-content: space-evenly;
+    }
+}
 
 
 
@@ -501,10 +506,9 @@
 
 // TẠO ĐƠN
 
-    .billBgCont{
+    .billDetailBgCont{
         overflow-x: hidden;
-        overflow-y: scroll;        
-        border: 20px solid #614A35;
+        overflow-y: scroll;        border: 20px solid #614A35;
         background-color: rgb(255, 255, 255);
         width:100%;
         height: 89vh;

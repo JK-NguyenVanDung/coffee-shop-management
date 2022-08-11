@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -12,8 +12,8 @@ import { numbToCurrency } from "../../../helper/currency";
 
 import Clipper from "../../../assets/img/clipper.svg";
 import * as collections from "../../../api/Collections/bill";
-
 import { shopPhone, shopAddress } from "../../../helper/Text";
+import { useReactToPrint } from "react-to-print";
 
 function currentDate() {
   let currentdate = new Date();
@@ -32,8 +32,7 @@ function currentDate() {
 const BillPrint = () => {
   let orderList = useAppSelector((state) => state.menu.orderList);
   let openPrint = useAppSelector((state) => state.menu.openPrint);
-  let id = useAppSelector((state) => state.menu.openDetail);
-
+  let id = useAppSelector((state) => state.menu.billID);
   const info = useAppSelector((state) => state.auth.info);
   let totalBill = useAppSelector((state) => state.menu.totalBill);
   let total = useAppSelector((state) => state.menu.total);
@@ -42,6 +41,7 @@ const BillPrint = () => {
   let note = useAppSelector((state) => state.menu.note);
   const [bill, setBill] = useState();
   let dispatch = useAppDispatch();
+  let billRef = useRef();
 
   function onRemove() {
     dispatch(actions.menuActions.cancelOrder());
@@ -99,71 +99,107 @@ const BillPrint = () => {
     },
     { label: "Trạng thái:", content: "Đã thanh toán" },
   ];
-  return (
-    <>
-      {openPrint && (
-        <div>
-          <div className="backdrop" onClick={onRemove}></div>
-          <div class="billDetailCont">
-            <img class="clipper" src={Clipper} />
-            <div className="billBgCont">
-              <div className="billHeader">
-                <h2>Linh's Coffee</h2>
-              </div>
-              <div className="locationCont">
-                <h4>Địa chỉ: {shopAddress}</h4>
-                <h4>SĐT: {shopPhone}</h4>
-              </div>
-              <hr width="100%" size="1%" align="center" />
+  const handlePrint = useReactToPrint({
+    content: () => billRef.current,
 
-              <div className="cardCont">
-                <Typography
-                  sx={{ fontSize: "1.5rem" }}
-                  color="text.secondary"
-                  gutterBottom
-                  textAlign="center"
-                >
-                  {billText.header3}
-                </Typography>
-                <div className="billContentsCont">
-                  {billContent.map((item) => {
-                    return (
-                      <>
-                        <div className="billContentCont">
-                          <Typography
-                            sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                            color="text.secondary"
-                            gutterBottom
-                          >
-                            {item.label}
-                          </Typography>
-                          <Typography
-                            sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                            color="text.secondary"
-                            gutterBottom
-                          >
-                            {item.content}
-                          </Typography>
-                        </div>
-                      </>
-                    );
-                  })}
-                  <hr width="100%" size="1%" align="center" />
+    documentTitle: "Hoá đơn mới",
+    pageStyle: "print",
+  });
+  const PrintWrapper = React.forwardRef((props, ref) => (
+    <div ref={ref}>{props.children}</div>
+  ));
+  const PrintBody = () => {
+    return (
+      <div className="billBgCont">
+        <div className="billHeader">
+          <h2>Linh's Coffee</h2>
+        </div>
+        <div className="locationCont">
+          <h4>Địa chỉ: {shopAddress}</h4>
+          <h4>SĐT: {shopPhone}</h4>
+        </div>
+        <hr width="100%" size="1%" align="center" />
+
+        <div className="cardCont">
+          <Typography
+            sx={{ fontSize: "1.5rem" }}
+            color="text.secondary"
+            gutterBottom
+            textAlign="center"
+          >
+            {billText.header3}
+          </Typography>
+          <div className="billContentsCont">
+            {billContent.map((item) => {
+              return (
+                <>
+                  <div className="billContentCont">
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.label}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.content}
+                    </Typography>
+                  </div>
+                </>
+              );
+            })}
+            <hr width="100%" size="1%" align="center" />
+            <div className="billItemsCont">
+              <Typography
+                sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                color="text.secondary"
+                gutterBottom
+              >
+                {billContent2.label}
+              </Typography>
+              <Typography
+                sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                color="text.secondary"
+                gutterBottom
+              >
+                {billContent2.content1}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+                color="text.secondary"
+                gutterBottom
+              >
+                {billContent2.content2}
+              </Typography>
+            </div>
+            {orderList.map((item) => {
+              return (
+                <>
                   <div className="billItemsCont">
-                    <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      {billContent2.label}
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      {billContent2.content1}
-                    </Typography>
+                    <div className="rowCont">
+                      <Typography
+                        sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        {item.name}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        {item.amount}
+                      </Typography>
+                    </div>
                     <Typography
                       sx={{
                         fontSize: "0.8rem",
@@ -173,75 +209,57 @@ const BillPrint = () => {
                       color="text.secondary"
                       gutterBottom
                     >
-                      {billContent2.content2}
+                      {numbToCurrency(item.price)}
                     </Typography>
                   </div>
-                  {orderList.map((item) => {
-                    return (
-                      <>
-                        <div className="billItemsCont">
-                          <div className="rowCont">
-                            <Typography
-                              sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                              color="text.secondary"
-                              gutterBottom
-                            >
-                              {item.name}
-                            </Typography>
-                            <Typography
-                              sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                              color="text.secondary"
-                              gutterBottom
-                            >
-                              {item.amount}
-                            </Typography>
-                          </div>
-                          <Typography
-                            sx={{
-                              fontSize: "0.8rem",
-                              fontWeight: "bold",
-                              textAlign: "center",
-                            }}
-                            color="text.secondary"
-                            gutterBottom
-                          >
-                            {numbToCurrency(item.price)}
-                          </Typography>
-                        </div>
-                      </>
-                    );
-                  })}
-                  <hr width="100%" size="1%" align="center" />
-                  {billContent3.map((item) => {
-                    return (
-                      <>
-                        <div className="billContentCont">
-                          <Typography
-                            sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                            color="text.secondary"
-                            gutterBottom
-                          >
-                            {item.label}
-                          </Typography>
-                          <Typography
-                            sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                            color="text.secondary"
-                            gutterBottom
-                          >
-                            {item.content}
-                          </Typography>
-                        </div>
-                      </>
-                    );
-                  })}
-                </div>
-              </div>
+                </>
+              );
+            })}
+            <hr width="100%" size="1%" align="center" />
+            {billContent3.map((item) => {
+              return (
+                <>
+                  <div className="billContentCont">
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.label}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.content}
+                    </Typography>
+                  </div>
+                </>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+  return (
+    <>
+      {openPrint && (
+        <div>
+          <div className="backdrop" onClick={onRemove}></div>
+          <div class="billDetailCont">
+            <img class="clipper" src={Clipper} />
+            <div className="billLayoutCont">
+              <PrintWrapper ref={billRef}>
+                <PrintBody />
+              </PrintWrapper>
 
               <div className="buttonCont">
                 <Button
                   variant="contained"
                   size="large"
-                  onClick={() => printOutBill()}
+                  onClick={() => handlePrint()}
                   color="secondary"
                 >
                   In đơn
@@ -256,6 +274,7 @@ const BillPrint = () => {
                 </Button>
               </div>
             </div>
+
             <div
               className="removeBtnCont"
               style={{

@@ -19,7 +19,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { vi } from "date-fns/locale";
 
-import { Line } from "@ant-design/charts";
+import { Area } from "@ant-design/charts";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import { CloseOutlined } from "@ant-design/icons";
@@ -59,10 +59,14 @@ const SaleChart = () => {
       let response = null;
 
       if (date) {
-        response = await collections.getData(date);
+        response = await collections.getData({
+          createdAt: date,
+        });
       } else {
         let out = getMonthAndYear(new Date());
-        response = await collections.getData(out);
+        response = await collections.getData({
+          createdAt: new Date().toISOString(),
+        });
       }
       dispatch(actions.analysisActions.setListAll(response));
 
@@ -80,59 +84,88 @@ const SaleChart = () => {
     fetchData();
   }, [date]);
   const data = [
-    { month: "1", value: 3 },
-    { month: "2", value: 4 },
-    { month: "3", value: 3.5 },
-    { month: "4", value: 5 },
-    { month: "5", value: 4.9 },
-    { month: "6", value: 6 },
-    { month: "7", value: 7 },
-    { month: "8", value: 9 },
-    { month: "9", value: 13 },
-    { month: "10", value: 13 },
-    { month: "11", value: 13 },
-    { month: "12", value: 13 },
+    { month: "1", value: 3000000 },
+    { month: "2", value: 4000000 },
+    { month: "3", value: 350000 },
+    { month: "4", value: 5000000 },
+    { month: "5", value: 490000 },
+    { month: "6", value: 6000000 },
+    { month: "7", value: 7000000 },
+    { month: "8", value: 9000000 },
+    { month: "9", value: 13000000 },
+    { month: "10", value: 13000000 },
+    { month: "11", value: 13000000 },
+    { month: "12", value: 13000000 },
   ];
   const config = {
     data,
     xField: "month",
     yField: "value",
-    label: {},
-    point: {
-      size: 5,
-      shape: "circule",
-      style: {
-        fill: "white",
-        stroke: "#5B8FF9",
-        lineWidth: 2,
-      },
-    },
-    tooltip: {
-      showMarkers: false,
-    },
-    state: {
-      active: {
+    yAxis: {
+      line: {
         style: {
-          shadowBlur: 4,
-          stroke: "#000",
-          fill: "red",
+          lineDash: [0, 0],
+          lineWidth: 1,
+          stroke: "#e9e9e9",
+        },
+      },
+
+      label: {
+        formatter: (val) => {
+          let str = val.toString();
+          const withoutLast3 = str.slice(0, -3);
+
+          return val > 999 ? withoutLast3 + "K" : val;
         },
       },
     },
-    interactions: [
-      {
-        type: "marker-active",
+    xAxis: {
+      label: {
+        formatter: (val) => {
+          return "Tháng " + val;
+        },
       },
-    ],
+    },
+    label: {},
+    smooth: true,
+    padding: "auto",
+    areaStyle: () => {
+      return {
+        fill: "l(270) 0:#ffffff 0.5:#3450B1 1:#3450B1",
+      };
+    },
+    // point: {
+    //   size: 5,
+    //   shape: "circule",
+    //   style: {
+    //     fill: "white",
+    //     stroke: "#5B8FF9",
+    //     lineWidth: 2,
+    //   },
+    // },
+    // tooltip: {
+    //   showMarkers: false,
+    // },
+    // state: {
+    //   active: {
+    //     style: {
+    //       shadowBlur: 4,
+    //       stroke: "#000",
+    //       fill: "red",
+    //     },
+    //   },
+    // },
+    // interactions: [
+    //   {
+    //     type: "marker-active",
+    //   },
+    // ],
   };
-  return <Line {...config} />;
+  return <Area {...config} />;
 };
 
 function getMonthAndYear(e) {
-  let month = new Date(e).getMonth();
-  let year = new Date(e).getFullYear();
-  let out = `${month + 1}/${year}`;
-  return out;
+  return e.toISOString();
 }
 export default function Analysis() {
   const dispatch = useAppDispatch();
@@ -142,7 +175,6 @@ export default function Analysis() {
     setDate(e);
     let out = getMonthAndYear(e);
     dispatch(actions.analysisActions.setDate(out));
-    console.log(out);
   }
   return (
     <>
@@ -159,10 +191,10 @@ export default function Analysis() {
                 <Typography sx={{ fontSize: 28 }}>$ 120,000</Typography>
               </CardContent>
               <CardActions>
-                <div className="cardConts">
+                {/* <div className="cardConts">
                   {cardCont.revenue_target}
                   <ArrowUpwardOutlinedIcon />
-                </div>
+                </div> */}
               </CardActions>
             </Card>
             <Card
@@ -175,10 +207,10 @@ export default function Analysis() {
                 <Typography sx={{ fontSize: 28 }}>$ 16,500</Typography>
               </CardContent>
               <CardActions>
-                <div className="cardConts">
+                {/* <div className="cardConts">
                   {cardCont.wallet_target}
                   <ArrowDownwardOutlinedIcon />
-                </div>
+                </div> */}
               </CardActions>
             </Card>
             <Card
@@ -195,10 +227,10 @@ export default function Analysis() {
                 <Typography sx={{ fontSize: 28 }}>$ 48,670</Typography>
               </CardContent>
               <CardActions>
-                <div className="cardConts">
+                {/* <div className="cardConts">
                   {cardCont.cost_target}
                   <ArrowUpwardOutlinedIcon />
-                </div>
+                </div> */}
               </CardActions>
             </Card>
             <Card sx={{ width: "50%", borderRadius: "12px" }}>
@@ -213,10 +245,10 @@ export default function Analysis() {
                 <Typography sx={{ fontSize: 28 }}>$ 74,330</Typography>
               </CardContent>
               <CardActions>
-                <div className="cardConts">
+                {/* <div className="cardConts">
                   {cardCont.balance_target}
                   <ArrowUpwardOutlinedIcon />
-                </div>
+                </div> */}
               </CardActions>
             </Card>
           </div>
@@ -272,11 +304,20 @@ export default function Analysis() {
           <div className="bankCard">
             <h3>{labels.bank_card}</h3>
             <img src={CreditCard} />
-            <h3 style={{ marginLeft: "25%" }}>COMING SOON</h3>
+            <h3
+              style={{
+                display: "flex",
+                width: "150%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              UNAVAILABLE
+            </h3>
           </div>
-          <div>
+          {/* <div>
             <h3>{labels.target}</h3>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

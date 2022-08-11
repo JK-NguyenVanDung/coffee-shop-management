@@ -85,7 +85,7 @@ const BillDetail = () => {
         payment_type: paymentMethod,
       };
       let response = await billCollections.addBill(data);
-      dispatch(actions.menuActions.recentBill(response));
+      dispatch(actions.menuActions.recentBill(response._id));
       setLoading(false);
 
       // setPagination({
@@ -131,7 +131,7 @@ const BillDetail = () => {
           <div className="backdrop" onClick={onRemove}></div>
           <div className="billDetailCont">
             <img className="clipper" src={Clipper} />
-            <div className="billBgCont">
+            <div className="billDetailBgCont">
               <div className="billHeader">
                 <h2>Linh's Coffee</h2>
                 <h1>TẠO ĐƠN</h1>
