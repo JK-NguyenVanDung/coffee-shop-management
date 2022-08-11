@@ -214,7 +214,10 @@ const Category = () => {
         >
           THÊM NHÓM MÓN
         </Button>
-        <FormModal children={<ModalContent />} />
+        <FormModal
+          children={<ModalContent />}
+          style={{ width: "70%", height: "70vh" }}
+        />
 
         <div className="dishSearch">
           <SearchTable

@@ -39,6 +39,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    overflow-y: scroll;
+    overflow-x:hidden;
     .ant-form-item-control-input-content{
         .ant-input{
             max-width: 100%

@@ -320,7 +320,7 @@ const Bills = () => {
           endIcon={<CloseOutlined />}
           style={{
             marginRight: "1%",
-            color: "#fff",           
+            color: "#fff",
           }}
           size="medium"
           onClick={() => setConfirm()}

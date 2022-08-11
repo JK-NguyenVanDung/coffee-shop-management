@@ -40,10 +40,10 @@ export const addBill = async (body) => {
       throw err.message;
     }
   };
-  export const removeThreeMonthBill = async (id) => {
+  export const removeThreeMonthBill = async () => {
     try {
-      // const response = await api.delete(`/bills/${id}`);
-      // return response;
+      const response = await api.delete(`/bills/`);
+      return response;
     } catch (err) {
       throw err.message;
     }

@@ -32,9 +32,12 @@
     flex-direction: row;
     justify-content: space-around;   
     overflow-y: scroll;
+    overflow-x:hidden;
 
 }
 .BtnCategory {
+    padding-top: 10vh;
+
     display: flex;
     justify-content: space-evenly;
 }

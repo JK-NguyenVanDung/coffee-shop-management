@@ -13,7 +13,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: "60%",
   height: "auto",
-  overlay: "scroll",
+  // overlay: "scroll",
   bgcolor: "background.paper",
   boxShadow: 24,
   borderRadius: 4,

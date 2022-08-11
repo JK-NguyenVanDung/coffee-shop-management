@@ -359,7 +359,7 @@
 
 
     .billBgCont{
-        overflow: scroll;
+        overflow-y: scroll;
         border: 20px solid #614A35;
         background-color: rgb(255, 255, 255);
         width:100%;
@@ -503,7 +503,8 @@
 
     .billBgCont{
         overflow-x: hidden;
-        overflow-y: scroll;        border: 20px solid #614A35;
+        overflow-y: scroll;        
+        border: 20px solid #614A35;
         background-color: rgb(255, 255, 255);
         width:100%;
         height: 89vh;
