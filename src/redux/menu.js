@@ -23,7 +23,7 @@ let initialState = {
     dishType: "drink",
     selectedCate: "",
     searchList: [],
-    
+    billID: null,
 }
 const slice = createSlice({
     name: 'menu',
@@ -223,6 +223,10 @@ const slice = createSlice({
             state.searchList =actions.payload;
         },
 
+        recentBill(state,actions){
+            state.billID =actions.payload;
+
+        }
     }
 })
 export const menuReducer = slice.reducer;

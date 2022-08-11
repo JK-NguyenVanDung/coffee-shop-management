@@ -64,7 +64,6 @@ const BillDetail = () => {
   let open = useAppSelector((state) => state.menu.openDetail);
 
   const info = useAppSelector((state) => state.auth.info);
-
   let totalBill = useAppSelector((state) => state.menu.totalBill);
   let total = useAppSelector((state) => state.menu.total);
   let printBill = useAppSelector((state) => state.menu.printBill);
@@ -85,7 +84,8 @@ const BillDetail = () => {
         price_total: totalBill,
         payment_type: paymentMethod,
       };
-      await billCollections.addBill(data);
+      let response = await billCollections.addBill(data);
+      dispatch(actions.menuActions.recentBill(response));
       setLoading(false);
 
       // setPagination({

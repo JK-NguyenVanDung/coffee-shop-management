@@ -8,6 +8,14 @@ export const getBills = async () => {
     throw err.message;
   }
 };
+export const getBill = async (id) => {
+  try {
+    const response = await api.get(`/bills/${id}`);
+    return response;
+  } catch (err) {
+    throw err.message;
+  }
+};
 export const addBill = async (body) => {
     try {
       const response = await api.post(`/bills`,body);

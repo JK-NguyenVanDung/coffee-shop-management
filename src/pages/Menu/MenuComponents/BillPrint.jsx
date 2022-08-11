@@ -11,6 +11,7 @@ import { RemoveButton } from "./RemoveButton";
 import { numbToCurrency } from "../../../helper/currency";
 
 import Clipper from "../../../assets/img/clipper.svg";
+import * as collections from "../../../api/Collections/bill";
 
 import { shopPhone, shopAddress } from "../../../helper/Text";
 
@@ -31,6 +32,7 @@ function currentDate() {
 const BillPrint = () => {
   let orderList = useAppSelector((state) => state.menu.orderList);
   let openPrint = useAppSelector((state) => state.menu.openPrint);
+  let id = useAppSelector((state) => state.menu.openDetail);
 
   const info = useAppSelector((state) => state.auth.info);
   let totalBill = useAppSelector((state) => state.menu.totalBill);
@@ -38,7 +40,7 @@ const BillPrint = () => {
   let printBill = useAppSelector((state) => state.menu.printBill);
   let paymentMethod = useAppSelector((state) => state.menu.paymentMethod);
   let note = useAppSelector((state) => state.menu.note);
-
+  const [bill, setBill] = useState();
   let dispatch = useAppDispatch();
 
   function onRemove() {
@@ -52,6 +54,11 @@ const BillPrint = () => {
   function cancelPrint() {
     dispatch(actions.menuActions.cancelOrder());
   }
+  useEffect(() => {
+    let res = collections.getBill(id);
+    console.log(res);
+    setBill(res);
+  }, []);
 
   const paymentText = [
     { value: "cash", label: "Tiền mặt" },
@@ -59,7 +66,7 @@ const BillPrint = () => {
     { value: "vnpay", label: "VNPay" },
   ];
   const billContent = [
-    { label: "ID đơn hàng", content: "CFM872022" },
+    { label: "ID đơn hàng", content: id },
     {
       label: "Ngày tạo:",
       content: currentDate(),
@@ -77,7 +84,7 @@ const BillPrint = () => {
       label: "Tổng đơn:",
       content: numbToCurrency(total) ? numbToCurrency(total) : "N/A", // Phần này add đường ngang vào tui ko biết có gì chú copy phần đó dưới á
     },
-    { label: "Thuế VAT", content: "10%" },
+    { label: "Thuế VAT", content: "0%" },
     {
       label: "Tổng tiền:",
       content: numbToCurrency(totalBill) ? numbToCurrency(totalBill) : "N/A",

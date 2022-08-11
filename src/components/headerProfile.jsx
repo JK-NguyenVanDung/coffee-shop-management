@@ -37,10 +37,10 @@ const labels = {
   activity_summary: "Tóm tắt hoạt động",
   bank_card: "Thẻ ngân hàng của tôi",
   target: "Mục tiêu",
-  morning_money: "Tiền sáng (VNĐ)",
-  lunch_money: "Tiền trưa (VNĐ)",
-  evening_money: "Tiền tối (VNĐ)",
-  end_money: "Tiền cuối ngày (VNĐ)",
+  morning_money: "Tiền sáng (VND)",
+  lunch_money: "Tiền trưa (VND)",
+  evening_money: "Tiền tối (VND)",
+  end_money: "Tổng tiền trong ngày (VND)",
 };
 const test = {
   email: "spottran2001@gmail.com",
@@ -162,7 +162,7 @@ export default function HeaderProFile() {
                 afternoon: values.afternoon,
                 night: values.night,
                 proceeds: values.proceeds,
-                status: confirm,
+                status: !confirm,
               },
             });
             setShowBank(false);
@@ -370,7 +370,7 @@ export default function HeaderProFile() {
                 </Button>
                 {dataItem ? (
                   <Button
-                    disabled={(dataItem ? dataItem.status : false) || loading}
+                    // disabled={(dataItem ? dataItem.status : false) || loading}
                     size="Large"
                     color="success"
                     variant="contained"
