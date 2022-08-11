@@ -7,10 +7,14 @@ const slice = createSlice({
         detail: null,
         listAll: [],
         loadData: false,
-
+        date: null,
     },
     reducers: {
+        setDate(state,actions){
+            state.date = actions.payload;
 
+        }
+        ,
         setDetail(state, actions) {
             let data = [...state.listAll];
             let index = data.findIndex((item)=> item._id === actions.payload)

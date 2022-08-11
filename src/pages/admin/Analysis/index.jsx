@@ -13,6 +13,11 @@ import Typography from "@mui/material/Typography";
 import * as collections from "../../../api/Collections/analysis";
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
+import TextField from "@mui/material/TextField";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { vi } from "date-fns/locale";
 
 import { Line } from "@ant-design/charts";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
@@ -47,12 +52,18 @@ const labels = {
 const SaleChart = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-
+  const date = useAppSelector((state) => state.analysis.date);
   const fetchData = async (value) => {
     try {
       setLoading(true);
-      const response = await collections.getData();
+      let response = null;
 
+      if (date) {
+        response = await collections.getData(date);
+      } else {
+        let out = getMonthAndYear(new Date());
+        response = await collections.getData(out);
+      }
       dispatch(actions.analysisActions.setListAll(response));
 
       setLoading(false);
@@ -67,7 +78,7 @@ const SaleChart = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData();
-  }, []);
+  }, [date]);
   const data = [
     { month: "1", value: 3 },
     { month: "2", value: 4 },
@@ -117,7 +128,22 @@ const SaleChart = () => {
   return <Line {...config} />;
 };
 
+function getMonthAndYear(e) {
+  let month = new Date(e).getMonth();
+  let year = new Date(e).getFullYear();
+  let out = `${month + 1}/${year}`;
+  return out;
+}
 export default function Analysis() {
+  const dispatch = useAppDispatch();
+
+  const [date, setDate] = useState();
+  function getDate(e) {
+    setDate(e);
+    let out = getMonthAndYear(e);
+    dispatch(actions.analysisActions.setDate(out));
+    console.log(out);
+  }
   return (
     <>
       <div className="analysisCont">
@@ -211,7 +237,7 @@ export default function Analysis() {
                   },
                 ]}
               >
-                <Select
+                {/* <Select
                   // disabled={isDetail}
                   dropdownStyle={{ zIndex: 2000 }}
                   // onChange={handleSelect}
@@ -219,8 +245,22 @@ export default function Analysis() {
                 >
                   {/* {listCate.map((item) => {
                                     return <Option value={item._id}>{item.name}</Option>;
-                                })} */}
-                </Select>
+                                })} 
+                                                </Select>
+*/}
+                <LocalizationProvider locale={vi} dateAdapter={AdapterDateFns}>
+                  <DesktopDatePicker
+                    views={["year", "month"]}
+                    label="Chọn năm và tháng"
+                    minDate={new Date("2022-07-01")}
+                    maxDate={new Date()}
+                    value={date}
+                    onChange={getDate}
+                    renderInput={(params) => (
+                      <TextField {...params} helperText={null} size="small" />
+                    )}
+                  />{" "}
+                </LocalizationProvider>
               </Form.Item>
             </div>
             <div className="chartCont">

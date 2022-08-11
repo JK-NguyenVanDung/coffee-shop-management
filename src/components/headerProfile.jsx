@@ -70,11 +70,23 @@ export default function HeaderProFile() {
   const [showBank, setShowBank] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [newNotification, setNewNotification] = useState(false);
   // useEffect(() => {
   //   if (getProFile) {
   //     setShow(true);
   //   }
   // });
+  const checkNewNotification = () => {
+    const temp = JSON.parse(localStorage.getItem("items"));
+    if (temp.length > 0) {
+      setNewNotification(true);
+    } else {
+      setNewNotification(false);
+    }
+  };
+  useEffect(() => {
+    checkNewNotification();
+  }, [localStorage.getItem("items")]);
   const token = useAppSelector((state) => state.auth.token);
 
   const logout = async () => {
@@ -370,7 +382,7 @@ export default function HeaderProFile() {
                 </Button>
                 {dataItem ? (
                   <Button
-                    // disabled={(dataItem ? dataItem.status : false) || loading}
+                    disabled={(dataItem ? dataItem.status : false) || loading}
                     size="Large"
                     color="success"
                     variant="contained"
@@ -476,7 +488,7 @@ export default function HeaderProFile() {
           visible={showNoti}
         >
           <div className="ant-dropdown-link">
-            <Badge dot={showNoti} offset={[-10, 10]}>
+            <Badge dot={newNotification} offset={[-10, 10]}>
               <IconButton
                 style={{ color: "#000" }}
                 onClick={(e) => showNotification(e)}
