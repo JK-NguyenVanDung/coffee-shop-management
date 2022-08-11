@@ -78,7 +78,7 @@ export default function HeaderProFile() {
   // });
   const checkNewNotification = () => {
     const temp = JSON.parse(localStorage.getItem("items"));
-    if (temp.length > 0) {
+    if (temp && temp.length > 0) {
       setNewNotification(true);
     } else {
       setNewNotification(false);
