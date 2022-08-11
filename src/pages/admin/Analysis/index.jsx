@@ -19,6 +19,18 @@ import { IconButton } from "@mui/material";
 import CreditCard from "../../../assets/img/CreditCard.svg";
 const { Search } = Input;
 const { Option } = Select;
+const cardTitle = {
+  total_revenue: "Tổng doanh thu",
+  electronic_wallet: "Ví điện tử",
+  total_cost: "Tổng chi phí",
+  account_balance: "Số dư (tài khoản)",
+};
+const cardCont = {
+  revenue_target: "12% Increase From Target",
+  wallet_target: "2% Decrease From Target",
+  cost_target: "6% Increase From Target",
+  balance_target: "1% Increase From Target",
+};
 const labels = {
   statistic: "Báo cáo thống kê doanh thu",
   activity_summary: "Tóm tắt hoạt động",
@@ -90,13 +102,13 @@ export default function Analysis() {
             >
               <CardContent>
                 <Typography sx={{ fontSize: 16 }} gutterBottom>
-                  Tổng doanh thu
+                  {cardTitle.total_revenue}
                 </Typography>
                 <Typography sx={{ fontSize: 28 }}>$ 120,000</Typography>
               </CardContent>
               <CardActions>
                 <div className="cardConts">
-                  12% Increase From Target
+                  {cardCont.revenue_target}
                   <ArrowUpwardOutlinedIcon />
                 </div>
               </CardActions>
@@ -106,13 +118,13 @@ export default function Analysis() {
             >
               <CardContent>
                 <Typography sx={{ fontSize: 16 }} gutterBottom>
-                  Ví điện tử
+                  {cardTitle.electronic_wallet}
                 </Typography>
                 <Typography sx={{ fontSize: 28 }}>$ 16,500</Typography>
               </CardContent>
               <CardActions>
                 <div className="cardConts">
-                  2% Decrease From Target
+                  {cardCont.wallet_target}
                   <ArrowDownwardOutlinedIcon />
                 </div>
               </CardActions>
@@ -126,13 +138,13 @@ export default function Analysis() {
                   color="text.secondary"
                   gutterBottom
                 >
-                  Tổng chi phí
+                  {cardTitle.total_cost}
                 </Typography>
                 <Typography sx={{ fontSize: 28 }}>$ 48,670</Typography>
               </CardContent>
               <CardActions>
                 <div className="cardConts">
-                  6% Increase From Target
+                  {cardCont.cost_target}
                   <ArrowUpwardOutlinedIcon />
                 </div>
               </CardActions>
@@ -144,13 +156,13 @@ export default function Analysis() {
                   color="text.secondary"
                   gutterBottom
                 >
-                  Số dư (tài khoản)
+                  {cardTitle.account_balance}
                 </Typography>
                 <Typography sx={{ fontSize: 28 }}>$ 74,330</Typography>
               </CardContent>
               <CardActions>
                 <div className="cardConts">
-                  1% Increase From Target
+                  {cardCont.balance_target}
                   <ArrowUpwardOutlinedIcon />
                 </div>
               </CardActions>
