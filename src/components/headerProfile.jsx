@@ -3,7 +3,9 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { UserOutlined } from "@ant-design/icons";
-
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import { numbToCurrency } from "../helper/currency";
 import { useAppDispatch, useAppSelector } from "../hook/useRedux";
 import { actions } from "../redux";
 import {
@@ -21,7 +23,7 @@ import * as collections from "../api/Collections/auth";
 import * as bankCollections from "../api/Collections/bank";
 
 import Card from "@mui/material/Card";
-
+import AlertDialog from "./AlertDialog";
 import Notification from "./MenuHeader/Notification";
 import avatar from "../assets/img/avatar.png";
 import { Input, Form } from "antd";
@@ -90,24 +92,32 @@ export default function HeaderProFile() {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
     const [dataItem, setDataItem] = useState(null);
-
+    const [disabled, setDisabled] = useState(false);
+    const [final, setFinal] = useState(0);
     const fetchData = async (value) => {
       try {
         setLoading(true);
         const response = await bankCollections.getBanks();
         const today = new Date();
         for (let i = 0; i < response.length; i++) {
-          if (today === response[i].created_at) {
+          let temp = new Date(response[i].createdAt);
+
+          if (today.getDate() === temp.getDate()) {
+            setDataItem(response[i]);
+            break;
+          } else {
+            setDataItem(null);
           }
         }
-        setDataItem(response);
-        setLoading(false);
+        console.log(dataItem);
+        // setDataItem(response);
         // setPagination({
         //   totalDocs: response.metadata.count,
         // });
       } catch (error) {
         //history.replace("/");
       }
+      setLoading(false);
     };
 
     useEffect(() => {
@@ -119,16 +129,18 @@ export default function HeaderProFile() {
       form.resetFields();
 
       const setForm = () => {
+        console.log(dataItem);
         form.setFieldsValue({
           //truyền data khi bấm vào => dataItem.
-          id: dataItem._id ? dataItem._id : null,
+          id: dataItem !== null ? dataItem._id : null,
           // createdAt: moment(new Date(dataItem.createdAt)).format(
           //   "h:mma - DD/MM/YYYY"
           // ),
-          morning: dataItem.morning ? dataItem.morning : 0,
-          afternoon: dataItem.afternoon ? dataItem.afternoon : 0,
-          night: dataItem.night ? dataItem.night : 0,
-          proceeds: dataItem.proceeds ? dataItem.proceeds : 0,
+          morning: dataItem !== null ? dataItem.morning : 0,
+          afternoon: dataItem !== null ? dataItem.afternoon : 0,
+          night: dataItem !== null ? dataItem.night : 0,
+          proceeds: dataItem !== null ? dataItem.proceeds : 0,
+          status: dataItem !== null ? dataItem.status : false,
         });
       };
 
@@ -136,7 +148,7 @@ export default function HeaderProFile() {
         setForm();
       }
     }, [dataItem]);
-    const handleOk = async () => {
+    const handleOk = async (confirm) => {
       form
         .validateFields()
         .then(async (values) => {
@@ -150,9 +162,10 @@ export default function HeaderProFile() {
                 afternoon: values.afternoon,
                 night: values.night,
                 proceeds: values.proceeds,
+                status: confirm,
               },
             });
-            showBankDropDown();
+            setShowBank(false);
             message.success("Thay đổi thành công");
             setLoading(false);
           } else {
@@ -162,7 +175,7 @@ export default function HeaderProFile() {
               night: values.night,
               proceeds: values.proceeds,
             });
-            showBankDropDown();
+            setShowBank(false);
             message.success("Thêm thành công");
 
             setLoading(false);
@@ -174,150 +187,220 @@ export default function HeaderProFile() {
 
           setLoading(false);
         });
+      dispatch(actions.formActions.hideDelete());
     };
-
+    const deleteItem = () => {
+      dispatch(actions.formActions.showDelete());
+    };
     return (
-      <Card sx={{ p: 5, height: "70vh", borderRadius: "12px" }} {...props}>
-        <div className="modalCont">
-          <div className="headerCont" style={{ padding: 0, paddingBottom: 10 }}>
-            <h2>Tiền trong két hôm nay</h2>
-            <IconButton
-              style={{ marginBottom: 10 }}
-              onClick={(e) => showBankDropDown(e)}
+      <Card
+        sx={[
+          {
+            p: 5,
+            height: "80vh",
+            borderRadius: "12px",
+            width: "100%",
+          },
+          loading
+            ? {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }
+            : null,
+        ]}
+        {...props}
+      >
+        {!loading ? (
+          <div className="modalCont">
+            <AlertDialog
+              children={`Tổng số tiền ${numbToCurrency(final)} ngày ${new Date(
+                dataItem && dataItem.createdAt
+              ).toLocaleDateString("vi-VN")} ?`}
+              title="Chốt số tiền hôm nay"
+              onAccept={() => handleOk(true)}
+            />
+            <div
+              className="headerCont"
+              style={{ padding: 0, paddingBottom: 10 }}
             >
-              <CloseOutlined />
-            </IconButton>
-          </div>
-          <Form
-            form={form}
-            className="form"
-            initialValues={{ modifier: "public" }}
-          >
-            <div className="bodyCont">
-              <div style={{ width: "100%" }}>
-                <h4>{labels.morning_money}</h4>
-                <Form.Item
-                  name="morning"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống tiền buổi sáng`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      // message: errorText.space,
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    style={{ width: "100%" }}
-                    formatter={(value) =>
-                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    min={0}
-                    max={1000000000000} // disabled={isDetail}
-                    placeholder="Nhập tiền buổi trưa"
-                  />
-                </Form.Item>
-                <h4>{labels.lunch_money}</h4>
-                <Form.Item
-                  name="afternoon"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống tiền buổi trưa`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      // message: errorText.space,
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    style={{ width: "100%" }}
-                    formatter={(value) =>
-                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    min={0}
-                    max={1000000000000} // disabled={isDetail}
-                    placeholder="Nhập tiền buổi trưa"
-                  />
-                </Form.Item>
-                <h4>{labels.evening_money}</h4>
-                <Form.Item
-                  name="night"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống tiền buổi tối`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      // message: errorText.space,
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    style={{ width: "100%" }}
-                    formatter={(value) =>
-                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    min={0}
-                    max={1000000000000} // disabled={isDetail}
-                    placeholder="Nhập tiền buổi tối"
-                  />
-                </Form.Item>
-                <h4>{labels.end_money}</h4>
-                <Form.Item
-                  name="proceeds"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống tiền cuối ngày`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      // message: errorText.space,
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    style={{ width: "100%" }}
-                    formatter={(value) =>
-                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    min={0}
-                    max={1000000000000} // disabled={isDetail}
-                    placeholder="Nhập tiền cuối ngày"
-                  />
-                </Form.Item>
-              </div>
-            </div>
-            <div className="btnAnalysis">
-              <Button
-                size="Large"
-                color="primary"
-                variant="contained"
-                style={{
-                  paddingLeft: "15%",
-                  paddingRight: "15%",
-                  paddingTop: "2%",
-                  paddingBottom: "2%",
-                  color: "#fff",
-                }}
-                disabled={loading}
-                onClick={handleOk}
+              <h2>Tiền trong két hôm nay</h2>
+              <IconButton
+                style={{ marginBottom: 10 }}
+                onClick={(e) => showBankDropDown(e)}
               >
-                Lưu
-              </Button>
+                <CloseOutlined />
+              </IconButton>
             </div>
-          </Form>
-          {/* <AlertDialog
+            <Form
+              form={form}
+              className="form"
+              initialValues={{
+                morning: 0,
+                afternoon: 0,
+                night: 0,
+                proceeds: 0,
+              }}
+            >
+              <div className="bodyCont">
+                <div style={{ width: "100%" }}>
+                  <h4>{labels.morning_money}</h4>
+                  <Form.Item
+                    name="morning"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống tiền buổi sáng`,
+                      },
+                      {
+                        pattern: new RegExp(/^\w/),
+                        // message: errorText.space,
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      formatter={(value) =>
+                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      min={0}
+                      max={1000000000000}
+                      disabled={dataItem ? dataItem.status : false}
+                      placeholder="Nhập tiền buổi trưa"
+                    />
+                  </Form.Item>
+                  <h4>{labels.lunch_money}</h4>
+                  <Form.Item
+                    name="afternoon"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống tiền buổi trưa`,
+                      },
+                      {
+                        pattern: new RegExp(/^\w/),
+                        // message: errorText.space,
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      formatter={(value) =>
+                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      min={0}
+                      max={1000000000000}
+                      disabled={dataItem ? dataItem.status : false}
+                      placeholder="Nhập tiền buổi trưa"
+                    />
+                  </Form.Item>
+                  <h4>{labels.evening_money}</h4>
+                  <Form.Item
+                    name="night"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống tiền buổi tối`,
+                      },
+                      {
+                        pattern: new RegExp(/^\w/),
+                        // message: errorText.space,
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      formatter={(value) =>
+                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      min={0}
+                      max={1000000000000}
+                      disabled={dataItem ? dataItem.status : false}
+                      placeholder="Nhập tiền buổi tối"
+                    />
+                  </Form.Item>
+                  <h4>{labels.end_money}</h4>
+                  <Form.Item
+                    name="proceeds"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống tiền cuối ngày`,
+                      },
+                      {
+                        pattern: new RegExp(/^\w/),
+                        // message: errorText.space,
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      formatter={(value) =>
+                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      min={0}
+                      max={1000000000000}
+                      disabled={dataItem ? dataItem.status : false}
+                      placeholder="Nhập tiền cuối ngày"
+                      onChange={(e) => setFinal(e)}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+              <div
+                className="btnAnalysis"
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <Button
+                  size="Large"
+                  color="primary"
+                  variant="contained"
+                  style={{
+                    paddingLeft: "15%",
+                    paddingRight: "15%",
+                    paddingTop: "2%",
+                    paddingBottom: "2%",
+                    color: "#fff",
+                    marginBottom: "2vh",
+                  }}
+                  disabled={(dataItem ? dataItem.status : false) || loading}
+                  onClick={() => handleOk(false)}
+                >
+                  Lưu
+                </Button>
+                {dataItem ? (
+                  <Button
+                    disabled={(dataItem ? dataItem.status : false) || loading}
+                    size="Large"
+                    color="success"
+                    variant="contained"
+                    style={{
+                      paddingLeft: "15%",
+                      paddingRight: "15%",
+                      paddingTop: "2%",
+                      paddingBottom: "2%",
+                      color: "#fff",
+                    }}
+                    onClick={() => deleteItem()}
+                  >
+                    {`Chốt đơn ngày ${new Date(
+                      dataItem.createdAt
+                    ).toLocaleDateString("vi-VN")}`}
+                  </Button>
+                ) : null}
+              </div>
+            </Form>
+            {/* <AlertDialog
                             children={`Xác nhận xoá ${dataItem ? dataItem.name : null} ?`}
                             title="Xoá nhóm món"
                             onAccept={handleDelete}
                         /> */}
-        </div>
+          </div>
+        ) : (
+          <div>
+            <CircularProgress />
+          </div>
+        )}
       </Card>
     );
   };
