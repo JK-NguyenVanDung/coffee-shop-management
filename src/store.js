@@ -12,7 +12,7 @@ const config = combineReducers({
     schedule: reducers.scheduleReducer,
     bills: reducers.billsReducer,
     inventories: reducers.inventoriesReducer,
-    // order: reducers.orderReducer,
+    analysis: reducers.analysisReducer,
     // news: reducers.newsReducer,
     // keyword: reducers.keyWordReducer,
     // vouchers:reducers.vouchersReducer

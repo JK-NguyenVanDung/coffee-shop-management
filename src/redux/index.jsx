@@ -7,7 +7,7 @@ import { categoriesActions, categoriesReducer } from "./categories";
 import { billsActions, billsReducer } from "./bills";
 import { inventoriesActions, inventoriesReducer } from "./inventories";
 import { scheduleActions, scheduleReducer } from "./schedule";
-// import { keyWordActions, keyWordReducer } from "./keyword";
+import { analysisActions, analysisReducer } from "./analysis";
 // import { vouchersActions, vouchersReducer } from "./voucher";
 // import { brandActions,brandReducer } from "./brand";
 const actions = {
@@ -20,7 +20,7 @@ const actions = {
   billsActions,
   inventoriesActions,
   scheduleActions,
-  //   keyWordActions,
+  analysisActions,
   //   vouchersActions,
   //   brandActions,
 };
@@ -37,7 +37,7 @@ const reducers = {
   billsReducer,
   inventoriesReducer,
   scheduleReducer,
-  //   keyWordReducer,
+  analysisReducer,
   //   vouchersReducer,
   //   brandReducer,
 };

@@ -10,6 +10,9 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import * as collections from "../../../api/Collections/analysis";
+import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
+import { actions } from "../../../redux";
 
 import { Line } from "@ant-design/charts";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
@@ -30,6 +33,29 @@ const labels = {
 };
 
 const SaleChart = () => {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const fetchData = async (value) => {
+    try {
+      setLoading(true);
+      const response = await collections.getData();
+
+      dispatch(actions.analysisActions.setListAll(response));
+
+      setLoading(false);
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      //history.replace("/");
+    }
+  };
+
+  useEffect(() => {
+    // test.current = 2;
+    fetchData();
+  }, []);
   const data = [
     { month: "1", value: 3 },
     { month: "2", value: 4 },
