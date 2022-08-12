@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
 import { Input, Table, Form, Popconfirm, Upload, message, Tooltip } from "antd";
@@ -12,9 +12,11 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { CloseOutlined } from "@ant-design/icons";
+import { billText } from "../../../helper/Text";
 
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/bill";
+import { useReactToPrint } from "react-to-print";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -38,7 +40,20 @@ const radioBtnstyles = (theme) => ({
   },
   checked: {},
 });
-
+function currentDate() {
+  let currentdate = new Date();
+  let datetime =
+    currentdate.getHours() +
+    ":" +
+    currentdate.getMinutes() +
+    " " +
+    currentdate.getDate() +
+    "/" +
+    (currentdate.getMonth() + 1) +
+    "/" +
+    currentdate.getFullYear();
+  return datetime;
+}
 const ModalContent = () => {
   const [loading, setLoading] = useState(false);
   const dataItem = useAppSelector((state) => state.bills.detail);
@@ -51,16 +66,33 @@ const ModalContent = () => {
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
   const employeesList = useAppSelector((state) => state.employees.listAll);
+  const info = useAppSelector((state) => state.auth.info);
+  let billRef = useRef();
+  const [display, setDisplay] = useState(false);
 
   const [details, setDetails] = useState([]);
 
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
-  const handlePrint = () => {
-    dispatch(actions.formActions.closeForm());
-    message.success("In đơn thành công");
-  };
+  // const handlePrint = () => {
+  //   dispatch(actions.formActions.closeForm());
+  //   message.success("In đơn thành công");
+  // };
+  const handlePrint = useReactToPrint({
+    content: () => billRef.current,
+
+    documentTitle: "Hoá đơn quán LINH COFFEE",
+    pageStyle: "print",
+    onBeforeGetContent: () => {
+      setDisplay(true);
+    },
+    onAfterPrint: () => {
+      setDisplay(false);
+      // dispatch(actions.formActions.closeForm());
+      message.success("In đơn thành công");
+    },
+  });
   const handleClose = () => dispatch(actions.formActions.closeForm());
 
   function getPayment(item) {
@@ -169,6 +201,193 @@ const ModalContent = () => {
     total_money: "Tổng tiền (VND)",
     payment_methods: "Phương thức thanh toán",
   };
+  let shopAddress = "địa chỉ";
+  let shopPhone = "0235354332";
+  const paymentText = [
+    { value: "cash", label: "Tiền mặt" },
+    { value: "momo", label: "Momo" },
+    { value: "vnpay", label: "VNPay" },
+  ];
+  const billContent = [
+    { label: "ID đơn hàng", content: dataItem._id },
+    {
+      label: "Ngày tạo:",
+      content: currentDate(),
+    },
+    {
+      label: "Thu ngân",
+      content: dataItem ? getUserName(dataItem.account_id) : "N/A",
+    },
+  ];
+  const billContent2 = {
+    label: "Tên món",
+    content1: "SL ",
+    content2: "Đơn giá",
+  };
+
+  const billContent3 = [
+    {
+      label: "Tổng đơn:",
+      content: numbToCurrency(dataItem.price_total)
+        ? numbToCurrency(dataItem.price_total)
+        : "N/A", // Phần này add đường ngang vào tui ko biết có gì chú copy phần đó dưới á
+    },
+    { label: "Thuế VAT", content: "0%" },
+    {
+      label: "Tổng tiền:",
+      content: numbToCurrency(dataItem.price_total)
+        ? numbToCurrency(dataItem.price_total)
+        : "N/A",
+    },
+    {
+      label: "Phương thức thanh toán:",
+      content: paymentText.map((item) => {
+        if (item.value === dataItem.payment_type) {
+          return item.label;
+        }
+      }),
+    },
+    { label: "Trạng thái:", content: "Đã thanh toán" },
+  ];
+  const PrintWrapper = React.forwardRef((props, ref) => (
+    <div ref={ref}>{props.children}</div>
+  ));
+  const PrintBody = () => {
+    return (
+      <div className="billBgCont">
+        <div className="billHeader">
+          <h2>Linh's Coffee</h2>
+        </div>
+        <div className="locationCont">
+          <h4>Địa chỉ: {shopAddress}</h4>
+          <h4>SĐT: {shopPhone}</h4>
+        </div>
+        <hr width="100%" size="1%" align="center" />
+
+        <div className="cardCont">
+          <div className="billContentsCont">
+            <Typography
+              sx={{ fontSize: "1.5rem", mb: 3 }}
+              color="text.secondary"
+              gutterBottom
+              textAlign="center"
+            >
+              {billText.header3}
+            </Typography>
+            {billContent.map((item) => {
+              return (
+                <>
+                  <div className="billContentCont">
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.label}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.content}
+                    </Typography>
+                  </div>
+                </>
+              );
+            })}
+            <hr width="100%" size="1%" align="center" />
+            <div className="billItemsCont">
+              <Typography
+                sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                color="text.secondary"
+                gutterBottom
+              >
+                {billContent2.label}
+              </Typography>
+              <Typography
+                sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                color="text.secondary"
+                gutterBottom
+              >
+                {billContent2.content1}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+                color="text.secondary"
+                gutterBottom
+              >
+                {billContent2.content2}
+              </Typography>
+            </div>
+            {details.map((item) => {
+              return (
+                <>
+                  <div className="billItemsCont">
+                    <div className="rowCont">
+                      <Typography
+                        sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        {item.name}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        {item.amount}
+                      </Typography>
+                    </div>
+                    <Typography
+                      sx={{
+                        fontSize: "0.8rem",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {numbToCurrency(item.price)}
+                    </Typography>
+                  </div>
+                </>
+              );
+            })}
+            <hr width="100%" size="1%" align="center" />
+            {billContent3.map((item) => {
+              return (
+                <>
+                  <div className="billContentCont">
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.label}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {item.content}
+                    </Typography>
+                  </div>
+                </>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="ModalCont">
       {modalError && <AlertModal chilren={errorText.formValidation} />}
@@ -354,6 +573,11 @@ const ModalContent = () => {
           </div>
         )}
       </Form>
+      <div className="printAreaCont">
+        <PrintWrapper ref={billRef}>
+          <PrintBody />
+        </PrintWrapper>
+      </div>
     </div>
   );
 };
