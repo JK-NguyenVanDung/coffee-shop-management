@@ -31,7 +31,7 @@ const cardTitle = {
   total_revenue: "Tổng doanh thu",
   electronic_wallet: "Ví điện tử",
   total_cost: "Tổng chi phí",
-  account_balance: "Số dư (tài khoản)",
+  account_balance: "Lợi nhuận",
 };
 const cardCont = {
   revenue_target: "12% Increase From Target",

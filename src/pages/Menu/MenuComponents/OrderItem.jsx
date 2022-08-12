@@ -74,7 +74,12 @@ const OrderItem = ({ item, changeAmount = false }) => {
             isValidHttpUrl(item.avatar) ? item.avatar : PlaceHolder
           })`,
         }}
-      />
+      >
+        {" "}
+        <div className="smallRemoveBtnCont">
+          <RemoveButton action={onRemove} />
+        </div>
+      </div>
 
       <div className="infoCont">
         <span className="title">{item.name + " x " + item.amount}</span>
@@ -111,9 +116,6 @@ const OrderItem = ({ item, changeAmount = false }) => {
           </IconButton>
         </div>
       )}
-      <div className="smallRemoveBtnCont">
-        <RemoveButton action={onRemove} />
-      </div>
     </div>
   );
 };
