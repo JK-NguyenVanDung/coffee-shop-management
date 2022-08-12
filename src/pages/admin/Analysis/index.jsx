@@ -52,6 +52,8 @@ const labels = {
 const SaleChart = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const data = useAppSelector((state) => state.analysis.listAll);
+
   const date = useAppSelector((state) => state.analysis.date);
   const fetchData = async (value) => {
     try {
@@ -59,16 +61,20 @@ const SaleChart = () => {
       let response = null;
 
       if (date) {
-        response = await collections.getData({
-          createdAt: date,
-        });
+        response = await collections.getData(date);
       } else {
         let out = getMonthAndYear(new Date());
-        response = await collections.getData({
-          createdAt: new Date().toISOString(),
-        });
+        response = await collections.getData(out);
       }
-      dispatch(actions.analysisActions.setListAll(response));
+      let data = response.sum_data.map((item) => {
+        return {
+          month: "Tháng  " + item.month,
+          value: item[0] ? item[0].sum : 0,
+        };
+      });
+
+      console.log(data);
+      dispatch(actions.analysisActions.setListAll(data));
 
       setLoading(false);
       // setPagination({
@@ -83,20 +89,21 @@ const SaleChart = () => {
     // test.current = 2;
     fetchData();
   }, [date]);
-  const data = [
-    { month: "1", value: 3000000 },
-    { month: "2", value: 4000000 },
-    { month: "3", value: 350000 },
-    { month: "4", value: 5000000 },
-    { month: "5", value: 490000 },
-    { month: "6", value: 6000000 },
-    { month: "7", value: 7000000 },
-    { month: "8", value: 9000000 },
-    { month: "9", value: 13000000 },
-    { month: "10", value: 13000000 },
-    { month: "11", value: 13000000 },
-    { month: "12", value: 13000000 },
-  ];
+
+  // const data = [
+  //   { month: "1", value: 3000000 },
+  //   { month: "2", value: 4000000 },
+  //   { month: "3", value: 350000 },
+  //   { month: "4", value: 5000000 },
+  //   { month: "5", value: 490000 },
+  //   { month: "6", value: 6000000 },
+  //   { month: "7", value: 7000000 },
+  //   { month: "8", value: 9000000 },
+  //   { month: "9", value: 13000000 },
+  //   { month: "10", value: 13000000 },
+  //   { month: "11", value: 13000000 },
+  //   { month: "12", value: 13000000 },
+  // ];
   const config = {
     data,
     xField: "month",
@@ -122,7 +129,7 @@ const SaleChart = () => {
     xAxis: {
       label: {
         formatter: (val) => {
-          return "Tháng " + val;
+          return val;
         },
       },
     },
@@ -165,7 +172,12 @@ const SaleChart = () => {
 };
 
 function getMonthAndYear(e) {
-  return e.toISOString();
+  let month = new Date(e).getMonth();
+  let year = new Date(e).getFullYear();
+  return {
+    month: month + 1,
+    year: year,
+  };
 }
 export default function Analysis() {
   const dispatch = useAppDispatch();
@@ -175,6 +187,7 @@ export default function Analysis() {
     setDate(e);
     let out = getMonthAndYear(e);
     dispatch(actions.analysisActions.setDate(out));
+    console.log(out);
   }
   return (
     <>

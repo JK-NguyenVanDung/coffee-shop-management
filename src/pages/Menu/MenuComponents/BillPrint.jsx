@@ -102,8 +102,9 @@ const BillPrint = () => {
   const handlePrint = useReactToPrint({
     content: () => billRef.current,
 
-    documentTitle: "Hoá đơn mới",
+    documentTitle: "Hoá đơn quán LINH COFFEE",
     pageStyle: "print",
+    onAfterPrint: () => printOutBill(),
   });
   const PrintWrapper = React.forwardRef((props, ref) => (
     <div ref={ref}>{props.children}</div>
@@ -121,15 +122,15 @@ const BillPrint = () => {
         <hr width="100%" size="1%" align="center" />
 
         <div className="cardCont">
-          <Typography
-            sx={{ fontSize: "1.5rem" }}
-            color="text.secondary"
-            gutterBottom
-            textAlign="center"
-          >
-            {billText.header3}
-          </Typography>
           <div className="billContentsCont">
+            <Typography
+              sx={{ fontSize: "1.5rem", mb: 3 }}
+              color="text.secondary"
+              gutterBottom
+              textAlign="center"
+            >
+              {billText.header3}
+            </Typography>
             {billContent.map((item) => {
               return (
                 <>
