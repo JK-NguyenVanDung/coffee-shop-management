@@ -68,7 +68,6 @@ const ModalContent = () => {
   const employeesList = useAppSelector((state) => state.employees.listAll);
   const info = useAppSelector((state) => state.auth.info);
   let billRef = useRef();
-  const [display, setDisplay] = useState(false);
 
   const [details, setDetails] = useState([]);
 
@@ -84,12 +83,9 @@ const ModalContent = () => {
 
     documentTitle: "Hoá đơn quán LINH COFFEE",
     pageStyle: "print",
-    onBeforeGetContent: () => {
-      setDisplay(true);
-    },
+
     onAfterPrint: () => {
-      setDisplay(false);
-      // dispatch(actions.formActions.closeForm());
+      dispatch(actions.formActions.closeForm());
       message.success("In đơn thành công");
     },
   });
