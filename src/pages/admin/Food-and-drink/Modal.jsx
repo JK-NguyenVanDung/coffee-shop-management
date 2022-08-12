@@ -378,6 +378,10 @@ const ModalContent = () => {
                   required: true,
                   message: `Không được để trống tên món`,
                 },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
               ]}
             >
               <Input disabled={isDetail} placeholder="Nhập tên món" />

@@ -252,8 +252,8 @@ const TimeSheets = () => {
     total_time2: "Tổng giờ làm (nếu có sai số)",
     rate: "Rate/ giờ (VND)",
     month: "Bảng lương tháng",
-    bonus: "Lương thưởng + (VND)",
-    punish: "Phạt lương - (VND)",
+    bonus: "Lương thưởng (VND)",
+    punish: "Phạt lương (VND)",
   };
   const data = [
     { year: "1991", value: 3 },
@@ -502,10 +502,7 @@ const TimeSheets = () => {
             </div>
             <div style={{ width: "50%" }}>
               <h4>{labels.work_time}</h4>
-              <Line
-                {...config}
-                style={{ marginBottom: 10, height: "49.8vh" }}
-              />
+              <Line {...config} style={{ marginBottom: 10, height: "56.2%" }} />
               <div className="workCont">
                 <div className="total_time1">
                   <h4>{labels.total_time1}</h4>
