@@ -484,10 +484,7 @@ const TimeSheets = () => {
           </div>
           <div style={{ width: "50%" }}>
             <h4>{labels.work_time}</h4>
-            <Line
-              {...config}
-              style={{ marginBottom: 10, height: "49.8  vh" }}
-            />
+            <Line {...config} style={{ marginBottom: 10, height: "49.8vh" }} />
             <div className="workCont">
               <div className="total_time1">
                 <h4>{labels.total_time1}</h4>
