@@ -91,7 +91,7 @@ export default function HeaderProFile() {
 
   const logout = async () => {
     console.log(token);
-    const response = await collections.logout(token);
+    // const response = await collections.logout(token);
     dispatch(actions.authActions.logout());
     localStorage.removeItem("Bearer");
     navigate(`../`);

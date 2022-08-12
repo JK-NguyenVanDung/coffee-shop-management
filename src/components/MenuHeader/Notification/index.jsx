@@ -94,7 +94,6 @@ function Notification(props) {
                 <div key={item.name} className="mainNote">
                   <div className="titleMain">
                     <div className="leftTitle">
-                      <CloseCircleOutlined />
                       <div className="title"> {item.name}</div>
                     </div>
                     <IconButton

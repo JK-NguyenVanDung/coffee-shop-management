@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
 import { Input, Form, message, Select, InputNumber } from "antd";
+import { useReactToPrint } from "react-to-print";
 
 import { Line } from "@ant-design/charts";
 
@@ -37,6 +38,7 @@ import moment from "moment";
 
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
+import { Print } from "@mui/icons-material";
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -133,7 +135,22 @@ const TimeSheets = () => {
   function checkCustomValidation() {
     return true;
   }
+  let billRef = useRef();
 
+  const handlePrint = useReactToPrint({
+    content: () => billRef.current,
+
+    documentTitle: "Hoá đơn quán LINH COFFEE",
+    pageStyle: "print",
+
+    onAfterPrint: () => {
+      dispatch(actions.formActions.closeForm());
+      message.success("In đơn thành công");
+    },
+  });
+  const PrintWrapper = React.forwardRef((props, ref) => (
+    <div ref={ref}>{props.children}</div>
+  ));
   const handleOk = async () => {
     form
       .validateFields()
@@ -288,180 +305,181 @@ const TimeSheets = () => {
         </IconButton>
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
-        <div className="selectCont">
-          <h4>{labels.month}</h4>
+        <PrintWrapper ref={billRef}>
+          <div className="selectCont">
+            <h4>{labels.month}</h4>
 
-          <div>
-            <Select
-              dropdownStyle={{ zIndex: 2000 }}
-              placeholder="Nhập loại menu"
-              defaultValue="8"
-            >
-              <Option value="8">Tháng 8</Option>
-            </Select>
-          </div>
-        </div>
-        <div className="bodyCont">
-          <div style={{ width: "40%" }}>
-            <h4>{labels.full_name}</h4>
-            <Form.Item
-              name="full_name"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống họ tên`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled placeholder="Nhập họ tên" />
-            </Form.Item>
-
-            <h4>{labels.userInfo}</h4>
-            <Form.Item
-              name="userInfo"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống thông tin liên lạc`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <TextArea
-                disabled
-                placeholder="Nhập thông tin liên lạc"
-                rows={3}
-                maxLength={6}
-              />
-            </Form.Item>
-            <div className="leftConts">
-              <div className="cont1">
-                <h4>{labels.role}</h4>
-                <Form.Item
-                  name="role"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống chức vụ`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
-                    },
-                  ]}
-                >
-                  <Input disabled placeholder="Nhập chức vụ" />
-                </Form.Item>
-              </div>
-              <div className="cont2">
-                <h4>{labels.status}</h4>
-                <Form.Item
-                  name="status"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống tình trạng`,
-                    },
-                  ]}
-                >
-                  <Input disabled placeholder="Nhập tình trạng" />
-                </Form.Item>
-              </div>
+            <div>
+              <Select
+                dropdownStyle={{ zIndex: 2000 }}
+                placeholder="Nhập loại menu"
+                defaultValue="8"
+              >
+                <Option value="8">Tháng 8</Option>
+              </Select>
             </div>
-            <h4>{labels.admin_payment}</h4>
-            <div style={{ marginBottom: "5%" }}>
-              <div className="PositionAdd">
-                <div className="paidCont">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        disabled={isDetail}
-                        onChange={handleCheckbox}
-                        checked={paid}
-                      />
-                    }
-                    name="paid"
-                    label="Đã thanh toán"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        disabled={isDetail}
-                        onChange={handleCheckbox}
-                        checked={!paid}
-                      />
-                    }
-                    name="unpaid"
-                    label="Chưa thanh toán"
-                  />
+          </div>
+          <div className="bodyCont">
+            <div style={{ width: "40%" }}>
+              <h4>{labels.full_name}</h4>
+              <Form.Item
+                name="full_name"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống họ tên`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <Input disabled placeholder="Nhập họ tên" />
+              </Form.Item>
+
+              <h4>{labels.userInfo}</h4>
+              <Form.Item
+                name="userInfo"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống thông tin liên lạc`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <TextArea
+                  disabled
+                  placeholder="Nhập thông tin liên lạc"
+                  rows={3}
+                  maxLength={6}
+                />
+              </Form.Item>
+              <div className="leftConts">
+                <div className="cont1">
+                  <h4>{labels.role}</h4>
+                  <Form.Item
+                    name="role"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống chức vụ`,
+                      },
+                      {
+                        pattern: new RegExp(/^\w/),
+                        message: errorText.space,
+                      },
+                    ]}
+                  >
+                    <Input disabled placeholder="Nhập chức vụ" />
+                  </Form.Item>
+                </div>
+                <div className="cont2">
+                  <h4>{labels.status}</h4>
+                  <Form.Item
+                    name="status"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống tình trạng`,
+                      },
+                    ]}
+                  >
+                    <Input disabled placeholder="Nhập tình trạng" />
+                  </Form.Item>
                 </div>
               </div>
-            </div>
-            <div className="leftConts">
-              <div className="cont1">
-                <h4>{labels.bonus}</h4>
-                <Form.Item
-                  name="bonus"
-                  rules={[
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    formatter={
-                      bonus === 0
-                        ? null
-                        : (value) =>
-                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    min={0}
-                    max={1000000000000}
-                    style={{ minWidth: "100%" }}
-                    onChange={(e) => setBonus(e)}
-                    disabled={endOfMonth()}
-                    placeholder="(Không bắt buộc)"
-                  />
-                </Form.Item>
+              <h4>{labels.admin_payment}</h4>
+              <div style={{ marginBottom: "5%" }}>
+                <div className="PositionAdd">
+                  <div className="paidCont">
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={isDetail}
+                          onChange={handleCheckbox}
+                          checked={paid}
+                        />
+                      }
+                      name="paid"
+                      label="Đã thanh toán"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={isDetail}
+                          onChange={handleCheckbox}
+                          checked={!paid}
+                        />
+                      }
+                      name="unpaid"
+                      label="Chưa thanh toán"
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="cont2">
-                <h4>{labels.punish}</h4>
-                <Form.Item
-                  name="punish"
-                  rules={[
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    formatter={
-                      punish === 0
-                        ? null
-                        : (value) =>
-                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    min={0}
-                    max={1000000000000}
-                    style={{ minWidth: "100%" }}
-                    onChange={(e) => setPunish(e)}
-                    disabled={endOfMonth()}
-                    placeholder="(Không bắt buộc)"
-                  />
-                </Form.Item>
+              <div className="leftConts">
+                <div className="cont1">
+                  <h4>{labels.bonus}</h4>
+                  <Form.Item
+                    name="bonus"
+                    rules={[
+                      {
+                        pattern: new RegExp(/^\w/),
+                        message: errorText.space,
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      formatter={
+                        bonus === 0
+                          ? null
+                          : (value) =>
+                              `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      min={0}
+                      max={1000000000000}
+                      style={{ minWidth: "100%" }}
+                      onChange={(e) => setBonus(e)}
+                      disabled={endOfMonth()}
+                      placeholder="(Không bắt buộc)"
+                    />
+                  </Form.Item>
+                </div>
+                <div className="cont2">
+                  <h4>{labels.punish}</h4>
+                  <Form.Item
+                    name="punish"
+                    rules={[
+                      {
+                        pattern: new RegExp(/^\w/),
+                        message: errorText.space,
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      formatter={
+                        punish === 0
+                          ? null
+                          : (value) =>
+                              `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      min={0}
+                      max={1000000000000}
+                      style={{ minWidth: "100%" }}
+                      onChange={(e) => setPunish(e)}
+                      disabled={endOfMonth()}
+                      placeholder="(Không bắt buộc)"
+                    />
+                  </Form.Item>
+                </div>
               </div>
-            </div>
-            <h4>{labels.salary_total}</h4>
-            {/* <Form.Item
+              <h4>{labels.salary_total}</h4>
+              {/* <Form.Item
               name="Tổng lương"
               rules={[
                 {
@@ -474,113 +492,117 @@ const TimeSheets = () => {
                 },
               ]}
             > */}
-            <Input
-              disabled={true}
-              value={total + " VNĐ"}
-              style={{ minWidth: "100%" }}
-              placeholder={`0 VNĐ`}
-            />
-            {/* </Form.Item> */}
-          </div>
-          <div style={{ width: "50%" }}>
-            <h4>{labels.work_time}</h4>
-            <Line {...config} style={{ marginBottom: 10, height: "49.8vh" }} />
-            <div className="workCont">
-              <div className="total_time1">
-                <h4>{labels.total_time1}</h4>
-                <Form.Item
-                  name="system_total"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống tổng giờ làm`,
-                    },
-                  ]}
-                >
-                  <Input disabled={true} placeholder="Nhập tổng giờ làm" />
-                </Form.Item>
-              </div>
-              <div className="total_time2">
-                <h4>{labels.total_time2}</h4>
-                <Form.Item
-                  name="total_margin"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống tổng giờ làm`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    formatter={
-                      miscalculation === 0
-                        ? null
-                        : (value) =>
-                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                    min={0}
-                    max={1000000000000}
-                    style={{ minWidth: "100%" }}
-                    disabled={endOfMonth()}
-                    onChange={(e) => setMiscalculation(e)}
-                    placeholder="Nhập tổng giờ làm"
-                  />
-                </Form.Item>
-              </div>
-            </div>
-            <h4>{labels.rate}</h4>
-            <Form.Item
-              name="payrate"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống rate/giờ`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <InputNumber
-                formatter={
-                  payrate === 0
-                    ? null
-                    : (value) =>
-                        `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }
-                min={0}
-                max={1000000000000}
+              <Input
+                disabled={true}
+                value={total + " VNĐ"}
                 style={{ minWidth: "100%" }}
-                disabled={endOfMonth()}
-                onChange={(e) => setPayrate(e)}
-                placeholder="Nhập rate/giờ"
+                placeholder={`0 VNĐ`}
               />
-            </Form.Item>
+              {/* </Form.Item> */}
+            </div>
+            <div style={{ width: "50%" }}>
+              <h4>{labels.work_time}</h4>
+              <Line
+                {...config}
+                style={{ marginBottom: 10, height: "49.8vh" }}
+              />
+              <div className="workCont">
+                <div className="total_time1">
+                  <h4>{labels.total_time1}</h4>
+                  <Form.Item
+                    name="system_total"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống tổng giờ làm`,
+                      },
+                    ]}
+                  >
+                    <Input disabled={true} placeholder="Nhập tổng giờ làm" />
+                  </Form.Item>
+                </div>
+                <div className="total_time2">
+                  <h4>{labels.total_time2}</h4>
+                  <Form.Item
+                    name="total_margin"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống tổng giờ làm`,
+                      },
+                      {
+                        pattern: new RegExp(/^\w/),
+                        message: errorText.space,
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      formatter={
+                        miscalculation === 0
+                          ? null
+                          : (value) =>
+                              `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      min={0}
+                      max={1000000000000}
+                      style={{ minWidth: "100%" }}
+                      disabled={endOfMonth()}
+                      onChange={(e) => setMiscalculation(e)}
+                      placeholder="Nhập tổng giờ làm"
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+              <h4>{labels.rate}</h4>
+              <Form.Item
+                name="payrate"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống rate/giờ`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <InputNumber
+                  formatter={
+                    payrate === 0
+                      ? null
+                      : (value) =>
+                          `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }
+                  min={0}
+                  max={1000000000000}
+                  style={{ minWidth: "100%" }}
+                  disabled={endOfMonth()}
+                  onChange={(e) => setPayrate(e)}
+                  placeholder="Nhập rate/giờ"
+                />
+              </Form.Item>
+            </div>
           </div>
-        </div>
-        <CardContent>
-          <div className="noteSalary">
-            <TextField
-              placeholder="Nhập ghi chú của quản lý ở đây"
-              label="Ghi chú (Không bắt buộc)"
-              multiline
-              rows={2}
-              id="my-input"
-              maxRows={4}
-              value={note}
-              variant="outlined"
-              onChange={(e) => {
-                setNote(e.target.value);
-              }}
-              fullWidth
-            />
-          </div>
-        </CardContent>
+          <CardContent>
+            <div className="noteSalary">
+              <TextField
+                placeholder="Nhập ghi chú của quản lý ở đây"
+                label="Ghi chú (Không bắt buộc)"
+                multiline
+                rows={2}
+                id="my-input"
+                maxRows={4}
+                value={note}
+                variant="outlined"
+                onChange={(e) => {
+                  setNote(e.target.value);
+                }}
+                fullWidth
+              />
+            </div>
+          </CardContent>
+        </PrintWrapper>
         <div className="btnTimekeeping">
           <Button
             size="Large"
@@ -593,7 +615,7 @@ const TimeSheets = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            onClick={handleOk}
+            onClick={handlePrint}
           >
             Xuất File
           </Button>
