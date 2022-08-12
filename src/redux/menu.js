@@ -115,7 +115,21 @@ const slice = createSlice({
          },
         resetOrderBar(state){
             if(state.orderList.length === 0){
-                return initialState;
+                state.show= false;
+                state.loadData= false;
+                state.note= "";
+                state.amount= 0;
+                state.totalBill=0;
+                state.total= 0;
+                state.paymentMethod= "cash";
+                state.printBill= true;
+                state.openPrint= false;
+                state.print= false;
+                state.info= {};
+                state.showInfo= false;
+                state.openDetail= false;
+                state.orderList = [];
+                state.loadData= false ;
             }
         },
         setNameMenu(state, actions) {
@@ -149,7 +163,7 @@ const slice = createSlice({
         removeOrderItem(state,actions){
             let temp = actions.payload;
             if(state.orderList.length > 0){
-                state.orderList= state.orderList.filter(item => item.id !== temp.id)
+                state.orderList= state.orderList.filter(item => item._id !== temp._id)
             
             }
         
