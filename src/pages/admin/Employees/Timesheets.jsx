@@ -107,8 +107,8 @@ const TimeSheets = () => {
         role: dataItem.role === 0 ? "Nhân viên" : "Quản lý",
         status: getStatus(dataItem.account_status),
         system_total: 12,
-        bonus: 0,
-        punish: 0,
+        bonus: null,
+        punish: null,
         payrate: 0,
         total_margin: 12,
       });
@@ -172,6 +172,12 @@ const TimeSheets = () => {
 
         //   setLoading(false);
         // }
+
+        handleClose();
+        dispatch(actions.formActions.changeLoad(!loadData));
+        message.success("Xuất file thành công");
+
+        setLoading(false);
       })
 
       .catch((info) => {
@@ -179,11 +185,6 @@ const TimeSheets = () => {
 
         setLoading(false);
       });
-    handleClose();
-    dispatch(actions.formActions.changeLoad(!loadData));
-    message.success("In thành công");
-
-    setLoading(false);
   };
 
   const validatePhone = (value) => {
@@ -483,7 +484,10 @@ const TimeSheets = () => {
           </div>
           <div style={{ width: "50%" }}>
             <h4>{labels.work_time}</h4>
-            <Line {...config} style={{ marginBottom: 10, height: "56vh" }} />
+            <Line
+              {...config}
+              style={{ marginBottom: 10, height: "49.8  vh" }}
+            />
             <div className="workCont">
               <div className="total_time1">
                 <h4>{labels.total_time1}</h4>
