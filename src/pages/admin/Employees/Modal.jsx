@@ -443,9 +443,24 @@ const ModalContent = () => {
               >
                 <UploadButton />
               </Upload>
+
               {/* </ImgCrop> */}
             </div>
-            <h4 style={{ marginTop: fileList !== null ? "4.5%" : 0 }}>
+            <p
+              style={{
+                marginBottom: "2.7vh",
+                fontSize: "0.6rem",
+                display: "flex",
+                width: "97%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {
+                "(Chọn ảnh nền tối, kích thước 200x200 và kích cỡ file dưới 5mb)"
+              }
+            </p>
+            <h4 style={{ marginTop: fileList !== null ? "0%" : 0 }}>
               {labels.fullname}
             </h4>
             <Form.Item
@@ -461,7 +476,11 @@ const ModalContent = () => {
                 },
               ]}
             >
-              <Input disabled={isDetail} placeholder="Nhập họ tên" />
+              <Input
+                style={{ marginBottom: 1 }}
+                disabled={isDetail}
+                placeholder="Nhập họ tên"
+              />
             </Form.Item>
 
             <div style={{ marginBottom: "10%" }}>

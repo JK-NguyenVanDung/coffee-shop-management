@@ -299,8 +299,8 @@ const ModalContent = () => {
         <div className="bodyCont">
           <div
             style={{
-              width: "30%",
-              display: "flet",
+              width: "34%",
+              display: "flex",
               flexDirection: "column",
               justifyContent: "flet-start",
             }}
@@ -326,6 +326,20 @@ const ModalContent = () => {
               </Upload>
               {/* </ImgCrop> */}
             </div>
+            <span
+              style={{
+                marginBottom: "1vh",
+                fontSize: "0.6rem",
+                display: "flex",
+                width: "97%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {
+                "(Chọn ảnh nền tối, kích thước 200x200 và kích cỡ file dưới 5mb)"
+              }
+            </span>
             {dataItem ? (
               <>
                 <h4>{labels.create}</h4>
