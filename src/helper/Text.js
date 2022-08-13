@@ -18,12 +18,12 @@ export const dishText={
 export const billText={
     header1: "Thông tin hoá đơn",
     header2: "Phương thức thanh toán",
-    header3: "Hóa đơn thanh toán"
+    header3: "Hóa đơn thanh toán",
 
 }
 
-export const shopPhone = "032154333222"
-export const shopAddress = "Shop"
+export const shopPhone = "0964889174"
+export const shopAddress = "111/79 đặng thuỳ trâm"
 
 
 export const errorText={

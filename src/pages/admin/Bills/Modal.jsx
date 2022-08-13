@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { CloseOutlined } from "@ant-design/icons";
-import { billText } from "../../../helper/Text";
+import { billText, shopPhone, shopAddress } from "../../../helper/Text";
 
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/bill";
@@ -197,8 +197,6 @@ const ModalContent = () => {
     total_money: "Tổng tiền (VND)",
     payment_methods: "Phương thức thanh toán",
   };
-  let shopAddress = "địa chỉ";
-  let shopPhone = "0235354332";
   const paymentText = [
     { value: "cash", label: "Tiền mặt" },
     { value: "momo", label: "Momo" },
