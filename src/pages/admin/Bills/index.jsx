@@ -117,18 +117,18 @@ const Bills = () => {
     },
     {
       title: "Phương thức thanh toán",
-      dataIndex: "payment_methods",
+      dataIndex: "payment_type",
       render: (item) => {
         let role = " ";
         switch (item) {
-          case 0:
+          case "cash":
             role = "Tiền mặt";
             break;
-          case 1:
+          case "momo":
             role = "Momo";
             break;
-          case 2:
-            role = "Ngân hàng";
+          case "vnpay":
+            role = "VN Pay";
             break;
           default:
             role = "Tiền mặt";
