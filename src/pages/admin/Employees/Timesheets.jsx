@@ -39,6 +39,138 @@ import moment from "moment";
 import AlertModal from "../../../components/FormElements/AlertModal";
 import AlertDialog from "../../../components/AlertDialog";
 import { Print } from "@mui/icons-material";
+
+import { Column } from "@ant-design/plots";
+
+const WorkColumn = (props) => {
+  const data = [
+    {
+      date: "01/02/2022",
+      hour: 12,
+    },
+    {
+      date: "02/02/2022",
+      hour: 4,
+    },
+    {
+      date: "03/02/2022",
+      hour: 8,
+    },
+    {
+      date: "04/02/2022",
+      hour: 4,
+    },
+    {
+      date: "05/02/2022",
+      hour: 4,
+    },
+    {
+      date: "06/02/2022",
+      hour: 12,
+    },
+    {
+      date: "07/02/2022",
+      hour: 8,
+    },
+    {
+      date: "08/02/2022",
+      hour: 4,
+    },
+    {
+      date: "09/02/2022",
+      hour: 12,
+    },
+    {
+      date: "10/02/2022",
+      hour: 4,
+    },
+    {
+      date: "11/02/2022",
+      hour: 12,
+    },
+    {
+      date: "12/02/2022",
+      hour: 4,
+    },
+    {
+      date: "13/02/2022",
+      hour: 8,
+    },
+    {
+      date: "14/02/2022",
+      hour: 4,
+    },
+    {
+      date: "15/02/2022",
+      hour: 4,
+    },
+    {
+      date: "16/02/2022",
+      hour: 8,
+    },
+    {
+      date: "17/02/2022",
+      hour: 4,
+    },
+    {
+      date: "18/02/2022",
+      hour: 12,
+    },
+    {
+      date: "19/02/2022",
+      hour: 8,
+    },
+    {
+      date: "20/02/2022",
+      hour: 4,
+    },
+  ];
+  const config = {
+    data,
+    xField: "date",
+    yField: "hour",
+    label: {
+      // 可手动配置 label 数据标签位置
+      position: "middle",
+      // 'top', 'bottom', 'middle',
+      // 配置样式
+      style: {
+        fill: "#FFFFFF",
+        opacity: 0.6,
+      },
+    },
+    xAxis: {
+      label: {
+        autoHide: true,
+        autoRotate: false,
+      },
+    },
+    yAxis: {
+      line: {
+        style: {
+          lineDash: [0, 0],
+          lineWidth: 1,
+          stroke: "#e9e9e9",
+        },
+      },
+
+      label: {
+        formatter: (val) => {
+          return val + "h";
+        },
+      },
+    },
+    meta: {
+      date: {
+        alias: "Ngày",
+      },
+      hour: {
+        alias: "Giờ làm việc",
+      },
+    },
+  };
+  return <Column {...config} {...props} />;
+};
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -108,12 +240,14 @@ const TimeSheets = () => {
           dataItem.phone_number,
         role: dataItem.role === 0 ? "Nhân viên" : "Quản lý",
         status: getStatus(dataItem.account_status),
-        system_total: 12,
+        system_total: 12 * 7,
         bonus: null,
         punish: null,
         payrate: 0,
-        total_margin: 12,
+        total_margin: 12 * 7,
       });
+      setMiscalculation(12 * 7);
+      setPayrate(0);
       // nếu không có dữ liệu đặc biệt thì xoá
       // setRole(dataItem.role === 0 ? true : false);
       // setStatus(dataItem.account_status);
@@ -247,7 +381,7 @@ const TimeSheets = () => {
     status: "Tình trạng",
     admin_payment: "Thanh toán của Admin",
     salary_total: "Tổng lương",
-    work_time: "Giờ làm (h/tuần)",
+    work_time: "Giờ làm (h/ngày)",
     total_time1: "Tổng giờ làm (trên hệ thống)",
     total_time2: "Tổng giờ làm (nếu có sai số)",
     rate: "Rate/ giờ (VND)",
@@ -502,7 +636,7 @@ const TimeSheets = () => {
             </div>
             <div style={{ width: "50%" }}>
               <h4>{labels.work_time}</h4>
-              <Line {...config} style={{ marginBottom: 10, height: "56.2%" }} />
+              <WorkColumn style={{ marginBottom: 10, height: "56.2%" }} />
               <div className="workCont">
                 <div className="total_time1">
                   <h4>{labels.total_time1}</h4>
@@ -585,7 +719,7 @@ const TimeSheets = () => {
             <div className="noteSalary">
               <TextField
                 placeholder="Nhập ghi chú của quản lý ở đây"
-                label="Ghi chú Không bắt buộc"
+                label="Ghi chú (Không bắt buộc)"
                 multiline
                 rows={2}
                 id="my-input"

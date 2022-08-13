@@ -133,6 +133,14 @@ const SaleChart = () => {
         },
       },
     },
+    meta: {
+      month: {
+        alias: "Tháng",
+      },
+      value: {
+        alias: "Tổng doanh thu",
+      },
+    },
     label: {},
     smooth: true,
     padding: "auto",
