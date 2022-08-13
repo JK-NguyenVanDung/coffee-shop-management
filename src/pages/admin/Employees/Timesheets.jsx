@@ -139,7 +139,7 @@ const TimeSheets = () => {
 
   const handlePrint = useReactToPrint({
     content: () => billRef.current,
-
+    onBeforePrint: () => handleOk(),
     documentTitle: "Hoá đơn quán LINH COFFEE",
     pageStyle: "print",
 
@@ -446,7 +446,7 @@ const TimeSheets = () => {
                       style={{ minWidth: "100%" }}
                       onChange={(e) => setBonus(e)}
                       disabled={endOfMonth()}
-                      placeholder="(Không bắt buộc)"
+                      placeholder="Không bắt buộc"
                     />
                   </Form.Item>
                 </div>
@@ -473,7 +473,7 @@ const TimeSheets = () => {
                       style={{ minWidth: "100%" }}
                       onChange={(e) => setPunish(e)}
                       disabled={endOfMonth()}
-                      placeholder="(Không bắt buộc)"
+                      placeholder="Không bắt buộc"
                     />
                   </Form.Item>
                 </div>
@@ -585,7 +585,7 @@ const TimeSheets = () => {
             <div className="noteSalary">
               <TextField
                 placeholder="Nhập ghi chú của quản lý ở đây"
-                label="Ghi chú (Không bắt buộc)"
+                label="Ghi chú Không bắt buộc"
                 multiline
                 rows={2}
                 id="my-input"

@@ -65,6 +65,7 @@ const slice = createSlice({
         },
         createOrder(state){
             // return initialState;
+            state.openDetail= false;
 
         },
         resetOrder(state){

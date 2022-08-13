@@ -217,7 +217,7 @@ const Bills = () => {
 
   function getUserName(id) {
     let emp = employeesList.filter((item) => item._id === id);
-    return emp[0].full_name;
+    return emp[0] ? emp[0].full_name : "N/A";
   }
 
   useEffect(() => {

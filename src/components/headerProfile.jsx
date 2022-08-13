@@ -429,7 +429,7 @@ export default function HeaderProFile() {
       <Menu.Divider />
       <Menu.Item icon={<LoginOutlined />} onClick={logout}>
         {/* logout */}
-        Logout
+        Đăng xuất
       </Menu.Item>
     </Menu>
   ) : (
