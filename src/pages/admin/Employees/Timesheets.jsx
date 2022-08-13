@@ -273,7 +273,6 @@ const TimeSheets = () => {
 
   const handlePrint = useReactToPrint({
     content: () => billRef.current,
-    onBeforePrint: () => handleOk(),
     documentTitle: "Hoá đơn quán LINH COFFEE",
     pageStyle: "print",
 
@@ -285,6 +284,16 @@ const TimeSheets = () => {
   const PrintWrapper = React.forwardRef((props, ref) => (
     <div ref={ref}>{props.children}</div>
   ));
+  const validateForm = async (e) => {
+    form
+      .validateFields()
+      .then(async (values) => {
+        handlePrint(e);
+      })
+      .catch((info) => {
+        console.log(2);
+      });
+  };
   const handleOk = async () => {
     form
       .validateFields()
@@ -746,7 +755,7 @@ const TimeSheets = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            onClick={handlePrint}
+            onClick={(e) => validateForm(e)}
           >
             Xuất File
           </Button>

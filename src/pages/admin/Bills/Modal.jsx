@@ -134,14 +134,12 @@ const ModalContent = () => {
   const { Bill, manager } = role;
   const error = [Bill, manager].filter((v) => v).length !== 1;
   function getUserName(id) {
-    function getUserName(id) {
-      for (let i = 0; i < employeesList.length; i++) {
-        if (employeesList[i]._id === id) {
-          return employeesList[i].full_name;
-        }
+    for (let i = 0; i < employeesList.length; i++) {
+      if (employeesList[i]._id === id) {
+        return employeesList[i].full_name;
       }
-      return "N/A";
     }
+    return "N/A";
   }
   const handleOk = async () => {
     form

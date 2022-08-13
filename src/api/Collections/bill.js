@@ -42,7 +42,7 @@ export const addBill = async (body) => {
   };
   export const removeThreeMonthBill = async () => {
     try {
-      const response = await api.delete(`/bills/`);
+      const response = await api.delete(`/bills`);
       return response;
     } catch (err) {
       throw err.message;
