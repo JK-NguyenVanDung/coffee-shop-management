@@ -44,7 +44,9 @@ import { Print } from "@mui/icons-material";
 import { Column } from "@ant-design/plots";
 
 const WorkColumn = (props) => {
-  const data = useAppSelector((state) => state.employees.workLog);
+  const data = useAppSelector((state) =>
+    state.employees.workLog ? state.employees.workLog : []
+  );
 
   // const data = [
   //   {
