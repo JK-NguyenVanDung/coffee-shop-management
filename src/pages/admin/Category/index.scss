@@ -22,9 +22,8 @@
     padding-left: 4%;
     padding-right: 3%;
 }
-.form{
-    height: 90vh;
-    overflow-y: scroll;
+.formCategory{
+    height: 90vh; 
 }
 .bodyCont {
     width: 100%;
@@ -32,7 +31,6 @@
     flex-direction: row;
     justify-content: space-around;   
     overflow-x:hidden;
-
 }
 .BtnCategory {
     padding-top: 10vh;
@@ -68,4 +66,8 @@
 }
 .ant-form-item-explain-error{
     max-width: 360px;
+}
+.css-yap398 {
+    width: 70%;
+    height: 90vh;
 }

@@ -174,7 +174,7 @@ const ModalContent = () => {
           <CloseOutlined />
         </IconButton>
       </div>
-      <Form form={form} className="form" initialValues={{ modifier: "public" }}>
+      <Form form={form} className="formCategory" initialValues={{ modifier: "public" }}>
         <div className="bodyCont">
           <div style={{ width: "40%" }}>
             <h4>{labels.name}</h4>
