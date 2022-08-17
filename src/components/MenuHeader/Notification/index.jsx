@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-// import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
+import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
 import "./index.scss";
 import { Form, Space, Input } from "antd";
@@ -16,12 +16,14 @@ import { IconButton } from "@mui/material";
 import moment from "moment";
 import * as collections from "../../../api/Collections/notification";
 import Loading from "../../../components/Loading";
+import { actions } from "../../../redux";
 
 function Notification(props) {
   const [items, setItems] = useState([]);
   const [inputItem, setInputItem] = useState("");
   const [update, setUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     // const temp = JSON.parse(localStorage.getItem("items"));
@@ -62,6 +64,7 @@ function Notification(props) {
           content: inputItem,
         });
       }
+      dispatch(actions.menuActions.updateNoti());
 
       setItems(temp);
       setUpdate(!update);

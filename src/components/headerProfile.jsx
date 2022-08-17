@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import { numbToCurrency } from "../helper/currency";
 import { useAppDispatch, useAppSelector } from "../hook/useRedux";
 import { actions } from "../redux";
+
 import {
   LoginOutlined,
   EditOutlined,
@@ -59,6 +60,7 @@ const test = {
 
 export default function HeaderProFile() {
   const location = useLocation();
+  const notification = useAppSelector((state) => state.menu.noti);
 
   // const getProFile = useAppSelector((state) => state.showProfile.data);
   const info = useAppSelector((state) => state.auth.info);
@@ -89,6 +91,9 @@ export default function HeaderProFile() {
   useEffect(() => {
     checkNewNotification();
   }, []);
+  useEffect(() => {
+    checkNewNotification();
+  }, [notification]);
   const token = useAppSelector((state) => state.auth.token);
 
   const logout = async () => {
