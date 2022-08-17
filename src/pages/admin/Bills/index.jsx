@@ -238,9 +238,9 @@ const Bills = () => {
                   item.name +
                   ", " +
                   numbToCurrency(item.price) +
-                  ", x" +
+                  " x " +
                   item.amount +
-                  "\n"
+                  "\n&  "
                 }`;
               }),
 

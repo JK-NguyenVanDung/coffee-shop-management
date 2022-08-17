@@ -8,8 +8,18 @@ const slice = createSlice({
         listAll: [],
         loadData: false,
         lock: false,
+        chart: null,
+        workLog: null,
+        workedTime: null,
     },
     reducers: { 
+        setWorkedTime(state, actions) {
+            state.workedTime = actions.payload;
+
+        }, 
+        setWorkLog(state, actions) {
+            state.workLog = actions.payload;
+        }, 
         lockPage(state) {
  
             state.lock = true;
@@ -17,13 +27,11 @@ const slice = createSlice({
         setDetail(state, actions) {
             let data = [...state.listAll];
             let index = data.findIndex((item)=> item._id === actions.payload)
-            console.log(index)
             state.detail = data[index];
         },
 
 
         setListAll(state, actions) {
-            console.log(actions.payload);
             state.listAll = actions.payload;
 
         },      

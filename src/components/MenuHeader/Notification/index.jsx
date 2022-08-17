@@ -14,47 +14,61 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IconButton } from "@mui/material";
 import moment from "moment";
+import * as collections from "../../../api/Collections/notification";
 
 function Notification(props) {
   const [items, setItems] = useState([]);
   const [inputItem, setInputItem] = useState("");
   const [update, setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    const temp = JSON.parse(localStorage.getItem("items"));
-    if (temp && temp.length > 0) {
-      setItems(temp);
-    }
+    // const temp = JSON.parse(localStorage.getItem("items"));
+    // if (temp && temp.length > 0) {
+    //   setItems(temp);
+    // }
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(items));
-  }, [items, update]);
-
-  function addItem() {
-    if (inputItem.trim() !== "") {
-      let temp = items;
-      let current = new Date();
-      const obj = { name: inputItem, time: current.toString() };
-      if (temp !== null) {
-        if (temp.length >= 3) {
-          temp.shift();
-          temp.push(obj);
-        } else {
-          temp.push(obj);
-        }
-      }
-      setItems(temp);
-
-      // localStorage.setItem("items", JSON.stringify(items));
-
-      setUpdate(!update);
-      setInputItem("");
+  // useEffect(() => {
+  //   localStorage.setItem("items", JSON.stringify(items));
+  // }, [items, update]);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await collections.getNotifications();
+      // setItems(response);
+      setLoading(false);
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      //history.replace("/");
     }
+  };
+  function addItem() {
+    // if (inputItem.trim() !== "") {
+    //   let temp = items;
+    //   let current = new Date();
+    //   const obj = { name: inputItem, time: current.toString() };
+    //   if (temp !== null) {
+    //     if (temp.length >= 3) {
+    //       temp.shift();
+    //       temp.push(obj);
+    //     } else {
+    //       temp.push(obj);
+    //     }
+    //   }
+    //   setItems(temp);
+    //   // localStorage.setItem("items", JSON.stringify(items));
+    //   setUpdate(!update);
+    //   setInputItem("");
+    // }
   }
   function deleteItem(e) {
-    const result = items.filter((item) => item.time !== e.time);
-    setItems(result);
-    setUpdate(!update);
+    // const result = items.filter((item) => item.time !== e.time);
+    // setItems(result);
+    // setUpdate(!update);
   }
   return (
     <>

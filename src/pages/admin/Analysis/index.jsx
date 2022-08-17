@@ -18,20 +18,21 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { vi } from "date-fns/locale";
-
+import { numbToDecimal } from "../../../helper/currency";
 import { Area } from "@ant-design/charts";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import { CloseOutlined } from "@ant-design/icons";
 import { IconButton } from "@mui/material";
+
 import CreditCard from "../../../assets/img/CreditCard.svg";
 const { Search } = Input;
 const { Option } = Select;
 const cardTitle = {
-  total_revenue: "Tổng doanh thu",
-  electronic_wallet: "Ví điện tử",
-  total_cost: "Tổng chi phí",
-  account_balance: "Lợi nhuận",
+  total_revenue: "Tổng doanh thu (VND)",
+  electronic_wallet: "Ví điện tử (VND)",
+  total_cost: "Tổng chi phí (VND)",
+  account_balance: "Lợi nhuận (VND)",
 };
 const cardCont = {
   revenue_target: "12% Increase From Target",
@@ -59,13 +60,32 @@ const SaleChart = () => {
     try {
       setLoading(true);
       let response = null;
-
+      let stat = null;
       if (date) {
         response = await collections.getData(date);
+        stat = await collections.getStat(date);
       } else {
         let out = getMonthAndYear(new Date());
         response = await collections.getData(out);
+        stat = await collections.getStat(out);
       }
+      console.log(stat.statistics[0]);
+      let total = stat.statistics[0].bills_total[0].sum;
+      let momo = stat.statistics[1].momo_total[0].sum;
+      let vn_pay = stat.statistics[3].vnpay_total[0].sum;
+      let cash = stat.statistics[2].cash_total[0].sum;
+      let inventory = stat.statistics[4].stored_total[0]
+        ? stat.statistics[4].stored_total[0].sum
+        : 0;
+      let group = {
+        total: total,
+        cash: cash,
+        inventory: inventory,
+        momo: momo,
+        vn_pay: vn_pay,
+      };
+      dispatch(actions.analysisActions.setStats(group));
+
       let data = response.sum_data.map((item) => {
         return {
           month: "Tháng  " + item.month,
@@ -189,6 +209,7 @@ function getMonthAndYear(e) {
 }
 export default function Analysis() {
   const dispatch = useAppDispatch();
+  const stats = useAppSelector((state) => state.analysis.stats);
 
   const [date, setDate] = useState();
   function getDate(e) {
@@ -203,13 +224,15 @@ export default function Analysis() {
         <div className="leftAnalysis">
           <div className="cards">
             <Card
-              sx={{ width: "50%", marginRight: "2%", borderRadius: "12px" }}
+              sx={{ width: "54%", marginRight: "2%", borderRadius: "12px" }}
             >
               <CardContent>
                 <Typography sx={{ fontSize: 16 }} gutterBottom>
                   {cardTitle.total_revenue}
                 </Typography>
-                <Typography sx={{ fontSize: 28 }}>$ 120,000</Typography>
+                <Typography sx={{ fontSize: 28 }}>
+                  {stats ? numbToDecimal(stats.total) : 0}
+                </Typography>
               </CardContent>
               <CardActions>
                 {/* <div className="cardConts">
@@ -225,7 +248,9 @@ export default function Analysis() {
                 <Typography sx={{ fontSize: 16 }} gutterBottom>
                   {cardTitle.electronic_wallet}
                 </Typography>
-                <Typography sx={{ fontSize: 28 }}>$ 16,500</Typography>
+                <Typography sx={{ fontSize: 28 }}>
+                  {stats ? numbToDecimal(stats.momo + stats.vn_pay) : 0}
+                </Typography>
               </CardContent>
               <CardActions>
                 {/* <div className="cardConts">
@@ -245,7 +270,9 @@ export default function Analysis() {
                 >
                   {cardTitle.total_cost}
                 </Typography>
-                <Typography sx={{ fontSize: 28 }}>$ 48,670</Typography>
+                <Typography sx={{ fontSize: 28 }}>
+                  {stats ? numbToDecimal(stats.inventory) : 0}
+                </Typography>
               </CardContent>
               <CardActions>
                 {/* <div className="cardConts">
@@ -263,7 +290,9 @@ export default function Analysis() {
                 >
                   {cardTitle.account_balance}
                 </Typography>
-                <Typography sx={{ fontSize: 28 }}>$ 74,330</Typography>
+                <Typography sx={{ fontSize: 28 }}>
+                  {stats ? numbToDecimal(stats.total - stats.inventory) : 0}
+                </Typography>
               </CardContent>
               <CardActions>
                 {/* <div className="cardConts">
