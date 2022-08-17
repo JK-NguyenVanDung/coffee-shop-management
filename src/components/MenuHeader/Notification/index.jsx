@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import { IconButton } from "@mui/material";
 import moment from "moment";
 import * as collections from "../../../api/Collections/notification";
+import Loading from "../../../components/Loading";
 
 function Notification(props) {
   const [items, setItems] = useState([]);
@@ -28,7 +29,7 @@ function Notification(props) {
     //   setItems(temp);
     // }
     fetchData();
-  }, []);
+  }, [update]);
 
   // useEffect(() => {
   //   localStorage.setItem("items", JSON.stringify(items));
@@ -37,7 +38,7 @@ function Notification(props) {
     try {
       setLoading(true);
       const response = await collections.getNotifications();
-      // setItems(response);
+      setItems(response);
       setLoading(false);
       // setPagination({
       //   totalDocs: response.metadata.count,
@@ -46,34 +47,44 @@ function Notification(props) {
       //history.replace("/");
     }
   };
-  function addItem() {
-    // if (inputItem.trim() !== "") {
-    //   let temp = items;
-    //   let current = new Date();
-    //   const obj = { name: inputItem, time: current.toString() };
-    //   if (temp !== null) {
-    //     if (temp.length >= 3) {
-    //       temp.shift();
-    //       temp.push(obj);
-    //     } else {
-    //       temp.push(obj);
-    //     }
-    //   }
-    //   setItems(temp);
-    //   // localStorage.setItem("items", JSON.stringify(items));
-    //   setUpdate(!update);
-    //   setInputItem("");
-    // }
+  async function addItem() {
+    if (inputItem.trim() !== "") {
+      setLoading(true);
+
+      let temp = items;
+      let current = new Date();
+      if (temp !== null) {
+        if (temp.length >= 3) {
+          await collections.removeNotification(temp[0]._id);
+        }
+        await collections.addNotification({
+          title: inputItem,
+          content: inputItem,
+        });
+      }
+
+      setItems(temp);
+      setUpdate(!update);
+      setInputItem("");
+      setLoading(false);
+    }
   }
-  function deleteItem(e) {
-    // const result = items.filter((item) => item.time !== e.time);
-    // setItems(result);
-    // setUpdate(!update);
+  async function deleteItem(e) {
+    setLoading(true);
+
+    await collections.removeNotification(e._id);
+    setUpdate(!update);
+    setLoading(false);
+
+    setInputItem("");
   }
   return (
     <>
       {/* TẠO THÔNG BÁO */}
+
       <div className="notificationCont" {...props}>
+        <Loading loading={loading} />
+
         <div className="inputCont">
           <div className="titleNote">
             <h3>TẠO THÔNG BÁO MỚI</h3>
@@ -105,10 +116,10 @@ function Notification(props) {
         {items.length > 0
           ? items.map((item) => {
               return (
-                <div key={item.name} className="mainNote">
+                <div key={item._id} className="mainNote">
                   <div className="titleMain">
                     <div className="leftTitle">
-                      <div className="title"> {item.name}</div>
+                      <div className="title"> {item.title}</div>
                     </div>
                     <IconButton
                       color="info"
@@ -119,9 +130,9 @@ function Notification(props) {
                     </IconButton>
                   </div>
                   <div className="timeCont">
-                    <span>{moment(item.time).format("DD/MM/YYYY")}</span>
+                    <span>{moment(item.createdAt).format("DD/MM/YYYY")}</span>
                     <br />
-                    <span> {moment(item.time).format(" h:mma")}</span>
+                    <span> {moment(item.createdAt).format(" h:mma")}</span>
                   </div>
                 </div>
               );
