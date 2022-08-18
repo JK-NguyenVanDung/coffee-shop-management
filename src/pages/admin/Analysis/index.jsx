@@ -24,6 +24,7 @@ import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import { CloseOutlined } from "@ant-design/icons";
 import { IconButton } from "@mui/material";
+import Loading from "../../../components/Loading";
 
 import CreditCard from "../../../assets/img/CreditCard.svg";
 const { Search } = Input;
@@ -196,7 +197,11 @@ const SaleChart = () => {
     //   },
     // ],
   };
-  return <Area {...config} />;
+  return (
+    <>
+      <Loading loading={loading} /> <Area {...config} />{" "}
+    </>
+  );
 };
 
 function getMonthAndYear(e) {

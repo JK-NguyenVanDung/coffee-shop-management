@@ -21,10 +21,10 @@
 
 
   .menuSearch{
-    width: 40%;
+    width:auto;       
+
     .ant-input-affix-wrapper{
       border-radius: 8px !important; 
-      width: 100%;
       border:none !important;
       padding-left: 3.1rem;
       height: 6vh; 
@@ -40,7 +40,6 @@
         top:1px !important;
         left: 0px !important;
         border:none;
-        width: 40px !important;
         height: 1rem !important;
         background: none !important;
       }

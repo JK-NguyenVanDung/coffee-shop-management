@@ -15,7 +15,6 @@ const slice = createSlice({
     reducers: { 
         setWorkedTime(state, actions) {
             state.workedTime = actions.payload;
-
         }, 
         setWorkLog(state, actions) {
             state.workLog = actions.payload;
