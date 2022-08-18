@@ -296,122 +296,88 @@ const ModalContent = () => {
         </IconButton>
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
-        <div className="bodyCont">
-          <div
-            style={{
-              width: "34%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flet-start",
-            }}
-          >
-            <h4>{labels.avatar}</h4>
-            <div className="avatarCont">
-              {/* <ImgCrop rotate> */}
-              <Upload
-                accept="image/*"
-                action={"https://localhost:3000"}
-                listType="picture-card"
-                fileList={fileList}
-                maxCount={1}
-                onChange={onChange}
-                beforeUpload={(file) => {
-                  return false;
+        <div className="dishCont">
+          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
+              <h4>{labels.avatar}</h4>
+              <div className="avatarDish">
+                {/* <ImgCrop rotate> */}
+                <Upload
+                  accept="image/*"
+                  action={"https://localhost:3000"}
+                  listType="picture-card"
+                  fileList={fileList}
+                  maxCount={1}
+                  onChange={onChange}
+                  beforeUpload={(file) => {
+                    return false;
+                  }}
+                  onPreview={onPreview}
+                  style={{ width: "500px", height: "100%" }}
+                  disabled={isDetail}
+                >
+                  <UploadButton />
+                </Upload>
+                {/* </ImgCrop> */}
+              </div>
+              <span
+                style={{
+                  marginBottom: "1vh",
+                  fontSize: "0.6rem",
+                  display: "flex",
+                  width: "97%",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-                onPreview={onPreview}
-                style={{ width: "500px", height: "100%" }}
-                disabled={isDetail}
               >
-                <UploadButton />
-              </Upload>
-              {/* </ImgCrop> */}
-            </div>
-            <span
-              style={{
-                marginBottom: "1vh",
-                fontSize: "0.6rem",
-                display: "flex",
-                width: "97%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {
-                "(Chọn ảnh nền tối, kích thước 200x200 và kích cỡ file dưới 5mb)"
-              }
-            </span>
-            {dataItem ? (
-              <>
-                <h4>{labels.create}</h4>
-                <Form.Item
-                  name="createdAt"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={true} placeholder="Nhập" />
-                </Form.Item>
-                <h4>{labels.update}</h4>
-                <Form.Item
-                  name="updatedAt"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={true} placeholder="Nhập" />
-                </Form.Item>
-              </>
-            ) : null}
-          </div>
-          <div style={{ width: "50%" }}>
-            <h4>{labels.name}</h4>
-            <Form.Item
-              name="name"
-              rules={[
                 {
-                  required: true,
-                  message: `Không được để trống tên món`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập tên món" />
-            </Form.Item>
-            <h4>{labels.price}</h4>
-            <Form.Item
-              name="price"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống giá`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <InputNumber
-                style={{ width: "100%" }}
-                formatter={(value) =>
-                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  "(Chọn ảnh nền tối, kích thước 200x200 và kích cỡ file dưới 5mb)"
                 }
-                min={0}
-                max={1000000000000}
-                disabled={isDetail}
-                placeholder="Nhập giá"
-              />
-            </Form.Item>
-            {/* {dataItem ? (
+              </span>
+            </div>
+            <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
+              <h4>{labels.name}</h4>
+              <Form.Item
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống tên món`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <Input disabled={isDetail} placeholder="Nhập tên món" />
+              </Form.Item>
+              <h4>{labels.price}</h4>
+              <Form.Item
+                name="price"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống giá`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <InputNumber
+                  style={{ width: "100%" }}
+                  formatter={(value) =>
+                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }
+                  min={0}
+                  max={1000000000000}
+                  disabled={isDetail}
+                  placeholder="Nhập giá"
+                />
+              </Form.Item>
+              {/* {dataItem ? (
               <>
                 <h4>{labels.amount_sell}</h4>
                 <Form.Item
@@ -430,71 +396,106 @@ const ModalContent = () => {
                   <Input disabled={true} placeholder="Nhập đã bán" />
                 </Form.Item>
               </>
-            ) : null} */}
-            <h4>{labels.dish_type}</h4>
-            <Form.Item
-              name="dish_type"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống loại món`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Select
-                disabled={isDetail}
-                dropdownStyle={{ zIndex: 2000 }}
-                placeholder="Nhập loại món"
-                onChange={handleSelect}
+              ) : null} */}
+              <h4>{labels.dish_type}</h4>
+              <Form.Item
+                name="dish_type"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống loại món`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
               >
-                {listCate.map((item) => {
-                  return <Option value={item._id}>{item.name}</Option>;
-                })}
-              </Select>
-            </Form.Item>
-            <h4>{labels.category_type}</h4>
-            <Form.Item
-              name="category_type"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống loại menu`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Select
-                disabled={isDetail}
-                dropdownStyle={{ zIndex: 2000 }}
-                placeholder="Nhập loại menu"
+                <Select
+                  disabled={isDetail}
+                  dropdownStyle={{ zIndex: 2000 }}
+                  placeholder="Nhập loại món" 
+                  onChange={handleSelect}
+                >
+                  {listCate.map((item) => {
+                    return <Option value={item._id}>{item.name}</Option>;
+                  })}
+                </Select>
+              </Form.Item>
+            </div>
+          </div>
+          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <div style={{ width: "50%", display: "flex", flexDirection: "column" }}>
+              {dataItem ? (
+                <>
+                  <h4>{labels.create}</h4>
+                  <Form.Item
+                    name="createdAt"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống`,
+                      },
+                    ]}
+                  >
+                    <Input disabled={true} placeholder="Nhập" />
+                  </Form.Item>
+                  <h4>{labels.update}</h4>
+                  <Form.Item
+                    name="updatedAt"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống`,
+                      },
+                    ]}
+                  >
+                    <Input disabled={true} placeholder="Nhập" />
+                  </Form.Item>
+                </>
+              ) : null}
+            </div>
+            <div style={{ width: "50%", display: "flex", flexDirection: "column" }}>
+              <h4>{labels.category_type}</h4>
+              <Form.Item
+                name="category_type"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống loại menu`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
               >
-                <Option value={true}>Đồ uống</Option>
-                <Option value={false}>Đồ ăn</Option>
-              </Select>
-            </Form.Item>
-            <h4>{labels.recipe}</h4>
-            <Form.Item
-              name="recipe"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống công thức`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập công thức" />
-            </Form.Item>
+                <Select
+                  disabled={isDetail}
+                  dropdownStyle={{ zIndex: 2000 }}
+                  placeholder="Nhập loại menu"
+                >
+                  <Option value={true}>Đồ uống</Option>
+                  <Option value={false}>Đồ ăn</Option>
+                </Select>
+              </Form.Item>
+              <h4>{labels.recipe}</h4>
+              <Form.Item
+                name="recipe"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống công thức`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <Input disabled={isDetail} placeholder="Nhập công thức" />
+              </Form.Item>
+            </div>
           </div>
         </div>
         <div className="btnDish">

@@ -33,11 +33,11 @@
     height: 90vh;
     overflow-y: scroll;
 }
-.bodyCont {
+.dishCont {
     width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;   
+    flex-direction: column;
+    justify-content: space-between;   
     overflow-x:hidden;
 }
 .btnDish {
@@ -47,7 +47,7 @@
     justify-content: space-evenly;
     margin-top: 4%;
 }
-.avatarCont{
+.avatarDish{
     width: 100%;
     display:flex;
     justify-content: center;

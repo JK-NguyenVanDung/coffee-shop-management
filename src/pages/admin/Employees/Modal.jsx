@@ -422,68 +422,167 @@ const ModalContent = () => {
         </IconButton>
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
-        <div className="bodyCont">
-          <div style={{ width: "40%" }}>
-            <h4>{labels.avatar}</h4>
-            <div className="avatarCont">
-              {/* <ImgCrop rotate> */}
-              <Upload
-                accept="image/*"
-                action={"https://localhost:3000"}
-                listType="picture-card"
-                fileList={fileList}
-                maxCount={1}
-                onChange={onChange}
-                beforeUpload={(file) => {
-                  return false;
+        <div className="employeesCont">
+          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <div style={{ width: "50%", display: "flex", flexDirection: "column" }}>
+              <h4>{labels.avatar}</h4>
+              <div className="avatarCont">
+                {/* <ImgCrop rotate> */}
+                <Upload
+                  accept="image/*"
+                  action={"https://localhost:3000"}
+                  listType="picture-card"
+                  fileList={fileList}
+                  maxCount={1}
+                  onChange={onChange}
+                  beforeUpload={(file) => {
+                    return false;
+                  }}
+                  onPreview={onPreview}
+                  style={{ width: "500px", height: "100%" }}
+                  disabled={isDetail}
+                >
+                  <UploadButton />
+                </Upload>
+
+                {/* </ImgCrop> */}
+              </div>
+              <p
+                style={{
+                  marginBottom: "2.7vh",
+                  fontSize: "0.6rem",
+                  display: "flex",
+                  width: "97%",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-                onPreview={onPreview}
-                style={{ width: "500px", height: "100%" }}
-                disabled={isDetail}
               >
-                <UploadButton />
-              </Upload>
-
-              {/* </ImgCrop> */}
+                {
+                  "(Chọn ảnh nền tối, kích thước 200x200 và kích cỡ file dưới 5mb)"
+                }
+              </p>
             </div>
-            <p
-              style={{
-                marginBottom: "2.7vh",
-                fontSize: "0.6rem",
-                display: "flex",
-                width: "97%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {
-                "(Chọn ảnh nền tối, kích thước 200x200 và kích cỡ file dưới 5mb)"
-              }
-            </p>
-            <h4 style={{ marginTop: fileList !== null ? "0%" : 0 }}>
-              {labels.fullname}
-            </h4>
-            <Form.Item
-              name="full_name"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống họ tên`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input
-                style={{ marginBottom: 1 }}
-                disabled={isDetail}
-                placeholder="Nhập họ tên"
-              />
-            </Form.Item>
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", paddingLeft: "3.8%" }}>
+              <h4>{labels.email}</h4>
+              <Form.Item
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống email`,
+                  },
+                ]}
+                validateStatus={
+                  email.validateStatus !== "" ? email.validateStatus : undefined
+                }
+                help={email.errorMsg !== "" ? email.errorMsg : undefined}
+              >
+                <Input
+                  disabled={isDetail}
+                  placeholder="Nhập email"
+                  value={email}
+                  onChange={(e) => handleEmail(e)}
+                />
+              </Form.Item>
 
-            <div style={{ marginBottom: "10%" }}>
+              <h4>{labels.phone}</h4>
+              <Form.Item
+                name="phone_number"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống số điện thoại`,
+                  },
+                ]}
+                validateStatus={
+                  phone.validateStatus !== "" ? phone.validateStatus : undefined
+                }
+                help={phone.errorMsg !== "" ? phone.errorMsg : undefined}
+              >
+                <Input
+                  disabled={isDetail}
+                  value={phone.value}
+                  placeholder="Nhập số điện thoại"
+                  onChange={(value) => handlePhone(value)}
+                />
+              </Form.Item>
+
+              <h4>{labels.password}</h4>
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống mật khẩu`,
+                  },
+                ]}
+                validateStatus={
+                  password.validateStatus !== ""
+                    ? password.validateStatus
+                    : undefined
+                }
+                help={password.errorMsg !== "" ? password.errorMsg : undefined}
+              >
+                {dataItem ? (
+                  <Input.Password
+                    placeholder="Nhập mật khẩu"
+                    disabled={disablePass || isDetail}
+                    value={password.value}
+                    onChange={(value) => handlePassword(value)}
+                    prefix={
+                      <IconButton
+                        disabled={isDetail}
+                        onClick={() => disablePassword()}
+                      >
+                        {!disablePass || isDetail ? (
+                          <LockOpenRoundedIcon fontSize="small" color="primary" />
+                        ) : (
+                          <LockRoundedIcon
+                            fontSize="small"
+                            color="primary"
+                            style={{ backgrounColor: "#fff" }}
+                          />
+                        )}
+                      </IconButton>
+                    }
+                  />
+                ) : (
+                  <Input.Password
+                    disabled={isDetail}
+                    placeholder="Nhập mật khẩu"
+                    value={password.value}
+                    onChange={(value) => handlePassword(value)}
+                  />
+                )}
+              </Form.Item>
+            </div>
+
+          </div>
+          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <div style={{ width: "55%", display: "flex", flexDirection: "column" }}>
+              <h4 style={{ marginTop: fileList !== null ? "0%" : 0 }}>
+                {labels.fullname}
+              </h4>
+              <Form.Item
+                name="full_name"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống họ tên`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <Input
+                  style={{ marginBottom: 1 }}
+                  disabled={isDetail}
+                  placeholder="Nhập họ tên"
+                />
+              </Form.Item>
+
               <h4>{labels.birthday}</h4>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
@@ -495,7 +594,7 @@ const ModalContent = () => {
                   disabled={isDetail}
                   renderInput={(params) => (
                     <TextField
-                      style={{ width: "100%" }}
+                      style={{ width: "100%", paddingBottom: "12%" }}
                       {...params}
                       label=""
                       variant="standard"
@@ -504,222 +603,135 @@ const ModalContent = () => {
                   )}
                 />
               </LocalizationProvider>
-            </div>
-            <h4>{labels.idcard}</h4>
-            <Form.Item
-              name="id_card"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống CMND/CCCD`,
-                },
-                // {
-                //   required: true,
-                //   message: errorText.id_card,
-                //   max: 12,
-                //   min: 9,
-                // },
-              ]}
-              validateStatus={
-                ID_card.validateStatus !== ""
-                  ? ID_card.validateStatus
-                  : undefined
-              }
-              help={ID_card.errorMsg !== "" ? ID_card.errorMsg : undefined}
-            >
-              <Input
-                disabled={isDetail}
-                placeholder="Nhập CMND"
-                value={ID_card}
-                onChange={(e) => handleID_card(e)}
-              />
-            </Form.Item>
-          </div>
-          <div>
-            <h4>{labels.email}</h4>
-            <Form.Item
-              name="email"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống email`,
-                },
-              ]}
-              validateStatus={
-                email.validateStatus !== "" ? email.validateStatus : undefined
-              }
-              help={email.errorMsg !== "" ? email.errorMsg : undefined}
-            >
-              <Input
-                disabled={isDetail}
-                placeholder="Nhập email"
-                value={email}
-                onChange={(e) => handleEmail(e)}
-              />
-            </Form.Item>
-            <h4>{labels.phone}</h4>
-            <Form.Item
-              name="phone_number"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống số điện thoại`,
-                },
-              ]}
-              validateStatus={
-                phone.validateStatus !== "" ? phone.validateStatus : undefined
-              }
-              help={phone.errorMsg !== "" ? phone.errorMsg : undefined}
-            >
-              <Input
-                disabled={isDetail}
-                value={phone.value}
-                placeholder="Nhập số điện thoại"
-                onChange={(value) => handlePhone(value)}
-              />
-            </Form.Item>
-            <h4>{labels.password}</h4>
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống mật khẩu`,
-                },
-              ]}
-              validateStatus={
-                password.validateStatus !== ""
-                  ? password.validateStatus
-                  : undefined
-              }
-              help={password.errorMsg !== "" ? password.errorMsg : undefined}
-            >
-              {dataItem ? (
-                <Input.Password
-                  placeholder="Nhập mật khẩu"
-                  disabled={disablePass || isDetail}
-                  value={password.value}
-                  onChange={(value) => handlePassword(value)}
-                  prefix={
-                    <IconButton
-                      disabled={isDetail}
-                      onClick={() => disablePassword()}
-                    >
-                      {!disablePass || isDetail ? (
-                        <LockOpenRoundedIcon fontSize="small" color="primary" />
-                      ) : (
-                        <LockRoundedIcon
-                          fontSize="small"
-                          color="primary"
-                          style={{ backgrounColor: "#fff" }}
-                        />
-                      )}
-                    </IconButton>
-                  }
-                />
-              ) : (
-                <Input.Password
+
+              <h4>{labels.idcard}</h4>
+              <Form.Item    
+                name="id_card"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống CMND/CCCD`,
+                  },
+                  // {
+                  //   required: true,
+                  //   message: errorText.id_card,
+                  //   max: 12,
+                  //   min: 9,
+                  // },
+                ]}
+                validateStatus={
+                  ID_card.validateStatus !== ""
+                    ? ID_card.validateStatus
+                    : undefined
+                }
+                help={ID_card.errorMsg !== "" ? ID_card.errorMsg : undefined}
+              >
+                <Input
                   disabled={isDetail}
-                  placeholder="Nhập mật khẩu"
-                  value={password.value}
-                  onChange={(value) => handlePassword(value)}
+                  placeholder="Nhập CMND"
+                  value={ID_card}
+                  onChange={(e) => handleID_card(e)}
                 />
-              )}
-            </Form.Item>
-
-            <h4>{labels.address}</h4>
-            <Form.Item
-              name="address"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống Địa Chỉ`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
-            </Form.Item>
-            <h4>{labels.status}</h4>
-            <div style={{ marginTop: "5%", marginBottom: "5%" }}>
-              <div>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={status}
-                  onChange={handleStatus}
-                  name="radio-buttons-group"
-                >
-                  <div class="radiogroupCont">
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="1"
-                      control={<Radio size="small" color="info" />}
-                      label="Đang làm"
-                      style={{
-                        backgroundColor: colors.success,
-                        borderRadius: 12,
-                      }}
-                    />
-
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="2"
-                      control={<Radio size="small" color="info" />}
-                      label="Tạm nghỉ"
-                      style={{
-                        backgroundColor: colors.warning,
-                        borderRadius: 12,
-                      }}
-                    />
-
-                    <FormControlLabel
-                      disabled={isDetail}
-                      value="3"
-                      control={<Radio size="small" color="info" />}
-                      label="Đã nghỉ"
-                      style={{
-                        backgroundColor: colors.error,
-                        borderRadius: 12,
-                      }}
-                    />
-                  </div>
-                </RadioGroup>
-              </div>
+              </Form.Item>
             </div>
-            <h4>{labels.position}</h4>
-            <div style={{ marginBottom: "8%" }}>
-              <div className="PositionAdd">
-                <div>
-                  <div className="checkboxCont">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
+            <div style={{ width: "70%", display: "flex", flexDirection: "column", paddingLeft: "4%" }}>
+              
+                <h4>{labels.address}</h4>
+                <Form.Item
+                  name="address"
+                  rules={[
+                    {
+                      required: true,
+                      message: `Không được để trống Địa Chỉ`,
+                    },
+                    {
+                      pattern: new RegExp(/^\w/),
+                      message: errorText.space,
+                    },
+                  ]}
+                >
+                  <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
+                </Form.Item>
+              
+                <h4>{labels.status}</h4>
+                <div style={{ marginTop: "1%", marginBottom: "7%" }}>
+                  
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      value={status}
+                      onChange={handleStatus}
+                      name="radio-buttons-group"
+                    >
+                      <div class="radiogroupEmployees">
+                        <FormControlLabel
                           disabled={isDetail}
-                          onChange={handleCheckbox}
-                          checked={role}
+                          value="1"
+                          control={<Radio size="small" color="info" />}
+                          label="Đang làm"
+                          style={{
+                            backgroundColor: colors.success,
+                            borderRadius: 12,
+                          }}
                         />
-                      }
-                      name="employee"
-                      label="Nhân viên"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
+
+                        <FormControlLabel
                           disabled={isDetail}
-                          onChange={handleCheckbox}
-                          checked={!role}
+                          value="2"
+                          control={<Radio size="small" color="info" />}
+                          label="Tạm nghỉ"
+                          style={{
+                            backgroundColor: colors.warning,
+                            borderRadius: 12,
+                          }}
                         />
-                      }
-                      name="manager"
-                      label="Quản lý"
-                    />
-                  </div>
+
+                        <FormControlLabel
+                          disabled={isDetail}
+                          value="3"
+                          control={<Radio size="small" color="info" />}
+                          label="Đã nghỉ"
+                          style={{
+                            backgroundColor: colors.error,
+                            borderRadius: 12,
+                          }}
+                        />
+                      </div>
+                    </RadioGroup>
+                  
                 </div>
-              </div>
+           
+                <h4>{labels.position}</h4>
+                
+                  <div className="PositionAdd">
+                    <div>
+                      <div className="checkboxEmployees">
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              disabled={isDetail}
+                              onChange={handleCheckbox}
+                              checked={role}
+                            />
+                          }
+                          name="employee"
+                          label="Nhân viên"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              disabled={isDetail}
+                              onChange={handleCheckbox}
+                              checked={!role}
+                            />
+                          }
+                          name="manager"
+                          label="Quản lý"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                      
             </div>
           </div>
         </div>
