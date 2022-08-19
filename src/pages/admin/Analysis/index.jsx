@@ -230,6 +230,7 @@ export default function Analysis() {
           <div className="cards">
             <Card
               sx={{ width: "54%", marginRight: "2%", borderRadius: "12px" }}
+              className="card drop-shadow"
             >
               <CardContent>
                 <Typography sx={{ fontSize: 16 }} gutterBottom>
@@ -247,6 +248,7 @@ export default function Analysis() {
               </CardActions>
             </Card>
             <Card
+              className="card drop-shadow"
               sx={{ width: "50%", marginRight: "2%", borderRadius: "12px" }}
             >
               <CardContent>
@@ -265,6 +267,7 @@ export default function Analysis() {
               </CardActions>
             </Card>
             <Card
+              className="card drop-shadow"
               sx={{ width: "50%", marginRight: "2%", borderRadius: "12px" }}
             >
               <CardContent>
@@ -286,7 +289,7 @@ export default function Analysis() {
                 </div> */}
               </CardActions>
             </Card>
-            <Card sx={{ width: "50%", borderRadius: "12px" }}>
+            <Card sx={{ width: "50%", borderRadius: "12px" }} className="card">
               <CardContent>
                 <Typography
                   sx={{ fontSize: 16 }}

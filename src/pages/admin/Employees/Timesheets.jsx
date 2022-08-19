@@ -5,7 +5,7 @@ import { Input, Form, message, Select, InputNumber } from "antd";
 import { useReactToPrint } from "react-to-print";
 
 import { Line } from "@ant-design/charts";
-
+import Loading from "../../../components/Loading";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -157,6 +157,8 @@ const TimeSheets = () => {
     return false;
   }
   async function fetchData() {
+    setLoading(true);
+
     let res = await workLogCollections.getSingleWorkLog({
       account: dataItem._id,
     });
@@ -178,6 +180,7 @@ const TimeSheets = () => {
     dispatch(actions.employeesActions.setWorkedTime(countTotal));
 
     dispatch(actions.employeesActions.setWorkLog(chartData));
+    setLoading(false);
   }
   useEffect(() => {
     fetchData();
@@ -239,7 +242,6 @@ const TimeSheets = () => {
 
     onAfterPrint: () => {
       dispatch(actions.formActions.closeForm());
-      message.success("In đơn thành công");
     },
   });
   const PrintWrapper = React.forwardRef((props, ref) => (
@@ -289,7 +291,7 @@ const TimeSheets = () => {
         //   dispatch(actions.formActions.changeLoad(!loadData));
         //   message.success("Thêm thành công");
 
-        //   setLoading(false);
+        setLoading(false);
         // }
 
         handleClose();
@@ -399,6 +401,7 @@ const TimeSheets = () => {
   };
   return (
     <div className="ModalCont">
+      <Loading loading={loading} />
       {modalError && <AlertModal chilren={errorText.formValidation} />}
       <div className="headerTimekeeping">
         <h2>{getHeaderTitle()}</h2>

@@ -75,7 +75,6 @@ const OrderItem = ({ item, changeAmount = false }) => {
           })`,
         }}
       >
-        {" "}
         <div className="smallRemoveBtnCont">
           <RemoveButton action={onRemove} />
         </div>
@@ -95,6 +94,7 @@ const OrderItem = ({ item, changeAmount = false }) => {
             justifyContent: "center",
             marginLeft: 5,
             marginTop: 5,
+            marginBottom: 20,
           }}
         >
           <IconButton

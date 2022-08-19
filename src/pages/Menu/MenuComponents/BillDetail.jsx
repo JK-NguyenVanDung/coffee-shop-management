@@ -134,7 +134,7 @@ const BillDetail = () => {
             <div className="billDetailBgCont">
               <div className="billHeader">
                 <h2>Linh's Coffee</h2>
-                <h1>TẠO ĐƠN</h1>
+                <i>TẠO ĐƠN</i>
               </div>
               <div className="billListCont">
                 {orderList.map((item) => {
