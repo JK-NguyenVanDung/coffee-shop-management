@@ -224,7 +224,7 @@ export default function HeaderProFile() {
         {...props}
       >
         {!loading ? (
-          <div className="modalCont">
+          <div className="modalCont" style={{ overflow: "hidden" }}>
             <AlertDialog
               children={`Tổng số tiền ${numbToCurrency(final)} ngày ${new Date(
                 dataItem && dataItem.createdAt

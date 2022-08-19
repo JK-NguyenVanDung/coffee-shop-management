@@ -393,7 +393,7 @@ const TimeSheets = () => {
     work_time: "Giờ làm (h/ngày)",
     total_time1: "Tổng giờ làm (trên hệ thống)",
     total_time2: "Tổng giờ làm (nếu có sai số)",
-    rate: "Rate/ giờ (VND)",
+    rate: "Tiền/ giờ (VND)",
     month: "Bảng lương tháng",
     bonus: "Lương thưởng (VND)",
     punish: "Phạt lương (VND)",
