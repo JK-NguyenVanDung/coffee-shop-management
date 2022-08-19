@@ -14,7 +14,7 @@ import * as cateCollections from "../../../api/Collections/category";
 import Loading from "../../../components/Loading";
 import { Button } from "@mui/material/";
 
-import WoodBoard from "../../../assets/img/wood.png";
+import WoodBoard from "../../../assets/img/wood.svg";
 import Clipboard from "../../../assets/img/clipboard.svg";
 import Clipper from "../../../assets/img/clipper.svg";
 
