@@ -33,18 +33,12 @@ import {
   RadioGroup,
   Checkbox,
 } from "@mui/material/";
-import Coffee from "../../assets/img/coffee_test.png";
-import PlaceHolder from "../../assets/img/placeholder.png";
 
-import WoodBoard from "../../assets/img/wood.svg";
-import Clipboard from "../../assets/img/clipboard.svg";
-import Clipper from "../../assets/img/clipper.svg";
 import BillPrint from "./MenuComponents/BillPrint";
 import MenuItemDetail from "./MenuComponents/MenuItemDetail";
 import OrderBar from "./MenuComponents/OrderBar";
 import BillDetail from "./MenuComponents/BillDetail";
 import { MenuItem } from "./MenuComponents/MenuItem";
-import { RemoveButton } from "./MenuComponents/RemoveButton";
 
 function currentDate() {
   let currentdate = new Date();
