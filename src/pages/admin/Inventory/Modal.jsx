@@ -401,123 +401,90 @@ const ModalContent = () => {
         </IconButton>
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
-        <div className="bodyCont">
-          <div
-            style={{
-              width: "40%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-            }}
-          >
-            <h4>{labels.avatar}</h4>
-            <div className="avatarCont">
-              {/* <ImgCrop rotate> */}
-              <Upload
-                accept="image/*"
-                action={"https://localhost:3000"}
-                listType="picture-card"
-                fileList={fileList}
-                maxCount={1}
-                onChange={onChange}
-                beforeUpload={(file) => {
-                  return false;
+        <div className="inventoryCont">
+          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+              <h4>{labels.avatar}</h4>
+              <div className="avatarCont">
+                {/* <ImgCrop rotate> */}
+                <Upload
+                  accept="image/*"
+                  action={"https://localhost:3000"}
+                  listType="picture-card"
+                  fileList={fileList}
+                  maxCount={1}
+                  onChange={onChange}
+                  beforeUpload={(file) => {
+                    return false;
+                  }}
+                  onPreview={onPreview}
+                  style={{ width: "500px", height: "100%" }}
+                  disabled={isDetail}
+                >
+                  <UploadButton />
+                </Upload>
+                {/* </ImgCrop> */}
+              </div>
+              <span
+                style={{
+                  marginBottom: "1vh",
+                  fontSize: "0.6rem",
+                  display: "flex",
+                  width: "97%",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-                onPreview={onPreview}
-                style={{ width: "500px", height: "100%" }}
-                disabled={isDetail}
               >
-                <UploadButton />
-              </Upload>
-              {/* </ImgCrop> */}
-            </div>
-            <span
-              style={{
-                marginBottom: "1vh",
-                fontSize: "0.6rem",
-                display: "flex",
-                width: "97%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {
-                "(Chọn ảnh nền tối, kích thước 200x200 và kích cỡ file dưới 5mb)"
-              }
-            </span>
-            {dataItem ? (
-              <>
-                <h4>{labels.create}</h4>
-                <Form.Item
-                  name="createdAt"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={true} placeholder="Nhập" />
-                </Form.Item>
-                <h4>{labels.update}</h4>
-                <Form.Item
-                  name="updatedAt"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống`,
-                    },
-                  ]}
-                >
-                  <Input disabled={true} placeholder="Nhập" />
-                </Form.Item>
-              </>
-            ) : null}
-          </div>
-          <div className="commoditieCont">
-            <h4>{labels.name}</h4>
-            <Form.Item
-              name="name"
-              rules={[
                 {
-                  required: true,
-                  message: `Không được để trống tên món`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <Input disabled={isDetail} placeholder="Nhập tên món" />
-            </Form.Item>
-
-            <h4>{labels.amount}</h4>
-            <Form.Item
-              name="amount"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống số lượng`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <InputNumber
-                style={{ width: "100%" }}
-                formatter={(value) =>
-                  `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  "(Chọn ảnh nền tối, kích thước 200x200 và kích cỡ file dưới 5mb)"
                 }
-                min={0}
-                max={1000000000000}
-                disabled={isDetail}
-              />
-            </Form.Item>
-            <h4>{labels.unit}</h4>
-            {/* <Form.Item
+              </span>
+            </div>
+            <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+              <h4>{labels.name}</h4>
+              <Form.Item
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống tên món`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <Input disabled={isDetail} placeholder="Nhập tên món" />
+              </Form.Item>
+
+              <h4>{labels.amount}</h4>
+              <Form.Item
+                name="amount"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống số lượng`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <InputNumber
+                  style={{ width: "100%" }}
+                  formatter={(value) =>
+                    `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }
+                  min={0}
+                  max={1000000000000}
+                  disabled={isDetail}
+                />
+              </Form.Item>
+
+              <h4>{labels.unit}</h4>
+              {/* <Form.Item
               name="unit"
               rules={[
                 {
@@ -532,62 +499,103 @@ const ModalContent = () => {
             >
           
             </Form.Item> */}
-            <Select
-              mode="tags"
-              disabled={isDetail}
-              dropdownStyle={{ zIndex: 2000 }}
-              placeholder="Nhập đơn vị"
-              onChange={handleSelect}
-              onSelect={handleSelect}
-              value={unit.value !== "" ? unit.value : listOptions[0]}
-              status={unit.error ? `error` : undefined}
-            >
-              {listOptions.map((item) => {
-                return <Option value={item}>{item}</Option>;
-              })}
-            </Select>
-            {unit.error ? (
-              <CustomError />
-            ) : (
-              <div style={{ minHeight: "24px" }}></div>
-            )}
-            <h4>{labels.price}</h4>
-            <Form.Item
-              name="price"
-              rules={[
-                {
-                  required: true,
-                  message: `Không được để trống tổng tiền`,
-                },
-                {
-                  pattern: new RegExp(/^\w/),
-                  message: errorText.space,
-                },
-              ]}
-            >
-              <InputNumber
-                style={{ width: "100%" }}
-                formatter={(value) =>
-                  `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }
-                min={0}
-                max={1000000000000}
+              <Select
+                mode="tags"
                 disabled={isDetail}
-              />
-            </Form.Item>
-            <h4>{labels.payment_type}</h4>
-            <Select
-              name="payment_type"
-              disabled={isDetail}
-              dropdownStyle={{ zIndex: 2000 }}
-              placeholder="Lựa chọn phương thức"
-              onChange={handlePayment}
-              value={payment !== "" ? payment : listPayments[0]}
-            >
-              {listPayments.map((item) => {
-                return <Option value={item}>{item}</Option>;
-              })}
-            </Select>
+                dropdownStyle={{ zIndex: 2000 }}
+                placeholder="Nhập đơn vị"
+                onChange={handleSelect}
+                onSelect={handleSelect}
+                value={unit.value !== "" ? unit.value : listOptions[0]}
+                status={unit.error ? `error` : undefined}
+              >
+                {listOptions.map((item) => {
+                  return <Option value={item}>{item}</Option>;
+                })}
+              </Select>
+              {unit.error ? (
+                <CustomError />
+              ) : (
+                <div style={{ minHeight: "24px" }}></div>
+              )}
+            </div>
+          </div>
+
+          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+
+            <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+              {dataItem ? (
+                <>
+                  <h4>{labels.create}</h4>
+                  <Form.Item
+                    name="createdAt"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống`,
+                      },
+                    ]}
+                  >
+                    <Input disabled={true} placeholder="Nhập" />
+                  </Form.Item>
+
+                  <h4>{labels.update}</h4>
+                  <Form.Item
+                    name="updatedAt"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Không được để trống`,
+                      },
+                    ]}
+                  >
+                    <Input disabled={true} placeholder="Nhập" />
+                  </Form.Item>
+                </>
+              ) : null}
+            </div>
+
+            <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+              <h4>{labels.price}</h4>
+              <Form.Item
+                name="price"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống tổng tiền`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <InputNumber
+                  style={{ width: "100%" }}
+                  formatter={(value) =>
+                    `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }
+                  min={0}
+                  max={1000000000000}
+                  disabled={isDetail}
+                />
+              </Form.Item>
+
+              <h4>{labels.payment_type}</h4>
+              <Select
+                name="payment_type"
+                disabled={isDetail}
+                dropdownStyle={{ zIndex: 2000 }}
+                placeholder="Lựa chọn phương thức"
+                onChange={handlePayment}
+                value={payment !== "" ? payment : listPayments[0]}
+              >
+                {listPayments.map((item) => {
+                  return <Option value={item}>{item}</Option>;
+                })}
+              </Select>
+            </div>
+
           </div>
         </div>
         <div className="btnInventory">

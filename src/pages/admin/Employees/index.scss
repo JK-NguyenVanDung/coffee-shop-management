@@ -113,8 +113,15 @@
 .css-atm9ut {
     width: 80%;
 }
+.timesheetsCont {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;   
+    overflow-x:hidden;
+}
 .paidCont {
-    width: 97%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -133,7 +140,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-top: 8.5%;
     margin-right: 10%;
     padding-bottom: 3vh;
 }
@@ -150,15 +156,14 @@
 }
 
 .selectCont{
-    padding-left:2.5%;
-    padding-right: 2.5%;
+    padding-right: 3%;
     padding-bottom: 3%;
 }
 .leftConts {
     width: 100%;
     display: flex;
     flex-direction: row;
-    padding-bottom: 5%;
+    padding-bottom: 3vh;
 }
 .cont1 {
     width: 90%;

@@ -27,10 +27,10 @@
     height: 90vh;
     overflow-y: scroll;
 }
-.bodyCont {
+.inventoryCont {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-around;   
     overflow-x: hidden;
 }
@@ -89,13 +89,6 @@
         align-items: center;
     }
 }
-.commoditieCont{
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-
 .tableRow{
     cursor:pointer;
 }
