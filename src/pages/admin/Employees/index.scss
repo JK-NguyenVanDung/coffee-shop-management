@@ -54,7 +54,8 @@
     justify-content: space-between;
 }
 .btnAdd {
-    margin-top: 6%;
+    margin-top: 3%;
+
     display: flex;
     justify-content: space-evenly;
 }
@@ -185,4 +186,26 @@
     padding-top: 2%;
     padding-left: 1%;
     padding-right: 1%;
+}
+
+.sectionCont{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}.leftSectionCont{
+    margin-left: 4.2%;
+width: 40%;
+display: flex;
+flex-direction: column;
+
+}
+.rightSectionCont{
+    
+width: 47%;
+display: flex;
+flex-direction: column;
+// align-items: flex-start;
+
 }

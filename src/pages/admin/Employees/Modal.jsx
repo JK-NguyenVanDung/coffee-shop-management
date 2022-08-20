@@ -165,7 +165,7 @@ const ModalContent = () => {
   const error = [employee, manager].filter((v) => v).length !== 1;
   const UploadButton = () => {
     return (
-      <div style={fileList === null ? { width: "19.5rem", height: "50%" } : {}}>
+      <div style={fileList === null ? { height: "50%" } : {}}>
         <div style={{ padding: 2 }}>
           {loading ? <LoadingOutlined /> : <PlusOutlined />}
           Upload
@@ -423,8 +423,8 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="employeesCont">
-          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            <div style={{ width: "50%", display: "flex", flexDirection: "column" }}>
+          <div className="sectionCont">
+            <div className="leftSectionCont">
               <h4>{labels.avatar}</h4>
               <div className="avatarCont">
                 {/* <ImgCrop rotate> */}
@@ -439,7 +439,7 @@ const ModalContent = () => {
                     return false;
                   }}
                   onPreview={onPreview}
-                  style={{ width: "500px", height: "100%" }}
+                  style={{ width: "400px", height: "100%" }}
                   disabled={isDetail}
                 >
                   <UploadButton />
@@ -462,7 +462,7 @@ const ModalContent = () => {
                 }
               </p>
             </div>
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", paddingLeft: "3.8%" }}>
+            <div className="rightSectionCont">
               <h4>{labels.email}</h4>
               <Form.Item
                 name="email"
@@ -535,7 +535,10 @@ const ModalContent = () => {
                         onClick={() => disablePassword()}
                       >
                         {!disablePass || isDetail ? (
-                          <LockOpenRoundedIcon fontSize="small" color="primary" />
+                          <LockOpenRoundedIcon
+                            fontSize="small"
+                            color="primary"
+                          />
                         ) : (
                           <LockRoundedIcon
                             fontSize="small"
@@ -556,10 +559,9 @@ const ModalContent = () => {
                 )}
               </Form.Item>
             </div>
-
           </div>
-          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            <div style={{ width: "55%", display: "flex", flexDirection: "column" }}>
+          <div className="sectionCont">
+            <div className="leftSectionCont">
               <h4 style={{ marginTop: fileList !== null ? "0%" : 0 }}>
                 {labels.fullname}
               </h4>
@@ -605,7 +607,7 @@ const ModalContent = () => {
               </LocalizationProvider>
 
               <h4>{labels.idcard}</h4>
-              <Form.Item    
+              <Form.Item
                 name="id_card"
                 rules={[
                   {
@@ -634,104 +636,100 @@ const ModalContent = () => {
                 />
               </Form.Item>
             </div>
-            <div style={{ width: "70%", display: "flex", flexDirection: "column", paddingLeft: "4%" }}>
-              
-                <h4>{labels.address}</h4>
-                <Form.Item
-                  name="address"
-                  rules={[
-                    {
-                      required: true,
-                      message: `Không được để trống Địa Chỉ`,
-                    },
-                    {
-                      pattern: new RegExp(/^\w/),
-                      message: errorText.space,
-                    },
-                  ]}
+            <div className="rightSectionCont">
+              <h4>{labels.address}</h4>
+              <Form.Item
+                name="address"
+                rules={[
+                  {
+                    required: true,
+                    message: `Không được để trống Địa Chỉ`,
+                  },
+                  {
+                    pattern: new RegExp(/^\w/),
+                    message: errorText.space,
+                  },
+                ]}
+              >
+                <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
+              </Form.Item>
+
+              <h4>{labels.status}</h4>
+              <div style={{ marginTop: "1%", marginBottom: "7%" }}>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  value={status}
+                  onChange={handleStatus}
+                  name="radio-buttons-group"
                 >
-                  <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
-                </Form.Item>
-              
-                <h4>{labels.status}</h4>
-                <div style={{ marginTop: "1%", marginBottom: "7%" }}>
-                  
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      value={status}
-                      onChange={handleStatus}
-                      name="radio-buttons-group"
-                    >
-                      <div class="radiogroupEmployees">
-                        <FormControlLabel
-                          disabled={isDetail}
-                          value="1"
-                          control={<Radio size="small" color="info" />}
-                          label="Đang làm"
-                          style={{
-                            backgroundColor: colors.success,
-                            borderRadius: 12,
-                          }}
-                        />
+                  <div class="radiogroupEmployees">
+                    <FormControlLabel
+                      disabled={isDetail}
+                      value="1"
+                      control={<Radio size="small" color="info" />}
+                      label="Đang làm"
+                      style={{
+                        backgroundColor: colors.success,
+                        borderRadius: 12,
+                      }}
+                    />
 
-                        <FormControlLabel
-                          disabled={isDetail}
-                          value="2"
-                          control={<Radio size="small" color="info" />}
-                          label="Tạm nghỉ"
-                          style={{
-                            backgroundColor: colors.warning,
-                            borderRadius: 12,
-                          }}
-                        />
+                    <FormControlLabel
+                      disabled={isDetail}
+                      value="2"
+                      control={<Radio size="small" color="info" />}
+                      label="Tạm nghỉ"
+                      style={{
+                        backgroundColor: colors.warning,
+                        borderRadius: 12,
+                      }}
+                    />
 
-                        <FormControlLabel
-                          disabled={isDetail}
-                          value="3"
-                          control={<Radio size="small" color="info" />}
-                          label="Đã nghỉ"
-                          style={{
-                            backgroundColor: colors.error,
-                            borderRadius: 12,
-                          }}
-                        />
-                      </div>
-                    </RadioGroup>
-                  
-                </div>
-           
-                <h4>{labels.position}</h4>
-                
-                  <div className="PositionAdd">
-                    <div>
-                      <div className="checkboxEmployees">
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              disabled={isDetail}
-                              onChange={handleCheckbox}
-                              checked={role}
-                            />
-                          }
-                          name="employee"
-                          label="Nhân viên"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              disabled={isDetail}
-                              onChange={handleCheckbox}
-                              checked={!role}
-                            />
-                          }
-                          name="manager"
-                          label="Quản lý"
-                        />
-                      </div>
-                    </div>
+                    <FormControlLabel
+                      disabled={isDetail}
+                      value="3"
+                      control={<Radio size="small" color="info" />}
+                      label="Đã nghỉ"
+                      style={{
+                        backgroundColor: colors.error,
+                        borderRadius: 12,
+                      }}
+                    />
                   </div>
-                      
+                </RadioGroup>
+              </div>
+
+              <h4>{labels.position}</h4>
+
+              <div className="PositionAdd">
+                <div>
+                  <div className="checkboxEmployees">
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={isDetail}
+                          onChange={handleCheckbox}
+                          checked={role}
+                        />
+                      }
+                      name="employee"
+                      label="Nhân viên"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={isDetail}
+                          onChange={handleCheckbox}
+                          checked={!role}
+                        />
+                      }
+                      name="manager"
+                      label="Quản lý"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -79,3 +79,11 @@
     justify-content: center;
     border-radius: 12px ;
   }
+
+  .employeesCont{
+    display:flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
