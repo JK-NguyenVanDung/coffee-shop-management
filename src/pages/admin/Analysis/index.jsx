@@ -4,6 +4,9 @@ import { useHistory } from "react-router-dom";
 import { Input, Select, Form } from "antd";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
+import { Column } from "@ant-design/plots";
+import { each, groupBy } from "@antv/util";
+
 import "./index.scss";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -25,6 +28,7 @@ import ArrowDownwardOutlinedIcon from "@mui/icons-material/ArrowDownwardOutlined
 import { CloseOutlined } from "@ant-design/icons";
 import { IconButton } from "@mui/material";
 import Loading from "../../../components/Loading";
+import * as bankCollections from "../../../api/Collections/bank";
 
 import CreditCard from "../../../assets/img/CreditCard.svg";
 const { Search } = Input;
@@ -42,6 +46,7 @@ const cardCont = {
   balance_target: "1% Increase From Target",
 };
 const labels = {
+  bank: "Báo cáo thống kê ngân sách mỗi ngày",
   statistic: "Báo cáo thống kê doanh thu",
   activity_summary: "Tóm tắt hoạt động",
   bank_card: "Thẻ ngân hàng của tôi",
@@ -342,14 +347,14 @@ export default function Analysis() {
                   <DesktopDatePicker
                     views={["year", "month"]}
                     label="Chọn năm và tháng"
-                    minDate={new Date("2022-07-01")}
+                    minDate={new Date("2022-08-01")}
                     maxDate={new Date()}
                     value={date}
                     onChange={getDate}
                     renderInput={(params) => (
                       <TextField {...params} helperText={null} size="small" />
                     )}
-                  />{" "}
+                  />
                 </LocalizationProvider>
               </Form.Item>
             </div>
@@ -378,6 +383,154 @@ export default function Analysis() {
           </div> */}
         </div>
       </div>
+      <BankColumn />
     </>
   );
 }
+
+const BankColumn = () => {
+  const [apiData, setAPIData] = useState([]);
+
+  const [data, setData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  function checkMonth(date) {
+    return true ? selectedDate.getMonth() === date.getMonth() : false;
+  }
+  useEffect(() => {
+    asyncFetch();
+  }, []);
+  useEffect(() => {
+    getData(apiData);
+  }, [selectedDate]);
+  function getDate(e) {
+    setSelectedDate(e);
+  }
+  async function getData(data) {
+    let tempList = [];
+    for (let i = 0; i < data.length; i++) {
+      let date = new Date(data[i].createdAt).toLocaleDateString("vi-VN");
+      let isMonth = checkMonth(new Date(data[i].createdAt));
+      if (isMonth) {
+        let m = {
+          date: date,
+          value: data[i].morning,
+          type: "Ca sáng",
+        };
+        let a = {
+          date: date,
+          value: data[i].afternoon,
+          type: "Ca chiều",
+        };
+        let n = {
+          date: date,
+          value: data[i].night,
+          type: "Ca tối",
+        };
+        let e = {
+          date: date,
+          value: data[i].proceeds,
+          type: "Tổng tiền trong ngày",
+        };
+        tempList.push(e, n, a, m);
+      }
+    }
+    console.log(tempList);
+    setData(tempList);
+  }
+  const asyncFetch = async () => {
+    let data = await bankCollections.getBanks();
+    console.log(data);
+    getData(data);
+    setAPIData(data);
+  };
+
+  const config = {
+    data,
+    isGroup: true,
+    dodgePadding: 2,
+    intervalPadding: 20,
+    columnStyle: {
+      radius: [20, 20, 0, 0],
+    },
+    xField: "date",
+    yField: "value",
+    yAxis: {
+      line: {
+        style: {
+          lineDash: [0, 0],
+          lineWidth: 1,
+          stroke: "#e9e9e9",
+        },
+      },
+
+      label: {
+        formatter: (val) => {
+          let str = val.toString();
+          const withoutLast3 = str.slice(0, -3);
+
+          return val > 999 ? withoutLast3 + "K" : val;
+        },
+      },
+    },
+    seriesField: "type",
+    label: {
+      // 可手动配置 label 数据标签位置
+      position: "middle", // 'top', 'bottom', 'middle'
+    },
+    interactions: [
+      {
+        type: "active-region",
+        enable: false,
+      },
+    ],
+    connectedArea: {
+      style: (oldStyle, element) => {
+        return {
+          fill: "rgba(0,0,0,0.25)",
+          stroke: oldStyle.fill,
+          lineWidth: 0.5,
+        };
+      },
+    },
+  };
+
+  return (
+    <div className="charts">
+      <div className="chartTitle">
+        <h2>{labels.bank}</h2>
+        <Form.Item
+          style={{ marginTop: "3.5%" }}
+          name=""
+          rules={[
+            {
+              required: true,
+              message: `Không được để trống`,
+            },
+            {
+              pattern: new RegExp(/^\w/),
+              // message: errorText.space,
+            },
+          ]}
+        >
+          <LocalizationProvider locale={vi} dateAdapter={AdapterDateFns}>
+            <DesktopDatePicker
+              views={["year", "month"]}
+              label="Chọn năm và tháng"
+              minDate={new Date("2022-05-01")}
+              maxDate={new Date()}
+              value={selectedDate}
+              onChange={getDate}
+              renderInput={(params) => (
+                <TextField {...params} helperText={null} size="small" />
+              )}
+            />
+          </LocalizationProvider>
+        </Form.Item>
+      </div>
+      <div className="chartCont">
+        <Column {...config} />
+      </div>
+    </div>
+  );
+};

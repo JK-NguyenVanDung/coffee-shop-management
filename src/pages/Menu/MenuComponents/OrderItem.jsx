@@ -36,9 +36,6 @@ import {
 import Coffee from "../../../assets/img/coffee_test.png";
 import PlaceHolder from "../../../assets/img/placeholder.png";
 
-import WoodBoard from "../../../assets/img/wood.svg";
-import Clipboard from "../../../assets/img/clipboard.svg";
-import Clipper from "../../../assets/img/clipper.svg";
 import { RemoveButton } from "./RemoveButton";
 const OrderItem = ({ item, changeAmount = false }) => {
   let list = useAppSelector((state) => state.menu.orderList);
