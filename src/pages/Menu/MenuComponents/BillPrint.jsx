@@ -49,7 +49,6 @@ const BillPrint = () => {
   function printOutBill() {
     dispatch(actions.menuActions.printBill());
     dispatch(actions.menuActions.cancelOrder());
-    message.success("In đơn thành công");
   }
   function cancelPrint() {
     dispatch(actions.menuActions.cancelOrder());
@@ -102,8 +101,8 @@ const BillPrint = () => {
   const handlePrint = useReactToPrint({
     content: () => billRef.current,
 
-    documentTitle: "Hoá đơn quán LINH COFFEE",
-    pageStyle: "print",
+    // documentTitle: "Hoá đơn quán LINH COFFEE",
+    pageStyle: "@page { size: 2.5in 4in }",
     onAfterPrint: () => printOutBill(),
   });
   const PrintWrapper = React.forwardRef((props, ref) => (
@@ -113,14 +112,13 @@ const BillPrint = () => {
     return (
       <div className="billBgCont">
         <div className="billHeader">
-          <h2>Linh's Coffee</h2>
+          <h4>Linh's Coffee</h4>
         </div>
         <div className="locationCont">
           <h4>Địa chỉ: {shopAddress}</h4>
           <h4>SĐT: {shopPhone}</h4>
         </div>
         <hr width="100%" size="1%" align="center" />
-
         <div className="cardCont">
           <div className="billContentsCont">
             <Typography

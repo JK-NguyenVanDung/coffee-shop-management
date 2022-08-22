@@ -80,13 +80,12 @@ const ModalContent = () => {
   // };
   const handlePrint = useReactToPrint({
     content: () => billRef.current,
-
-    documentTitle: "Hoá đơn quán LINH COFFEE",
     pageStyle: "print",
+
+    // pageStyle: "@page { size: 3.1496063in 10in }",
 
     onAfterPrint: () => {
       dispatch(actions.formActions.closeForm());
-      message.success("In đơn thành công");
     },
   });
   const handleClose = () => dispatch(actions.formActions.closeForm());
@@ -253,19 +252,33 @@ const ModalContent = () => {
   const PrintBody = () => {
     return (
       <div className="billBgCont">
-        <div className="billHeader">
+        {/* <div className="billHeader">
           <h2>Linh's Coffee</h2>
-        </div>
+        </div> */}
         <div className="locationCont">
-          <h4>Địa chỉ: {shopAddress}</h4>
-          <h4>SĐT: {shopPhone}</h4>
+          <Typography
+            sx={{ fontSize: "16px", fontWeight: "bold" }}
+            color="text.secondary"
+            gutterBottom
+            textAlign="left"
+          >
+            Địa chỉ: {shopAddress}
+          </Typography>
+          <Typography
+            sx={{ fontSize: "16px", fontWeight: "bold" }}
+            color="text.secondary"
+            gutterBottom
+            textAlign="left"
+          >
+            SĐT: {shopPhone}
+          </Typography>
         </div>
         <hr width="100%" size="1%" align="center" />
 
         <div className="cardCont">
           <div className="billContentsCont">
             <Typography
-              sx={{ fontSize: "1.5rem", mb: 3 }}
+              sx={{ fontSize: "20px", mb: 5, fontWeight: "bold" }}
               color="text.secondary"
               gutterBottom
               textAlign="center"
@@ -277,14 +290,14 @@ const ModalContent = () => {
                 <>
                   <div className="billContentCont">
                     <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      sx={{ fontSize: "16px", fontWeight: "bold" }}
                       color="text.secondary"
                       gutterBottom
                     >
                       {item.label}
                     </Typography>
                     <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      sx={{ fontSize: "16px", fontWeight: "bold" }}
                       color="text.secondary"
                       gutterBottom
                     >
@@ -297,14 +310,14 @@ const ModalContent = () => {
             <hr width="100%" size="1%" align="center" />
             <div className="billItemsCont">
               <Typography
-                sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                sx={{ fontSize: "16px", fontWeight: "bold" }}
                 color="text.secondary"
                 gutterBottom
               >
                 {billContent2.label}
               </Typography>
               <Typography
-                sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                sx={{ fontSize: "16px", fontWeight: "bold" }}
                 color="text.secondary"
                 gutterBottom
               >
@@ -312,7 +325,7 @@ const ModalContent = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontSize: "0.8rem",
+                  fontSize: "16px",
                   fontWeight: "bold",
                   textAlign: "center",
                 }}
@@ -328,14 +341,14 @@ const ModalContent = () => {
                   <div className="billItemsCont">
                     <div className="rowCont">
                       <Typography
-                        sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                        sx={{ fontSize: "16px", fontWeight: "bold" }}
                         color="text.secondary"
                         gutterBottom
                       >
                         {item.name}
                       </Typography>
                       <Typography
-                        sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                        sx={{ fontSize: "16px", fontWeight: "bold" }}
                         color="text.secondary"
                         gutterBottom
                       >
@@ -344,7 +357,7 @@ const ModalContent = () => {
                     </div>
                     <Typography
                       sx={{
-                        fontSize: "0.8rem",
+                        fontSize: "16px",
                         fontWeight: "bold",
                         textAlign: "center",
                       }}
@@ -363,14 +376,14 @@ const ModalContent = () => {
                 <>
                   <div className="billContentCont">
                     <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      sx={{ fontSize: "16px", fontWeight: "bold" }}
                       color="text.secondary"
                       gutterBottom
                     >
                       {item.label}
                     </Typography>
                     <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
+                      sx={{ fontSize: "16px", fontWeight: "bold" }}
                       color="text.secondary"
                       gutterBottom
                     >

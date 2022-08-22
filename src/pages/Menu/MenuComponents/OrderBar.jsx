@@ -13,10 +13,8 @@ import * as collections from "../../../api/Collections/dish";
 import * as cateCollections from "../../../api/Collections/category";
 import Loading from "../../../components/Loading";
 import { Button } from "@mui/material/";
-import Coffee from "../../../assets/img/coffee_test.png";
-import PlaceHolder from "../../../assets/img/placeholder.png";
 
-import WoodBoard from "../../../assets/img/wood.svg";
+import WoodBoard from "../../../assets/img/wood.png";
 import Clipboard from "../../../assets/img/clipboard.svg";
 import Clipper from "../../../assets/img/clipper.svg";
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-// import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
+import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
 import "./index.scss";
 import { Form, Space, Input } from "antd";
@@ -14,52 +14,80 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IconButton } from "@mui/material";
 import moment from "moment";
+import * as collections from "../../../api/Collections/notification";
+import Loading from "../../../components/Loading";
+import { actions } from "../../../redux";
 
 function Notification(props) {
   const [items, setItems] = useState([]);
   const [inputItem, setInputItem] = useState("");
   const [update, setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    const temp = JSON.parse(localStorage.getItem("items"));
-    if (temp && temp.length > 0) {
-      setItems(temp);
+    // const temp = JSON.parse(localStorage.getItem("items"));
+    // if (temp && temp.length > 0) {
+    //   setItems(temp);
+    // }
+    fetchData();
+  }, [update]);
+
+  // useEffect(() => {
+  //   localStorage.setItem("items", JSON.stringify(items));
+  // }, [items, update]);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await collections.getNotifications();
+      setItems(response);
+      setLoading(false);
+      // setPagination({
+      //   totalDocs: response.metadata.count,
+      // });
+    } catch (error) {
+      //history.replace("/");
     }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(items));
-  }, [items, update]);
-
-  function addItem() {
+  };
+  async function addItem() {
     if (inputItem.trim() !== "") {
+      setLoading(true);
+
       let temp = items;
       let current = new Date();
-      const obj = { name: inputItem, time: current.toString() };
       if (temp !== null) {
         if (temp.length >= 3) {
-          temp.shift();
-          temp.push(obj);
-        } else {
-          temp.push(obj);
+          await collections.removeNotification(temp[0]._id);
         }
+        await collections.addNotification({
+          title: inputItem,
+          content: inputItem,
+        });
       }
+      dispatch(actions.menuActions.updateNoti());
+
       setItems(temp);
-
-      // localStorage.setItem("items", JSON.stringify(items));
-
       setUpdate(!update);
       setInputItem("");
+      setLoading(false);
     }
   }
-  function deleteItem(e) {
-    const result = items.filter((item) => item.time !== e.time);
-    setItems(result);
+  async function deleteItem(e) {
+    setLoading(true);
+
+    await collections.removeNotification(e._id);
     setUpdate(!update);
+    setLoading(false);
+
+    setInputItem("");
   }
   return (
     <>
       {/* TẠO THÔNG BÁO */}
+
       <div className="notificationCont" {...props}>
+        <Loading loading={loading} />
+
         <div className="inputCont">
           <div className="titleNote">
             <h3>TẠO THÔNG BÁO MỚI</h3>
@@ -91,10 +119,10 @@ function Notification(props) {
         {items.length > 0
           ? items.map((item) => {
               return (
-                <div key={item.name} className="mainNote">
+                <div key={item._id} className="mainNote">
                   <div className="titleMain">
                     <div className="leftTitle">
-                      <div className="title"> {item.name}</div>
+                      <div className="title"> {item.title}</div>
                     </div>
                     <IconButton
                       color="info"
@@ -105,9 +133,9 @@ function Notification(props) {
                     </IconButton>
                   </div>
                   <div className="timeCont">
-                    <span>{moment(item.time).format("DD/MM/YYYY")}</span>
+                    <span>{moment(item.createdAt).format("DD/MM/YYYY")}</span>
                     <br />
-                    <span> {moment(item.time).format(" h:mma")}</span>
+                    <span> {moment(item.createdAt).format(" h:mma")}</span>
                   </div>
                 </div>
               );

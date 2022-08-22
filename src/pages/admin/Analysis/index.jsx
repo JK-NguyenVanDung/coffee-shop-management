@@ -4,6 +4,9 @@ import { useHistory } from "react-router-dom";
 import { Input, Select, Form } from "antd";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
+import { Column } from "@ant-design/plots";
+import { each, groupBy } from "@antv/util";
+
 import "./index.scss";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -18,20 +21,23 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { vi } from "date-fns/locale";
-
+import { numbToDecimal } from "../../../helper/currency";
 import { Area } from "@ant-design/charts";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import { CloseOutlined } from "@ant-design/icons";
 import { IconButton } from "@mui/material";
+import Loading from "../../../components/Loading";
+import * as bankCollections from "../../../api/Collections/bank";
+
 import CreditCard from "../../../assets/img/CreditCard.svg";
 const { Search } = Input;
 const { Option } = Select;
 const cardTitle = {
-  total_revenue: "Tổng doanh thu",
-  electronic_wallet: "Ví điện tử",
-  total_cost: "Tổng chi phí",
-  account_balance: "Lợi nhuận",
+  total_revenue: "Tổng doanh thu (VND)",
+  electronic_wallet: "Ví điện tử (VND)",
+  total_cost: "Tổng chi phí (VND)",
+  account_balance: "Lợi nhuận (VND)",
 };
 const cardCont = {
   revenue_target: "12% Increase From Target",
@@ -40,6 +46,7 @@ const cardCont = {
   balance_target: "1% Increase From Target",
 };
 const labels = {
+  bank: "Báo cáo thống kê ngân sách mỗi ngày",
   statistic: "Báo cáo thống kê doanh thu",
   activity_summary: "Tóm tắt hoạt động",
   bank_card: "Thẻ ngân hàng của tôi",
@@ -59,13 +66,32 @@ const SaleChart = () => {
     try {
       setLoading(true);
       let response = null;
-
+      let stat = null;
       if (date) {
         response = await collections.getData(date);
+        stat = await collections.getStat(date);
       } else {
         let out = getMonthAndYear(new Date());
         response = await collections.getData(out);
+        stat = await collections.getStat(out);
       }
+      console.log(stat.statistics[0]);
+      let total = stat.statistics[0].bills_total[0].sum;
+      let momo = stat.statistics[1].momo_total[0].sum;
+      let vn_pay = stat.statistics[3].vnpay_total[0].sum;
+      let cash = stat.statistics[2].cash_total[0].sum;
+      let inventory = stat.statistics[4].stored_total[0]
+        ? stat.statistics[4].stored_total[0].sum
+        : 0;
+      let group = {
+        total: total,
+        cash: cash,
+        inventory: inventory,
+        momo: momo,
+        vn_pay: vn_pay,
+      };
+      dispatch(actions.analysisActions.setStats(group));
+
       let data = response.sum_data.map((item) => {
         return {
           month: "Tháng  " + item.month,
@@ -176,7 +202,11 @@ const SaleChart = () => {
     //   },
     // ],
   };
-  return <Area {...config} />;
+  return (
+    <>
+      <Loading loading={loading} /> <Area {...config} />{" "}
+    </>
+  );
 };
 
 function getMonthAndYear(e) {
@@ -189,6 +219,7 @@ function getMonthAndYear(e) {
 }
 export default function Analysis() {
   const dispatch = useAppDispatch();
+  const stats = useAppSelector((state) => state.analysis.stats);
 
   const [date, setDate] = useState();
   function getDate(e) {
@@ -203,13 +234,16 @@ export default function Analysis() {
         <div className="leftAnalysis">
           <div className="cards">
             <Card
-              sx={{ width: "50%", marginRight: "2%", borderRadius: "12px" }}
+              sx={{ width: "54%", marginRight: "2%", borderRadius: "12px" }}
+              className="card drop-shadow"
             >
               <CardContent>
                 <Typography sx={{ fontSize: 16 }} gutterBottom>
                   {cardTitle.total_revenue}
                 </Typography>
-                <Typography sx={{ fontSize: 28 }}>$ 120,000</Typography>
+                <Typography sx={{ fontSize: 28 }}>
+                  {stats ? numbToDecimal(stats.total) : 0}
+                </Typography>
               </CardContent>
               <CardActions>
                 {/* <div className="cardConts">
@@ -219,13 +253,16 @@ export default function Analysis() {
               </CardActions>
             </Card>
             <Card
+              className="card drop-shadow"
               sx={{ width: "50%", marginRight: "2%", borderRadius: "12px" }}
             >
               <CardContent>
                 <Typography sx={{ fontSize: 16 }} gutterBottom>
                   {cardTitle.electronic_wallet}
                 </Typography>
-                <Typography sx={{ fontSize: 28 }}>$ 16,500</Typography>
+                <Typography sx={{ fontSize: 28 }}>
+                  {stats ? numbToDecimal(stats.momo + stats.vn_pay) : 0}
+                </Typography>
               </CardContent>
               <CardActions>
                 {/* <div className="cardConts">
@@ -235,6 +272,7 @@ export default function Analysis() {
               </CardActions>
             </Card>
             <Card
+              className="card drop-shadow"
               sx={{ width: "50%", marginRight: "2%", borderRadius: "12px" }}
             >
               <CardContent>
@@ -245,7 +283,9 @@ export default function Analysis() {
                 >
                   {cardTitle.total_cost}
                 </Typography>
-                <Typography sx={{ fontSize: 28 }}>$ 48,670</Typography>
+                <Typography sx={{ fontSize: 28 }}>
+                  {stats ? numbToDecimal(stats.inventory) : 0}
+                </Typography>
               </CardContent>
               <CardActions>
                 {/* <div className="cardConts">
@@ -254,7 +294,7 @@ export default function Analysis() {
                 </div> */}
               </CardActions>
             </Card>
-            <Card sx={{ width: "50%", borderRadius: "12px" }}>
+            <Card sx={{ width: "50%", borderRadius: "12px" }} className="card">
               <CardContent>
                 <Typography
                   sx={{ fontSize: 16 }}
@@ -263,7 +303,9 @@ export default function Analysis() {
                 >
                   {cardTitle.account_balance}
                 </Typography>
-                <Typography sx={{ fontSize: 28 }}>$ 74,330</Typography>
+                <Typography sx={{ fontSize: 28 }}>
+                  {stats ? numbToDecimal(stats.total - stats.inventory) : 0}
+                </Typography>
               </CardContent>
               <CardActions>
                 {/* <div className="cardConts">
@@ -305,14 +347,14 @@ export default function Analysis() {
                   <DesktopDatePicker
                     views={["year", "month"]}
                     label="Chọn năm và tháng"
-                    minDate={new Date("2022-07-01")}
+                    minDate={new Date("2022-08-01")}
                     maxDate={new Date()}
                     value={date}
                     onChange={getDate}
                     renderInput={(params) => (
                       <TextField {...params} helperText={null} size="small" />
                     )}
-                  />{" "}
+                  />
                 </LocalizationProvider>
               </Form.Item>
             </div>
@@ -341,6 +383,154 @@ export default function Analysis() {
           </div> */}
         </div>
       </div>
+      <BankColumn />
     </>
   );
 }
+
+const BankColumn = () => {
+  const [apiData, setAPIData] = useState([]);
+
+  const [data, setData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  function checkMonth(date) {
+    return true ? selectedDate.getMonth() === date.getMonth() : false;
+  }
+  useEffect(() => {
+    asyncFetch();
+  }, []);
+  useEffect(() => {
+    getData(apiData);
+  }, [selectedDate]);
+  function getDate(e) {
+    setSelectedDate(e);
+  }
+  async function getData(data) {
+    let tempList = [];
+    for (let i = 0; i < data.length; i++) {
+      let date = new Date(data[i].createdAt).toLocaleDateString("vi-VN");
+      let isMonth = checkMonth(new Date(data[i].createdAt));
+      if (isMonth) {
+        let m = {
+          date: date,
+          value: data[i].morning,
+          type: "Ca sáng",
+        };
+        let a = {
+          date: date,
+          value: data[i].afternoon,
+          type: "Ca chiều",
+        };
+        let n = {
+          date: date,
+          value: data[i].night,
+          type: "Ca tối",
+        };
+        let e = {
+          date: date,
+          value: data[i].proceeds,
+          type: "Tổng tiền trong ngày",
+        };
+        tempList.push(e, n, a, m);
+      }
+    }
+    console.log(tempList);
+    setData(tempList);
+  }
+  const asyncFetch = async () => {
+    let data = await bankCollections.getBanks();
+    console.log(data);
+    getData(data);
+    setAPIData(data);
+  };
+
+  const config = {
+    data,
+    isGroup: true,
+    dodgePadding: 2,
+    intervalPadding: 20,
+    columnStyle: {
+      radius: [20, 20, 0, 0],
+    },
+    xField: "date",
+    yField: "value",
+    yAxis: {
+      line: {
+        style: {
+          lineDash: [0, 0],
+          lineWidth: 1,
+          stroke: "#e9e9e9",
+        },
+      },
+
+      label: {
+        formatter: (val) => {
+          let str = val.toString();
+          const withoutLast3 = str.slice(0, -3);
+
+          return val > 999 ? withoutLast3 + "K" : val;
+        },
+      },
+    },
+    seriesField: "type",
+    label: {
+      // 可手动配置 label 数据标签位置
+      position: "middle", // 'top', 'bottom', 'middle'
+    },
+    interactions: [
+      {
+        type: "active-region",
+        enable: false,
+      },
+    ],
+    connectedArea: {
+      style: (oldStyle, element) => {
+        return {
+          fill: "rgba(0,0,0,0.25)",
+          stroke: oldStyle.fill,
+          lineWidth: 0.5,
+        };
+      },
+    },
+  };
+
+  return (
+    <div className="charts">
+      <div className="chartTitle">
+        <h2>{labels.bank}</h2>
+        <Form.Item
+          style={{ marginTop: "3.5%" }}
+          name=""
+          rules={[
+            {
+              required: true,
+              message: `Không được để trống`,
+            },
+            {
+              pattern: new RegExp(/^\w/),
+              // message: errorText.space,
+            },
+          ]}
+        >
+          <LocalizationProvider locale={vi} dateAdapter={AdapterDateFns}>
+            <DesktopDatePicker
+              views={["year", "month"]}
+              label="Chọn năm và tháng"
+              minDate={new Date("2022-05-01")}
+              maxDate={new Date()}
+              value={selectedDate}
+              onChange={getDate}
+              renderInput={(params) => (
+                <TextField {...params} helperText={null} size="small" />
+              )}
+            />
+          </LocalizationProvider>
+        </Form.Item>
+      </div>
+      <div className="chartCont">
+        <Column {...config} />
+      </div>
+    </div>
+  );
+};

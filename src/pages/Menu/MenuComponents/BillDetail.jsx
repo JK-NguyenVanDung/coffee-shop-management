@@ -35,11 +35,7 @@ import {
   RadioGroup,
   Checkbox,
 } from "@mui/material/";
-import Coffee from "../../../assets/img/coffee_test.png";
-import PlaceHolder from "../../../assets/img/placeholder.png";
 
-import WoodBoard from "../../../assets/img/wood.svg";
-import Clipboard from "../../../assets/img/clipboard.svg";
 import Clipper from "../../../assets/img/clipper.svg";
 import OrderItem from "./OrderItem";
 import { RemoveButton } from "./RemoveButton";
@@ -134,7 +130,7 @@ const BillDetail = () => {
             <div className="billDetailBgCont">
               <div className="billHeader">
                 <h2>Linh's Coffee</h2>
-                <h1>TẠO ĐƠN</h1>
+                <i>TẠO ĐƠN</i>
               </div>
               <div className="billListCont">
                 {orderList.map((item) => {

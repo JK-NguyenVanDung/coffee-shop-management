@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import { numbToCurrency } from "../helper/currency";
 import { useAppDispatch, useAppSelector } from "../hook/useRedux";
 import { actions } from "../redux";
+
 import {
   LoginOutlined,
   EditOutlined,
@@ -21,6 +22,7 @@ import AccountBalanceRoundedIcon from "@mui/icons-material/AccountBalanceRounded
 import { IconButton } from "@mui/material/";
 import * as collections from "../api/Collections/auth";
 import * as bankCollections from "../api/Collections/bank";
+import * as notiCollections from "../api/Collections/notification";
 
 import Card from "@mui/material/Card";
 import AlertDialog from "./AlertDialog";
@@ -58,6 +60,7 @@ const test = {
 
 export default function HeaderProFile() {
   const location = useLocation();
+  const notification = useAppSelector((state) => state.menu.noti);
 
   // const getProFile = useAppSelector((state) => state.showProfile.data);
   const info = useAppSelector((state) => state.auth.info);
@@ -76,8 +79,9 @@ export default function HeaderProFile() {
   //     setShow(true);
   //   }
   // });
-  const checkNewNotification = () => {
-    const temp = JSON.parse(localStorage.getItem("items"));
+  const checkNewNotification = async () => {
+    const temp = await notiCollections.getNotifications();
+
     if (temp && temp.length > 0) {
       setNewNotification(true);
     } else {
@@ -86,7 +90,10 @@ export default function HeaderProFile() {
   };
   useEffect(() => {
     checkNewNotification();
-  }, [localStorage.getItem("items")]);
+  }, []);
+  useEffect(() => {
+    checkNewNotification();
+  }, [notification]);
   const token = useAppSelector((state) => state.auth.token);
 
   const logout = async () => {

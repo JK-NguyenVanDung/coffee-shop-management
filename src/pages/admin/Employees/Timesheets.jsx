@@ -5,7 +5,7 @@ import { Input, Form, message, Select, InputNumber } from "antd";
 import { useReactToPrint } from "react-to-print";
 
 import { Line } from "@ant-design/charts";
-
+import Loading from "../../../components/Loading";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
@@ -25,6 +25,7 @@ import {
 
 import { IconButton, Typography } from "@mui/material";
 import * as collections from "../../../api/Collections/employees";
+import * as workLogCollections from "../../../api/Collections/workLog";
 
 import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 import { actions } from "../../../redux";
@@ -43,97 +44,28 @@ import { Print } from "@mui/icons-material";
 import { Column } from "@ant-design/plots";
 
 const WorkColumn = (props) => {
-  const data = [
-    {
-      date: "01/02/2022",
-      hour: 12,
-    },
-    {
-      date: "02/02/2022",
-      hour: 4,
-    },
-    {
-      date: "03/02/2022",
-      hour: 8,
-    },
-    {
-      date: "04/02/2022",
-      hour: 4,
-    },
-    {
-      date: "05/02/2022",
-      hour: 4,
-    },
-    {
-      date: "06/02/2022",
-      hour: 12,
-    },
-    {
-      date: "07/02/2022",
-      hour: 8,
-    },
-    {
-      date: "08/02/2022",
-      hour: 4,
-    },
-    {
-      date: "09/02/2022",
-      hour: 12,
-    },
-    {
-      date: "10/02/2022",
-      hour: 4,
-    },
-    {
-      date: "11/02/2022",
-      hour: 12,
-    },
-    {
-      date: "12/02/2022",
-      hour: 4,
-    },
-    {
-      date: "13/02/2022",
-      hour: 8,
-    },
-    {
-      date: "14/02/2022",
-      hour: 4,
-    },
-    {
-      date: "15/02/2022",
-      hour: 4,
-    },
-    {
-      date: "16/02/2022",
-      hour: 8,
-    },
-    {
-      date: "17/02/2022",
-      hour: 4,
-    },
-    {
-      date: "18/02/2022",
-      hour: 12,
-    },
-    {
-      date: "19/02/2022",
-      hour: 8,
-    },
-    {
-      date: "20/02/2022",
-      hour: 4,
-    },
-  ];
+  const data = useAppSelector((state) =>
+    state.employees.workLog ? state.employees.workLog : []
+  );
+
+  // const data = [
+  //   {
+  //     date: "19/02/2022",
+  //     hour: 8,
+  //   },
+  //   {
+  //     date: "20/02/2022",
+  //     hour: 4,
+  //   },
+  // ];
   const config = {
     data,
     xField: "date",
     yField: "hour",
     label: {
-      // 可手动配置 label 数据标签位置
       position: "middle",
       // 'top', 'bottom', 'middle',
-      // 配置样式
+
       style: {
         fill: "#FFFFFF",
         opacity: 0.6,
@@ -177,6 +109,9 @@ const { TextArea } = Input;
 const TimeSheets = () => {
   const [loading, setLoading] = useState(false);
   const dataItem = useAppSelector((state) => state.employees.detail);
+
+  const workedTime = useAppSelector((state) => state.employees.workedTime);
+
   const [date, setDate] = React.useState(new Date("2001-08-18"));
   const [status, setStatus] = React.useState("1");
   let [role, setRole] = useState(true);
@@ -194,6 +129,7 @@ const TimeSheets = () => {
   const [total, setTotal] = useState(0);
   const [miscalculation, setMiscalculation] = useState(0);
   const [payrate, setPayrate] = useState(0);
+  const show = useAppSelector((state) => state.auth.accessRight);
 
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
@@ -220,9 +156,37 @@ const TimeSheets = () => {
   function endOfMonth() {
     return false;
   }
+  async function fetchData() {
+    setLoading(true);
+
+    let res = await workLogCollections.getSingleWorkLog({
+      account: dataItem._id,
+    });
+    let data = res.work_logs;
+    let chartData = [];
+
+    let countTotal = 0;
+    for (let i = 0; i < data.length; i++) {
+      countTotal += data[i].working_time;
+
+      if (data[i].working_time) {
+        chartData.push({
+          date: new Date(data[i].logout_time).toLocaleDateString("vi-VN"),
+          hour: data[i].working_time,
+        });
+      }
+    }
+
+    dispatch(actions.employeesActions.setWorkedTime(countTotal));
+
+    dispatch(actions.employeesActions.setWorkLog(chartData));
+    setLoading(false);
+  }
+  useEffect(() => {
+    fetchData();
+  }, [dataItem]);
   useEffect(() => {
     form.resetFields();
-
     const setForm = () => {
       form.setFieldsValue({
         email: dataItem.email,
@@ -240,14 +204,15 @@ const TimeSheets = () => {
           dataItem.phone_number,
         role: dataItem.role === 0 ? "Nhân viên" : "Quản lý",
         status: getStatus(dataItem.account_status),
-        system_total: 12 * 7,
+        system_total: workedTime,
         bonus: null,
         punish: null,
         payrate: 0,
-        total_margin: 12 * 7,
+        total_margin: workedTime,
       });
-      setMiscalculation(12 * 7);
+      setMiscalculation(workedTime);
       setPayrate(0);
+
       // nếu không có dữ liệu đặc biệt thì xoá
       // setRole(dataItem.role === 0 ? true : false);
       // setStatus(dataItem.account_status);
@@ -257,13 +222,12 @@ const TimeSheets = () => {
     if (dataItem) {
       setForm();
     }
-  }, [dataItem]);
+  }, [workedTime]);
 
   useEffect(() => {
     let final = miscalculation * payrate;
     final -= punish;
     final += bonus;
-    console.log(final);
     setTotal(final);
   }, [miscalculation, payrate, bonus, punish]);
   function checkCustomValidation() {
@@ -278,7 +242,6 @@ const TimeSheets = () => {
 
     onAfterPrint: () => {
       dispatch(actions.formActions.closeForm());
-      message.success("In đơn thành công");
     },
   });
   const PrintWrapper = React.forwardRef((props, ref) => (
@@ -290,9 +253,7 @@ const TimeSheets = () => {
       .then(async (values) => {
         handlePrint(e);
       })
-      .catch((info) => {
-        console.log(2);
-      });
+      .catch((info) => {});
   };
   const handleOk = async () => {
     form
@@ -330,7 +291,7 @@ const TimeSheets = () => {
         //   dispatch(actions.formActions.changeLoad(!loadData));
         //   message.success("Thêm thành công");
 
-        //   setLoading(false);
+        setLoading(false);
         // }
 
         handleClose();
@@ -440,6 +401,7 @@ const TimeSheets = () => {
   };
   return (
     <div className="ModalCont">
+      <Loading loading={loading} />
       {modalError && <AlertModal chilren={errorText.formValidation} />}
       <div className="headerTimekeeping">
         <h2>{getHeaderTitle()}</h2>

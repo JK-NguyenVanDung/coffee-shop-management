@@ -32,11 +32,6 @@ import {
   RadioGroup,
   Checkbox,
 } from "@mui/material/";
-import Coffee from "../../../assets/img/coffee_test.png";
-
-import WoodBoard from "../../../assets/img/wood.svg";
-import Clipboard from "../../../assets/img/clipboard.svg";
-import Clipper from "../../../assets/img/clipper.svg";
 
 const MenuItemDetail = () => {
   let info = useAppSelector((state) => state.menu.info);

@@ -8,6 +8,7 @@ const slice = createSlice({
         listAll: [],
         loadData: false,
         date: null,
+        stats:null,
     },
     reducers: {
         setDate(state,actions){
@@ -31,6 +32,10 @@ const slice = createSlice({
         changeLoad(state, actions) {
             state.loadData = actions.payload;
         },
+        setStats(state,actions){
+            state.stats = actions.payload;
+
+        }
     }
 })
 export const analysisReducer = slice.reducer;

@@ -24,11 +24,16 @@ let initialState = {
     selectedCate: "",
     searchList: [],
     billID: null,
+    noti: false,
 }
 const slice = createSlice({
     name: 'menu',
     initialState,
     reducers: {
+        updateNoti(state, actions) {
+            state.noti = !state.noti;
+
+        },
         setListCate(state, actions) {
             state.listCate = actions.payload;
 

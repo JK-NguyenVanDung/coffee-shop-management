@@ -60,7 +60,11 @@ const MenuHeader = (props) => {
         className="menuSearch"
         value={search}
         onChange={(e) => onChangeSearch(e.target.value)}
-        enterButton={onSearch}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            onSearch();
+          }
+        }}
         addonBefore={
           <IconButton onClick={onSearch}>
             <SearchRoundedIcon />

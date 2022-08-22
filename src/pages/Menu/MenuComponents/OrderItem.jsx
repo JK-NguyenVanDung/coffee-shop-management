@@ -36,9 +36,6 @@ import {
 import Coffee from "../../../assets/img/coffee_test.png";
 import PlaceHolder from "../../../assets/img/placeholder.png";
 
-import WoodBoard from "../../../assets/img/wood.svg";
-import Clipboard from "../../../assets/img/clipboard.svg";
-import Clipper from "../../../assets/img/clipper.svg";
 import { RemoveButton } from "./RemoveButton";
 const OrderItem = ({ item, changeAmount = false }) => {
   let list = useAppSelector((state) => state.menu.orderList);
@@ -75,7 +72,6 @@ const OrderItem = ({ item, changeAmount = false }) => {
           })`,
         }}
       >
-        {" "}
         <div className="smallRemoveBtnCont">
           <RemoveButton action={onRemove} />
         </div>
@@ -95,6 +91,7 @@ const OrderItem = ({ item, changeAmount = false }) => {
             justifyContent: "center",
             marginLeft: 5,
             marginTop: 5,
+            marginBottom: 20,
           }}
         >
           <IconButton

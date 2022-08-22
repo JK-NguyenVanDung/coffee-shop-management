@@ -216,7 +216,7 @@ const Category = () => {
         </Button>
         <FormModal
           children={<ModalContent />}
-          style={{ width: "70%", height: "70vh" }}
+          style={{ width: "70%", height: "74vh" }}
         />
 
         <div className="dishSearch">

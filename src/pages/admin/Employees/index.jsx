@@ -66,19 +66,8 @@ const Employees = () => {
     setSearch(value);
     setData(value ? filteredData : dataList);
   };
-  // const emitEmpty = () => {
-  //   this.setState({
-  //     data: dataList,
-  //     search: "",
-  //   });
-  // };
+
   const columns = [
-    {
-      title: "Số điện thoại",
-      dataIndex: "phone_number",
-      // render: (text) => <a>{text}</a>,
-      width: GIRD12.COL1,
-    },
     {
       title: "Họ tên",
       dataIndex: "full_name",
@@ -86,11 +75,13 @@ const Employees = () => {
     },
     {
       title: "Thông tin liên lạc",
-      dataIndex: "address",
       // dataIndex: 'sdt',
       // dataIndex: 'avatar',
       // dataIndex: 'age',
       width: GIRD12.COL3,
+      render: (item) => {
+        return <div>{`${item.address}, ${item.phone_number}`}</div>;
+      },
     },
     {
       title: "Tình trạng",
