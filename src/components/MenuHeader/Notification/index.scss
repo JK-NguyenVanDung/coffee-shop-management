@@ -1,6 +1,8 @@
+
  .notificationCont {
   // z-index: 1000;
   // position:absolute;
+  overflow:hidden;
   min-width: 100px;
   width: 400px;
   min-height: 30vh;
@@ -99,3 +101,4 @@
 .ant-dropdown-placement-bottomRight{
   top: 10vh !important;
 }
+
