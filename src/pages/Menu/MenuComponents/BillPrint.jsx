@@ -102,7 +102,7 @@ const BillPrint = () => {
     content: () => billRef.current,
 
     // documentTitle: "Hoá đơn quán LINH COFFEE",
-    pageStyle: "@page { size: 2.5in 4in }",
+    pageStyle: "print",
     onAfterPrint: () => printOutBill(),
   });
   const PrintWrapper = React.forwardRef((props, ref) => (

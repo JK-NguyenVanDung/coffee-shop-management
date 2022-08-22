@@ -195,7 +195,7 @@ export default function HeaderProFile() {
               proceeds: values.proceeds,
             });
             setShowBank(false);
-            message.success("Thêm thành công");
+            message.success("Lưu thành công");
 
             setLoading(false);
           }

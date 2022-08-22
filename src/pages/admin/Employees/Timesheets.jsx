@@ -44,11 +44,31 @@ import { Print } from "@mui/icons-material";
 import { Column } from "@ant-design/plots";
 
 const WorkColumn = (props) => {
-  const data = useAppSelector((state) =>
+  let data = useAppSelector((state) =>
     state.employees.workLog ? state.employees.workLog : []
   );
+  let month = useAppSelector((state) =>
+    state.employees.selectedMonth != ""
+      ? state.employees.selectedMonth
+      : new Date().getMonth() + 1 + "-" + new Date().getFullYear()
+  );
+  let workedTime = 0;
+  // data = data.filter((item) => item.date.split("/")[1] === month);
+  let monthData = [];
+  for (let i = 0; i < data.length; i++) {
+    let monthYear =
+      data[i].date.split("/")[1] + "-" + data[i].date.split("/")[2];
+    if (monthYear == month) {
+      monthData.push(data[i]);
+      workedTime += data[i].hour;
+    }
+  }
+  console.log(month);
+  data = monthData;
+  const dispatch = useAppDispatch();
 
-  // const data = [
+  dispatch(actions.employeesActions.setWorkedTime(workedTime));
+
   //   {
   //     date: "19/02/2022",
   //     hour: 8,
@@ -109,7 +129,9 @@ const { TextArea } = Input;
 const TimeSheets = () => {
   const [loading, setLoading] = useState(false);
   const dataItem = useAppSelector((state) => state.employees.detail);
-
+  const workLog = useAppSelector((state) =>
+    state.employees.workLog ? state.employees.workLog : []
+  );
   const workedTime = useAppSelector((state) => state.employees.workedTime);
 
   const [date, setDate] = React.useState(new Date("2001-08-18"));
@@ -121,7 +143,8 @@ const TimeSheets = () => {
 
   const [note, setNote] = useState("");
   const [paid, setPaid] = useState(false);
-
+  const [options, setOptions] = useState([]);
+  const [option, setOption] = useState("");
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
   const [bonus, setBonus] = useState(0);
@@ -162,18 +185,53 @@ const TimeSheets = () => {
     let res = await workLogCollections.getSingleWorkLog({
       account: dataItem._id,
     });
+    // let test = {
+    //   _id: "62f61f2ed4e70db4a08b58f6",
+    //   logout_time: "2022-07-12T11:04:04.055Z",
+    //   work_log_days: "2022712",
+    //   working_time: 2.47,
+    //   createdAt: "2022-07-12T11:04:04.055Z",
+    // };
+
     let data = res.work_logs;
     let chartData = [];
-
+    let ops = [];
     let countTotal = 0;
     for (let i = 0; i < data.length; i++) {
-      countTotal += data[i].working_time;
-
+      ops.push(
+        new Date(data[i].createdAt).getMonth() +
+          1 +
+          "-" +
+          new Date(data[i].createdAt).getFullYear()
+      );
       if (data[i].working_time) {
         chartData.push({
           date: new Date(data[i].logout_time).toLocaleDateString("vi-VN"),
           hour: data[i].working_time,
         });
+      }
+    }
+
+    let uniqOptions = ops.filter(
+      (v, i, a) => v !== "NaN-NaN" && a.indexOf(v) === i
+    );
+
+    setOptions(uniqOptions);
+    let op = "";
+
+    for (let i = 0; i < uniqOptions.length; i++) {
+      let month = new Date().getMonth() + 1 + "-" + new Date().getFullYear();
+      if (uniqOptions[i] == month) {
+        op = uniqOptions[i];
+      }
+    }
+
+    setOption(op);
+    for (let i = 0; i < chartData.length; i++) {
+      let date =
+        chartData[i].date.split("/")[1] + "-" + chartData[i].date.split("/")[2];
+      if (op === date) {
+        countTotal += chartData[i].hour;
       }
     }
 
@@ -334,7 +392,10 @@ const TimeSheets = () => {
     // }
     return "Bảng chấm công";
   }
-
+  function handleSelect(e) {
+    setOption(e);
+    dispatch(actions.employeesActions.selectedMonth(e));
+  }
   const handleDelete = async () => {
     setLoading(true);
     await collections.removeEmployee(dataItem._id);
@@ -359,46 +420,7 @@ const TimeSheets = () => {
     bonus: "Lương thưởng (VND)",
     punish: "Phạt lương (VND)",
   };
-  const data = [
-    { year: "1991", value: 3 },
-    { year: "1992", value: 4 },
-    { year: "1993", value: 3.5 },
-    { year: "1994", value: 5 },
-    { year: "1995", value: 4.9 },
-    { year: "1996", value: 6 },
-    { year: "1997", value: 7 },
-    { year: "1998", value: 9 },
-    { year: "1999", value: 13 },
-  ];
-  const config = {
-    data,
-    height: 400,
-    xField: "year",
-    yField: "value",
-    point: {
-      size: 5,
-      shape: "diamond | circule",
-    },
-    tooltip: {
-      formatter: (data) => {
-        return {
-          name: "",
-          value: "",
-        };
-      },
-      customContent: (name, data) =>
-        `<div>${data?.map((item) => {
-          return `<div class="tooltip-chart" >
-              <span class="tooltip-item-name">${item?.name}</span>
-              <span class="tooltip-item-value">${item?.value}</span>
-            </div>`;
-        })}</div>`,
-      showMarkers: true,
-      showContent: true,
-      position: "right | left",
-      showCrosshairs: true,
-    },
-  };
+
   return (
     <div className="ModalCont">
       <Loading loading={loading} />
@@ -415,12 +437,22 @@ const TimeSheets = () => {
             <h4>{labels.month}</h4>
 
             <div>
-              <Select
+              {/* <Select
                 dropdownStyle={{ zIndex: 2000 }}
                 placeholder="Nhập loại menu"
                 defaultValue="8"
               >
                 <Option value="8">Tháng 8</Option>
+              </Select> */}
+              <Select
+                dropdownStyle={{ zIndex: 2000 }}
+                placeholder="Chọn tháng"
+                onChange={handleSelect}
+                value={option !== "" ? option : options[0]}
+              >
+                {options.map((item) => {
+                  return <Option value={item}>Tháng {item}</Option>;
+                })}
               </Select>
             </div>
           </div>
@@ -455,7 +487,11 @@ const TimeSheets = () => {
                     },
                   ]}
                 >
-                  <Input disabled placeholder="Nhập họ tên" />
+                  <Input
+                    style={{ minWidth: "100%" }}
+                    disabled
+                    placeholder="Nhập họ tên"
+                  />
                 </Form.Item>
 
                 <h4>{labels.userInfo}</h4>
@@ -753,24 +789,22 @@ const TimeSheets = () => {
               </div>
             </div>
           </div>
-          <CardContent>
-            <div className="noteSalary">
-              <TextField
-                placeholder="Nhập ghi chú của quản lý ở đây"
-                label="Ghi chú (Không bắt buộc)"
-                multiline
-                rows={2}
-                id="my-input"
-                maxRows={4}
-                value={note}
-                variant="outlined"
-                onChange={(e) => {
-                  setNote(e.target.value);
-                }}
-                fullWidth
-              />
-            </div>
-          </CardContent>
+          <div className="noteSalary">
+            <TextField
+              placeholder="Nhập ghi chú của quản lý ở đây"
+              label="Ghi chú (Không bắt buộc)"
+              multiline
+              rows={2}
+              id="my-input"
+              maxRows={4}
+              value={note}
+              variant="outlined"
+              onChange={(e) => {
+                setNote(e.target.value);
+              }}
+              fullWidth
+            />
+          </div>
         </PrintWrapper>
         <div className="btnTimekeeping">
           <Button

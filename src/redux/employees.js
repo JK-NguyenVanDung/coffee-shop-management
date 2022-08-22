@@ -11,8 +11,12 @@ const slice = createSlice({
         chart: null,
         workLog: null,
         workedTime: null,
+        selectedMonth:"",
     },
     reducers: { 
+        selectedMonth(state, actions) {
+            state.selectedMonth = actions.payload;
+        }, 
         setWorkedTime(state, actions) {
             state.workedTime = actions.payload;
         }, 

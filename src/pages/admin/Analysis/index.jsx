@@ -75,7 +75,6 @@ const SaleChart = () => {
         response = await collections.getData(out);
         stat = await collections.getStat(out);
       }
-      console.log(stat.statistics[0]);
       let total = stat.statistics[0].bills_total[0].sum;
       let momo = stat.statistics[1].momo_total[0].sum;
       let vn_pay = stat.statistics[3].vnpay_total[0].sum;
@@ -116,20 +115,6 @@ const SaleChart = () => {
     fetchData();
   }, [date]);
 
-  // const data = [
-  //   { month: "1", value: 3000000 },
-  //   { month: "2", value: 4000000 },
-  //   { month: "3", value: 350000 },
-  //   { month: "4", value: 5000000 },
-  //   { month: "5", value: 490000 },
-  //   { month: "6", value: 6000000 },
-  //   { month: "7", value: 7000000 },
-  //   { month: "8", value: 9000000 },
-  //   { month: "9", value: 13000000 },
-  //   { month: "10", value: 13000000 },
-  //   { month: "11", value: 13000000 },
-  //   { month: "12", value: 13000000 },
-  // ];
   const config = {
     data,
     xField: "month",
@@ -208,13 +193,17 @@ const SaleChart = () => {
     </>
   );
 };
-
+function daysInMonth(month, year) {
+  return new Date(year, month, 0).getDate();
+}
 function getMonthAndYear(e) {
   let month = new Date(e).getMonth();
   let year = new Date(e).getFullYear();
+  let numberOfDate = daysInMonth(month, year);
   return {
     month: month + 1,
     year: year,
+    days_of_month: numberOfDate,
   };
 }
 export default function Analysis() {
@@ -517,7 +506,7 @@ const BankColumn = () => {
             <DesktopDatePicker
               views={["year", "month"]}
               label="Chọn năm và tháng"
-              minDate={new Date("2022-05-01")}
+              minDate={new Date("2022-08-01")}
               maxDate={new Date()}
               value={selectedDate}
               onChange={getDate}
