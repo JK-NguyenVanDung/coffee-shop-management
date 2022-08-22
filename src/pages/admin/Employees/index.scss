@@ -31,19 +31,19 @@
     height: 90vh;
     overflow-y: scroll;
 }
-.bodyCont {
+.employeesCont {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-around;   
     overflow-x:hidden;
 }
-.radiogroupCont{
+.radiogroupEmployees{
     width: 100%;
     display:inline-flex;
     align-items: center;
-    justify-content: space-evenly;
-    padding-left: 15px;
+    justify-content: space-between;
+    padding-left: 3%;
     .MuiTypography-root{
         padding-right: 12px !important;
         color:#fff;
@@ -54,120 +54,13 @@
     justify-content: space-between;
 }
 .btnAdd {
+    margin-top: 3%;
+
     display: flex;
     justify-content: space-evenly;
 }
-
-// Thông tin nhân viên
-.Info {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-
-    border-radius: 12px ;
-    padding: 0.5%;
-  }
-.totalContentInfo {
-    background-color: #fff;
-    border-radius: 12px;
-}
-.TitleInfo {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-left: 4.3%;
-    margin-right: 4.3%;
-}
-.ContInfo {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
-.ItemCont {
-    padding-bottom: 3%;
-}  
-
-
-.positionCheckInfo {
-    display: flex;
-    justify-content: space-between;
-}
-.BtnInfo {
-    display: flex;
-    justify-content: space-around;
-    padding-bottom: 3%;
-}
-
-
-// Sửa thông tin nhân viên
-.Edit {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-
-    border-radius: 12px ;
-    padding: 0.5%;
-  }
-.totalContentEdit {
-    background-color: #fff;
-    border-radius: 12px;
-}
-.TitleEdit {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-left: 4.3%;
-    margin-right: 4.3%;
-}
-.ContEdit {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
-.NameEdit {
-    padding-bottom: 3%;
-}  
-.AgeEdit {
-    padding-bottom: 3%;
-}
-.identityCardEdit {
-    padding-bottom: 3%;
-}
-.IDEdit {
-    padding-bottom: 3%;
-}
-.EmailEdit {
-    padding-bottom: 3%;
-}
-.PhoneEdit {
-    padding-bottom: 3%;
-}
-.PassEdit {
-    padding-bottom: 3%;
-}
-.AddressEdit {
-    padding-bottom: 3%;
-}
-.StatusEdit {
-    padding-bottom: 3%;
-}
-.PositionEdit {
-    padding-bottom: 3%;
-}
-.positionCheckEdit {
-    display: flex;
-    justify-content: space-between;
-}
-.BtnEdit {
-    display: flex;
-    justify-content: space-around;
-    padding-bottom: 3%;
-}
-
-.checkboxCont{
-    width: 100%;
+.checkboxEmployees{
+    width: 98%;
     display:inline-flex;
     flex-direction: row;
     justify-content: space-between;
@@ -221,8 +114,15 @@
 .css-atm9ut {
     width: 80%;
 }
+.timesheetsCont {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;   
+    overflow-x:hidden;
+}
 .paidCont {
-    width: 97%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -241,7 +141,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-top: 8%;
     margin-right: 10%;
     padding-bottom: 3vh;
 }
@@ -258,15 +157,14 @@
 }
 
 .selectCont{
-    padding-left:2.5%;
-    padding-right: 2.5%;
+    padding-right: 3%;
     padding-bottom: 3%;
 }
 .leftConts {
     width: 100%;
     display: flex;
     flex-direction: row;
-    padding-bottom: 5%;
+    padding-bottom: 3vh;
 }
 .cont1 {
     width: 90%;

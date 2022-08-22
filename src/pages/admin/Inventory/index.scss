@@ -27,10 +27,10 @@
     height: 90vh;
     overflow-y: scroll;
 }
-.bodyCont {
+.inventoryCont {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-around;   
     overflow-x: hidden;
 }
@@ -59,11 +59,11 @@
         .ant-upload-list-picture-card-container{
             // width: 63%;
             // height: 63%;
-            width: 320px;
+            width: 359px;
             height: 23vh;
         }
         .ant-upload-select-picture-card{
-            width: 98%;
+            width: 97.5%;
             height: 150%;
         }
     }
@@ -89,13 +89,6 @@
         align-items: center;
     }
 }
-.commoditieCont{
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-
 .tableRow{
     cursor:pointer;
 }
@@ -109,4 +102,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+}
+.ant-upload-list-picture-card-container{
+    width: 550px;
 }

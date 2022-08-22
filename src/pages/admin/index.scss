@@ -106,3 +106,25 @@
         min-width: 200px;
     }
 }
+
+.sectionCont{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}.leftSectionCont{
+    margin-left: 4.2%;
+width: 40%;
+display: flex;
+flex-direction: column;
+
+}
+.rightSectionCont{
+    
+width: 47%;
+display: flex;
+flex-direction: column;
+// align-items: flex-start;
+
+}
