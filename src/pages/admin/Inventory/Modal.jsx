@@ -58,19 +58,13 @@ const getBase64 = (img, callback) => {
 };
 
 const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  const isLt5M = file.size / 1024 / 1024 >= 5;
 
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
+  if (isLt5M) {
+    message.error("Ảnh phải nhỏ hơn 5MB!");
   }
 
-  const isLt2M = file.size / 1024 / 1024 < 2;
-
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-
-  return isJpgOrPng && isLt2M;
+  return isLt5M;
 };
 
 const radioBtnstyles = (theme) => ({
@@ -277,10 +271,12 @@ const ModalContent = () => {
       .then(async (values) => {
         if (checkCustomValidation()) {
           setLoading(true);
-          const temp = [];
-          const fmData = new FormData();
-          fmData.append("file", fileList[0].originFileObj);
-          const res = await uploadAPI.upload(fmData);
+          let res = null;
+          if (fileList[0].originFileObj) {
+            const fmData = new FormData();
+            fmData.append("file", fileList[0].originFileObj);
+            res = await uploadAPI.upload(fmData);
+          }
           if (dataItem) {
             await collections.editInventory({
               _id: dataItem._id,
@@ -292,7 +288,7 @@ const ModalContent = () => {
                 payment_type: getPaymentType(),
                 createdAt: values.createdAt,
                 updatedAt: values.updatedAt,
-                avatar: res.name3,
+                avatar: res !== null ? res.name3 : dataItem.avatar,
               },
             });
             handleClose();
@@ -308,7 +304,7 @@ const ModalContent = () => {
               payment_type: getPaymentType(),
               createdAt: values.createdAt,
               updatedAt: values.updatedAt,
-              avatar: res.name3,
+              avatar: res !== null ? res.name3 : "",
             });
             handleClose();
             dispatch(actions.formActions.changeLoad(!loadData));
@@ -428,9 +424,7 @@ const ModalContent = () => {
                   fileList={fileList}
                   maxCount={1}
                   onChange={onChange}
-                  beforeUpload={(file) => {
-                    return false;
-                  }}
+                  beforeUpload={beforeUpload}
                   onPreview={onPreview}
                   style={{ width: "600px", height: "100%" }}
                   disabled={isDetail}

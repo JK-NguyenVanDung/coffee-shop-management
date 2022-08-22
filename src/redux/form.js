@@ -27,7 +27,8 @@ const slice = createSlice({
         },
         showError(state,actions) {
             state.modalError = true;
-            state.errorText = actions.payload;
+            console.log(actions.payload);
+            state.errorText = actions.payload?actions.payload:"" ;
         },
         hideError(state) {
             state.modalError = false;

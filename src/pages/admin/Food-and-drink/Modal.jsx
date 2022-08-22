@@ -59,19 +59,13 @@ const getBase64 = (img, callback) => {
 };
 
 const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  const isLt5M = file.size / 1024 / 1024 > 5;
 
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
+  if (isLt5M) {
+    message.error("Ảnh phải nhỏ hơn 5MB!");
   }
 
-  const isLt2M = file.size / 1024 / 1024 < 2;
-
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-
-  return isJpgOrPng && isLt2M;
+  return isLt5M;
 };
 
 const radioBtnstyles = (theme) => ({
@@ -206,10 +200,13 @@ const ModalContent = () => {
       .validateFields()
       .then(async (values) => {
         setLoading(true);
-        const temp = [];
-        const fmData = new FormData();
-        fmData.append("file", fileList[0].originFileObj);
-        const res = await uploadAPI.upload(fmData);
+
+        let res = null;
+        if (fileList[0].originFileObj) {
+          const fmData = new FormData();
+          fmData.append("file", fileList[0].originFileObj);
+          res = await uploadAPI.upload(fmData);
+        }
 
         if (dataItem) {
           await collections.editDish({
@@ -219,7 +216,7 @@ const ModalContent = () => {
               recipe: values.recipe,
               price: values.price,
               active: values.active,
-              avatar: res.name3,
+              avatar: res !== null ? res.name3 : dataItem.avatar,
               dish_type: values.dish_type,
               category_type: values.category_type,
             },
@@ -235,7 +232,7 @@ const ModalContent = () => {
             recipe: values.recipe,
             price: values.price,
             active: values.active,
-            avatar: res.name3,
+            avatar: res !== null ? res.name3 : "",
             dish_type: values.dish_type,
             category_type: values.category_type,
           });
@@ -309,9 +306,7 @@ const ModalContent = () => {
                   fileList={fileList}
                   maxCount={1}
                   onChange={onChange}
-                  beforeUpload={(file) => {
-                    return false;
-                  }}
+                  beforeUpload={beforeUpload}
                   onPreview={onPreview}
                   style={{ width: "100%", height: "100%" }}
                   disabled={isDetail}

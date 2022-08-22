@@ -425,8 +425,22 @@ const TimeSheets = () => {
             </div>
           </div>
           <div className="timesheetsCont">
-            <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-              <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <div
+                style={{
+                  width: "55%",
+                  display: "flex",
+                  flexDirection: "column",
+                  paddingRight: "4%",
+                }}
+              >
                 <h4>{labels.full_name}</h4>
                 <Form.Item
                   name="full_name"
@@ -532,15 +546,34 @@ const TimeSheets = () => {
                 </div>
               </div>
 
-              <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+              <div
+                style={{
+                  width: "55%",
+                  display: "flex",
+                  flexDirection: "column",
+                  paddingRight: "4%",
+                }}
+              >
                 <h4>{labels.work_time}</h4>
                 <WorkColumn style={{ marginBottom: 10, height: "80%" }} />
               </div>
-
             </div>
-            <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-
-              <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <div
+                style={{
+                  width: "55%",
+                  display: "flex",
+                  flexDirection: "column",
+                  paddingRight: "4%",
+                }}
+              >
                 <div className="leftConts">
                   <div className="cont1">
                     <h4>{labels.bonus}</h4>
@@ -558,7 +591,10 @@ const TimeSheets = () => {
                           bonus === 0
                             ? null
                             : (value) =>
-                              `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                `${value} `.replace(
+                                  /\B(?=(\d{3})+(?!\d))/g,
+                                  ","
+                                )
                         }
                         min={0}
                         max={1000000000000}
@@ -585,7 +621,10 @@ const TimeSheets = () => {
                           punish === 0
                             ? null
                             : (value) =>
-                              `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                `${value} `.replace(
+                                  /\B(?=(\d{3})+(?!\d))/g,
+                                  ","
+                                )
                         }
                         min={0}
                         max={1000000000000}
@@ -621,7 +660,14 @@ const TimeSheets = () => {
                 {/* </Form.Item> */}
               </div>
 
-              <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+              <div
+                style={{
+                  width: "55%",
+                  display: "flex",
+                  flexDirection: "column",
+                  paddingRight: "4%",
+                }}
+              >
                 <div className="workCont">
                   <div className="total_time1">
                     <h4>{labels.total_time1}</h4>
@@ -657,7 +703,10 @@ const TimeSheets = () => {
                           miscalculation === 0
                             ? null
                             : (value) =>
-                              `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                `${value} `.replace(
+                                  /\B(?=(\d{3})+(?!\d))/g,
+                                  ","
+                                )
                         }
                         min={0}
                         max={1000000000000}
@@ -690,19 +739,18 @@ const TimeSheets = () => {
                         payrate === 0
                           ? null
                           : (value) =>
-                            `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       }
                       min={0}
                       max={1000000000000}
                       style={{ minWidth: "100%" }}
                       disabled={endOfMonth()}
                       onChange={(e) => setPayrate(e)}
-                      placeholder="Nhập rate/giờ"
+                      placeholder="Nhập tiền/giờ"
                     />
                   </Form.Item>
                 </div>
               </div>
-
             </div>
           </div>
           <CardContent>

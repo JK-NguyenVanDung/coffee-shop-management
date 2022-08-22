@@ -84,7 +84,6 @@ function Notification(props) {
   return (
     <>
       {/* TẠO THÔNG BÁO */}
-
       <div className="notificationCont" {...props}>
         <Loading loading={loading} />
 

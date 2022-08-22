@@ -47,19 +47,13 @@ const getBase64 = (img, callback) => {
 };
 
 const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
+  const isLt5M = file.size / 1024 / 1024 >= 5;
+  console.log(file.size / 1024 / 1024);
+  if (isLt5M) {
+    message.error("Ảnh phải nhỏ hơn 5MB!");
   }
 
-  const isLt5M = file.size / 1024 / 1024 < 5;
-
-  if (!isLt5M) {
-    message.error("Image must smaller than 5MB!");
-  }
-
-  return isJpgOrPng && isLt5M;
+  return isLt5M;
 };
 
 const radioBtnstyles = (theme) => ({
@@ -84,6 +78,7 @@ const ModalContent = () => {
   const [disablePass, setDisablePass] = useState(true);
   const openDialog = useAppSelector((state) => state.form.delete);
   const [previewFile, setPreviewFile] = useState("");
+  const errorTextType = useAppSelector((state) => state.form.errorText);
   // const uploadImage = useAppSelector((state) => state.form.image);
   const [email, setEmail] = useState({
     value: "",
@@ -222,20 +217,65 @@ const ModalContent = () => {
       .then(async (values) => {
         if (checkCustomValidation()) {
           setLoading(true);
-          const temp = [];
-          const fmData = new FormData();
-          fmData.append("file", fileList[0].originFileObj);
-          const res = await uploadAPI.upload(fmData);
+
+          const response = await collections.getEmployees();
+          let uniq = response.filter(
+            (item) =>
+              item.email === values.email.replace(/\s/g, "") ||
+              item.id_card === values.id_card ||
+              item.phone_number === values.phone_number.replace(/\s/g, "")
+          );
+          let res = null;
+          if (fileList[0].originFileObj) {
+            const fmData = new FormData();
+            fmData.append("file", fileList[0].originFileObj);
+            res = await uploadAPI.upload(fmData);
+          }
 
           if (dataItem) {
-            await collections.editEmployee({
-              _id: dataItem._id,
-              body: {
-                email: values.email.replace(/\s/g, "").replace(/ /g, ""),
-                phone_number: values.phone_number
-                  .replace(/\s/g, "")
-                  .replace(/ /g, ""),
-                password: values.password.replace(/\s/g, "").replace(/ /g, ""),
+            if (uniq.length === 1 && uniq[0]._id === dataItem._id) {
+              await collections.editEmployee({
+                _id: dataItem._id,
+                body: {
+                  email: values.email.replace(/\s/g, "").replace(/ /g, ""),
+                  phone_number: values.phone_number
+                    .replace(/\s/g, "")
+                    .replace(/ /g, ""),
+                  password: values.password
+                    .replace(/\s/g, "")
+                    .replace(/ /g, ""),
+                  address: values.address,
+                  account_status: Number(status),
+                  role: role ? 0 : 1,
+                  full_name: values.full_name,
+                  id_card: values.id_card,
+                  date_of_birth:
+                    date.getMonth() +
+                    1 +
+                    "/" +
+                    date.getDate() +
+                    "/" +
+                    date.getFullYear(),
+                  avatar: res !== null ? res.name3 : dataItem.avatar,
+                },
+              });
+              handleClose();
+              dispatch(actions.formActions.changeLoad(!loadData));
+              message.success("Thay đổi thành công");
+            } else {
+              dispatch(
+                actions.formActions.showError(
+                  "Trùng lặp email hoặc SĐT hoặc CMND/CCCD với nhân viên đã tồn tại"
+                )
+              );
+            }
+            setLoading(false);
+          } else {
+            if (uniq.length === 0) {
+              await collections.addEmployee({
+                email: values.email.replace(/\s/g, ""),
+                phone_number: values.phone_number.replace(/\s/g, ""),
+                password: values.password.replace(/\s/g, ""),
                 address: values.address,
                 account_status: Number(status),
                 role: role ? 0 : 1,
@@ -248,47 +288,30 @@ const ModalContent = () => {
                   date.getDate() +
                   "/" +
                   date.getFullYear(),
-                avatar: res.name3,
-              },
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thay đổi thành công");
-
-            setLoading(false);
-          } else {
-            await collections.addEmployee({
-              email: values.email.replace(/\s/g, ""),
-              phone_number: values.phone_number.replace(/\s/g, ""),
-              password: values.password.replace(/\s/g, ""),
-              address: values.address,
-              account_status: Number(status),
-              role: role ? 0 : 1,
-              full_name: values.full_name,
-              id_card: values.id_card,
-              date_of_birth:
-                date.getMonth() +
-                1 +
-                "/" +
-                date.getDate() +
-                "/" +
-                date.getFullYear(),
-              avatar: res.name3,
-            });
-            handleClose();
-            dispatch(actions.formActions.changeLoad(!loadData));
-            message.success("Thêm thành công");
-
+                avatar: res !== null ? res.name3 : "",
+              });
+              handleClose();
+              dispatch(actions.formActions.changeLoad(!loadData));
+              message.success("Thêm thành công");
+            } else {
+              dispatch(
+                actions.formActions.showError(
+                  "Không thể thêm 1 email hoặc SĐT hoặc CMND/CCCD đã tồn tại"
+                )
+              );
+            }
             setLoading(false);
           }
+          setLoading(false);
         } else {
           dispatch(actions.formActions.showError());
           setLoading(false);
         }
       })
 
-      .catch((info) => {
+      .catch((e) => {
         dispatch(actions.formActions.showError());
+        console.log(e);
 
         setLoading(false);
       });
@@ -409,12 +432,16 @@ const ModalContent = () => {
     position: "Chức vụ",
   };
 
-  async function upload(file) {
-    console.log(file);
-  }
+  async function upload(file) {}
   return (
     <div className="ModalCont">
-      {modalError && <AlertModal chilren={errorText.formValidation} />}
+      {modalError && (
+        <AlertModal
+          chilren={
+            errorTextType === "" ? errorText.formValidation : errorTextType
+          }
+        />
+      )}
       <div className="headerCont">
         <h2>{getHeaderTitle()}</h2>
         <IconButton onClick={handleClose}>
@@ -435,9 +462,7 @@ const ModalContent = () => {
                   fileList={fileList}
                   maxCount={1}
                   onChange={onChange}
-                  beforeUpload={(file) => {
-                    return false;
-                  }}
+                  beforeUpload={beforeUpload}
                   onPreview={onPreview}
                   style={{ width: "400px", height: "100%" }}
                   disabled={isDetail}
