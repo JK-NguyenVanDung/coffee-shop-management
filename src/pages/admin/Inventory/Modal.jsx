@@ -402,8 +402,22 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="inventoryCont">
-          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <div
+              style={{
+                width: "55%",
+                display: "flex",
+                flexDirection: "column",
+                paddingRight: "4%",
+              }}
+            >
               <h4>{labels.avatar}</h4>
               <div className="avatarCont">
                 {/* <ImgCrop rotate> */}
@@ -418,7 +432,7 @@ const ModalContent = () => {
                     return false;
                   }}
                   onPreview={onPreview}
-                  style={{ width: "500px", height: "100%" }}
+                  style={{ width: "600px", height: "100%" }}
                   disabled={isDetail}
                 >
                   <UploadButton />
@@ -440,7 +454,14 @@ const ModalContent = () => {
                 }
               </span>
             </div>
-            <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+            <div
+              style={{
+                width: "55%",
+                display: "flex",
+                flexDirection: "column",
+                paddingRight: "4%",
+              }}
+            >
               <h4>{labels.name}</h4>
               <Form.Item
                 name="name"
@@ -521,9 +542,22 @@ const ModalContent = () => {
             </div>
           </div>
 
-          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-
-            <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <div
+              style={{
+                width: "55%",
+                display: "flex",
+                flexDirection: "column",
+                paddingRight: "4%",
+              }}
+            >
               {dataItem ? (
                 <>
                   <h4>{labels.create}</h4>
@@ -555,7 +589,14 @@ const ModalContent = () => {
               ) : null}
             </div>
 
-            <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+            <div
+              style={{
+                width: "55%",
+                display: "flex",
+                flexDirection: "column",
+                paddingRight: "4%",
+              }}
+            >
               <h4>{labels.price}</h4>
               <Form.Item
                 name="price"
@@ -595,7 +636,6 @@ const ModalContent = () => {
                 })}
               </Select>
             </div>
-
           </div>
         </div>
         <div className="btnInventory">

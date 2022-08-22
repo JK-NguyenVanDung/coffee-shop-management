@@ -59,11 +59,11 @@
         .ant-upload-list-picture-card-container{
             // width: 63%;
             // height: 63%;
-            width: 320px;
+            width: 359px;
             height: 23vh;
         }
         .ant-upload-select-picture-card{
-            width: 98%;
+            width: 97.5%;
             height: 150%;
         }
     }
@@ -102,4 +102,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+}
+.ant-upload-list-picture-card-container{
+    width: 550px;
 }

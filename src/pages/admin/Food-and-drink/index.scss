@@ -39,6 +39,20 @@
     flex-direction: column;
     justify-content: space-between;   
     overflow-x:hidden;
+    .rightSectionCont{
+        width:38%;
+display: flex;
+flex-direction: column;
+margin-right: 7%;
+
+    }
+    .leftSectionCont{
+        margin-left: 4.2%;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    
+    }
 }
 .btnDish {
     width: 100%;
@@ -61,11 +75,11 @@
         .ant-upload-list-picture-card-container{
             // width: 63%;
             // height: 63%;
-            width: 320px;
+            width: 356px;
             height: 23vh;
         }
         .ant-upload-select-picture-card{
-            width: 98%;
+            width: 94.5%;
             height: 150%;
         }
     }

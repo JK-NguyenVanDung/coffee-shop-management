@@ -297,8 +297,8 @@ const ModalContent = () => {
       </div>
       <Form form={form} className="form" initialValues={{ modifier: "public" }}>
         <div className="dishCont">
-          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            <div style={{ paddingRight:  "4%" }}>
+          <div className="sectionCont">
+            <div className="leftSectionCont">
               <h4>{labels.avatar}</h4>
               <div className="avatarDish">
                 {/* <ImgCrop rotate> */}
@@ -313,7 +313,7 @@ const ModalContent = () => {
                     return false;
                   }}
                   onPreview={onPreview}
-                  style={{ width: "500px", height: "100%" }}
+                  style={{ width: "100%", height: "100%" }}
                   disabled={isDetail}
                 >
                   <UploadButton />
@@ -335,7 +335,7 @@ const ModalContent = () => {
                 }
               </span>
             </div>
-            <div style={{ width: "80%", display: "flex", flexDirection: "column", paddingRight: "5%" }}>
+            <div className="rightSectionCont">
               <h4>{labels.name}</h4>
               <Form.Item
                 name="name"
@@ -414,7 +414,7 @@ const ModalContent = () => {
                 <Select
                   disabled={isDetail}
                   dropdownStyle={{ zIndex: 2000 }}
-                  placeholder="Nhập loại món" 
+                  placeholder="Nhập loại món"
                   onChange={handleSelect}
                 >
                   {listCate.map((item) => {
@@ -424,8 +424,8 @@ const ModalContent = () => {
               </Form.Item>
             </div>
           </div>
-          <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            <div style={{ width: "55%", display: "flex", flexDirection: "column", paddingRight:  "4%" }}>
+          <div className="sectionCont">
+            <div className="leftSectionCont">
               {dataItem ? (
                 <>
                   <h4>{labels.create}</h4>
@@ -455,7 +455,7 @@ const ModalContent = () => {
                 </>
               ) : null}
             </div>
-            <div style={{ width: "80%", display: "flex", flexDirection: "column", paddingRight:  "5%" }}>
+            <div className="rightSectionCont">
               <h4>{labels.category_type}</h4>
               <Form.Item
                 name="category_type"
