@@ -13,7 +13,7 @@ const slice = createSlice({
     },
     reducers: {
         setType(state,actions){
-            state.type = actions.payload;
+            state.type = !state.type;
 
         }
         ,

@@ -237,8 +237,11 @@ export default function Analysis() {
   }
   function changeType(e) {
     getDate(new Date());
-    dispatch(actions.analysisActions.setType(e));
+    dispatch(actions.analysisActions.setType());
   }
+  const onKeyDown = (e) => {
+    e.preventDefault();
+  };
   return (
     <>
       <div className="analysisCont">
@@ -270,7 +273,12 @@ export default function Analysis() {
             </Card>
             <Card
               className="card drop-shadow"
-              sx={{ width: "50%", marginRight: "2%", borderRadius: "12px" }}
+              sx={{
+                width: "50%",
+                marginRight: "2%",
+                borderRadius: "12px",
+                height: "15vh",
+              }}
             >
               <CardContent>
                 <Typography sx={{ fontSize: 16 }} gutterBottom>
@@ -289,7 +297,12 @@ export default function Analysis() {
             </Card>
             <Card
               className="card drop-shadow"
-              sx={{ width: "50%", marginRight: "2%", borderRadius: "12px" }}
+              sx={{
+                width: "50%",
+                marginRight: "2%",
+                borderRadius: "12px",
+                height: "15vh",
+              }}
             >
               <CardContent>
                 <Typography
@@ -310,7 +323,10 @@ export default function Analysis() {
                 </div> */}
               </CardActions>
             </Card>
-            <Card sx={{ width: "50%", borderRadius: "12px" }} className="card">
+            <Card
+              sx={{ width: "50%", borderRadius: "12px", height: "15vh" }}
+              className="card"
+            >
               <CardContent>
                 <Typography
                   sx={{ fontSize: 16 }}
@@ -364,7 +380,12 @@ export default function Analysis() {
                       value={date}
                       onChange={getDate}
                       renderInput={(params) => (
-                        <TextField {...params} helperText={null} size="small" />
+                        <TextField
+                          {...params}
+                          helperText={null}
+                          size="small"
+                          onKeyDown={onKeyDown}
+                        />
                       )}
                     />
                   </LocalizationProvider>
@@ -404,7 +425,9 @@ const BankColumn = () => {
 
   const [data, setData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-
+  const onKeyDown = (e) => {
+    e.preventDefault();
+  };
   function checkMonth(date) {
     return true ? selectedDate.getMonth() === date.getMonth() : false;
   }
@@ -533,7 +556,12 @@ const BankColumn = () => {
               value={selectedDate}
               onChange={getDate}
               renderInput={(params) => (
-                <TextField {...params} helperText={null} size="small" />
+                <TextField
+                  {...params}
+                  helperText={null}
+                  size="small"
+                  onKeyDown={onKeyDown}
+                />
               )}
             />
           </LocalizationProvider>

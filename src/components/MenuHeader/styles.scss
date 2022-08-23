@@ -37,11 +37,30 @@
         z-index: 1 !important;
         border-radius: 8px !important; 
         position: absolute !important;
-        top:1px !important;
+        top:1vh!important;
         left: 0px !important;
         border:none;
         height: 1rem !important;
         background: none !important;
+      }
+      @media only screen and (max-height: 787px) {
+        .ant-input-group-addon{
+   
+          top:0.8vh!important;
+  
+        }
+      }
+      @media only screen and (max-height: 707px) {
+        .ant-input-group-addon{
+          z-index: 1 !important;
+          border-radius: 8px !important; 
+          position: absolute !important;
+          top:5%!important;
+          left: 0px !important;
+          border:none;
+          height: 1rem !important;
+          background: none !important;
+        }
       }
       .ant-input-group-addon:hover{
         color: #111 !important;

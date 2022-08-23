@@ -146,12 +146,7 @@ export const CustomDay = ({ isModal }) => {
         }}
         renderDay={renderWeekPickerDay}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            style={{ width: "100%" }}
-            size="small"
-            disabled
-          />
+          <TextField {...params} style={{ width: "100%" }} size="small" />
         )}
         inputFormat="'Tuần của' dd/MM/yyyy"
       />
