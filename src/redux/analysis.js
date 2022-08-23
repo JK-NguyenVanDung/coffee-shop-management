@@ -9,8 +9,14 @@ const slice = createSlice({
         loadData: false,
         date: null,
         stats:null,
+        type: true,
     },
     reducers: {
+        setType(state,actions){
+            state.type = actions.payload;
+
+        }
+        ,
         setDate(state,actions){
             state.date = actions.payload;
 

@@ -43,6 +43,7 @@ const Employees = () => {
   const lock = useAppSelector((state) => state.employees.lock);
   const [showList, setShowList] = useState(false);
   const accessRight = useAppSelector((state) => state.auth.accessRight);
+  const info = useAppSelector((state) => state.auth.info);
 
   const [selectionType, setSelectionType] = useState("checkbox");
   const [search, setSearch] = useState("");
@@ -80,7 +81,9 @@ const Employees = () => {
       // dataIndex: 'age',
       width: GIRD12.COL3,
       render: (item) => {
-        return <div>{`${item.address}, ${item.phone_number}`}</div>;
+        return (
+          <div>{item ? `${item.address}, ${item.phone_number}` : "N/A"}</div>
+        );
       },
     },
     {
@@ -142,10 +145,10 @@ const Employees = () => {
             <Button
               disabled={accessRight == false}
               variant="contained"
+              color="dark"
               endIcon={<PendingActionsOutlinedIcon />}
               style={{
                 marginRight: "5%",
-                backgroundColor: "#111",
                 color: "#fff",
               }}
               size="small"
@@ -165,7 +168,9 @@ const Employees = () => {
               Sửa
             </Button>
             <Popconfirm
-              title={`Bạn có muốn xoá ${item.full_name} không ?`}
+              title={`Bạn có muốn xoá ${
+                item ? item.full_name : "nhân viên này"
+              } không ?`}
               onConfirm={() => handleDelete(item)}
               onCancel={cancel}
               okText="Có"
@@ -217,8 +222,7 @@ const Employees = () => {
 
   useEffect(() => {
     console.log(accessRight);
-
-    setData(
+    let data =
       showList && dataList
         ? dataList.map((item, index) => {
             return {
@@ -237,8 +241,11 @@ const Employees = () => {
               updatedAt: item.updatedAt,
             };
           })
-        : []
-    );
+        : [];
+    if (accessRight === false) {
+      data = data.filter((item) => item.id == info._id);
+    }
+    setData(data);
   }, [showList, checkOnload, dataList]);
 
   const dispatch = useAppDispatch();

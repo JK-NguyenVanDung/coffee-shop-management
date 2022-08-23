@@ -79,6 +79,8 @@ const ModalContent = () => {
   const openDialog = useAppSelector((state) => state.form.delete);
   const [previewFile, setPreviewFile] = useState("");
   const errorTextType = useAppSelector((state) => state.form.errorText);
+  const accessRight = useAppSelector((state) => state.auth.accessRight);
+
   // const uploadImage = useAppSelector((state) => state.form.image);
   const [email, setEmail] = useState({
     value: "",
@@ -465,7 +467,7 @@ const ModalContent = () => {
                   beforeUpload={beforeUpload}
                   onPreview={onPreview}
                   style={{ width: "400px", height: "100%" }}
-                  disabled={isDetail}
+                  disabled={isDetail || accessRight === false}
                 >
                   <UploadButton />
                 </Upload>
@@ -503,7 +505,8 @@ const ModalContent = () => {
                 help={email.errorMsg !== "" ? email.errorMsg : undefined}
               >
                 <Input
-                  disabled={isDetail}
+                  style={{ minWidth: "100%" }}
+                  disabled={isDetail || accessRight === false}
                   placeholder="Nhập email"
                   value={email}
                   onChange={(e) => handleEmail(e)}
@@ -525,7 +528,8 @@ const ModalContent = () => {
                 help={phone.errorMsg !== "" ? phone.errorMsg : undefined}
               >
                 <Input
-                  disabled={isDetail}
+                  style={{ minWidth: "100%" }}
+                  disabled={isDetail || accessRight === false}
                   value={phone.value}
                   placeholder="Nhập số điện thoại"
                   onChange={(value) => handlePhone(value)}
@@ -550,13 +554,14 @@ const ModalContent = () => {
               >
                 {dataItem ? (
                   <Input.Password
+                    style={{ minWidth: "100%" }}
                     placeholder="Nhập mật khẩu"
                     disabled={disablePass || isDetail}
                     value={password.value}
                     onChange={(value) => handlePassword(value)}
                     prefix={
                       <IconButton
-                        disabled={isDetail}
+                        disabled={isDetail || accessRight === false}
                         onClick={() => disablePassword()}
                       >
                         {!disablePass || isDetail ? (
@@ -576,7 +581,8 @@ const ModalContent = () => {
                   />
                 ) : (
                   <Input.Password
-                    disabled={isDetail}
+                    style={{ minWidth: "100%" }}
+                    disabled={isDetail || accessRight === false}
                     placeholder="Nhập mật khẩu"
                     value={password.value}
                     onChange={(value) => handlePassword(value)}
@@ -604,8 +610,8 @@ const ModalContent = () => {
                 ]}
               >
                 <Input
-                  style={{ marginBottom: 1 }}
-                  disabled={isDetail}
+                  style={{ marginBottom: 1, minWidth: "100%" }}
+                  disabled={isDetail || accessRight === false}
                   placeholder="Nhập họ tên"
                 />
               </Form.Item>
@@ -618,7 +624,7 @@ const ModalContent = () => {
                   inputFormat="dd/MM/yyyy"
                   value={date}
                   onChange={handleChange}
-                  disabled={isDetail}
+                  disabled={isDetail || accessRight === false}
                   renderInput={(params) => (
                     <TextField
                       style={{ width: "100%", paddingBottom: "12%" }}
@@ -654,7 +660,8 @@ const ModalContent = () => {
                 help={ID_card.errorMsg !== "" ? ID_card.errorMsg : undefined}
               >
                 <Input
-                  disabled={isDetail}
+                  style={{ minWidth: "100%" }}
+                  disabled={isDetail || accessRight === false}
                   placeholder="Nhập CMND"
                   value={ID_card}
                   onChange={(e) => handleID_card(e)}
@@ -676,7 +683,11 @@ const ModalContent = () => {
                   },
                 ]}
               >
-                <Input disabled={isDetail} placeholder="Nhập địa chỉ" />
+                <Input
+                  style={{ minWidth: "100%" }}
+                  disabled={isDetail}
+                  placeholder="Nhập địa chỉ"
+                />
               </Form.Item>
 
               <h4>{labels.status}</h4>
@@ -690,7 +701,7 @@ const ModalContent = () => {
                 >
                   <div class="radiogroupEmployees">
                     <FormControlLabel
-                      disabled={isDetail}
+                      disabled={isDetail || accessRight === false}
                       value="1"
                       control={<Radio size="small" color="info" />}
                       label="Đang làm"
@@ -701,7 +712,7 @@ const ModalContent = () => {
                     />
 
                     <FormControlLabel
-                      disabled={isDetail}
+                      disabled={isDetail || accessRight === false}
                       value="2"
                       control={<Radio size="small" color="info" />}
                       label="Tạm nghỉ"
@@ -712,7 +723,7 @@ const ModalContent = () => {
                     />
 
                     <FormControlLabel
-                      disabled={isDetail}
+                      disabled={isDetail || accessRight === false}
                       value="3"
                       control={<Radio size="small" color="info" />}
                       label="Đã nghỉ"
@@ -733,7 +744,7 @@ const ModalContent = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          disabled={isDetail}
+                          disabled={isDetail || accessRight === false}
                           onChange={handleCheckbox}
                           checked={role}
                         />
@@ -744,7 +755,7 @@ const ModalContent = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          disabled={isDetail}
+                          disabled={isDetail || accessRight === false}
                           onChange={handleCheckbox}
                           checked={!role}
                         />
@@ -770,13 +781,13 @@ const ModalContent = () => {
               paddingBottom: "2%",
               color: "#fff",
             }}
-            disabled={loading}
+            disabled={loading || accessRight === false}
             onClick={dataItem && isDetail === true ? editItem : handleOk}
           >
             {dataItem && isDetail === true ? "Sửa" : "Lưu"}
           </Button>
           <Button
-            disabled={loading}
+            disabled={loading || accessRight === false}
             size="Large"
             color="error"
             variant="contained"

@@ -7,7 +7,7 @@ const slice = createSlice({
     initialState: {
         token: null,
         info: {
-            name: "test"
+           
         },
         accessRight: false,
 

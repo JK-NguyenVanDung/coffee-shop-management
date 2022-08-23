@@ -36,6 +36,9 @@ const theme = createTheme({
     warning: {
       main: colors.warning,
     },
+    dark: {
+      main: colors.inherit,
+    },
   },
 });
 

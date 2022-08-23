@@ -318,7 +318,7 @@ const Bills = () => {
   return (
     <>
       <div className="dishSearchCont">
-        <Button
+        {/* <Button
           disabled={!accessRight}
           variant="contained"
           color="error"
@@ -331,7 +331,7 @@ const Bills = () => {
           onClick={() => setConfirm()}
         >
           XÓA 3 THÁNG ĐƠN
-        </Button>
+        </Button> */}
         <AlertDialog
           children="Xác nhận xoá 3 tháng hoá đơn trước ?"
           title="Xoá 3 tháng đơn"

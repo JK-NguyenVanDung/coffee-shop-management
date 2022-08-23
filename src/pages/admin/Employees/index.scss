@@ -79,11 +79,11 @@
         .ant-upload-list-picture-card-container{
             // width: 63%;
             // height: 63%;
-            width: 320px;
+            width: 100% !important;
             height: 23vh;
         }
         .ant-upload-select-picture-card{
-            width: 98%;
+            width: 100%;
             height: 150%;
         }
     }

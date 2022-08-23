@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 // import MyPagination from "../../../components/Pagination";
-import { Input, Select, Form } from "antd";
+import { Input, Form, Switch } from "antd";
 // import { useAppDispatch, useAppSelector } from "../../../hook/useRedux";
 // import { actions } from "../../../redux";
 import { Column } from "@ant-design/plots";
 import { each, groupBy } from "@antv/util";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 import "./index.scss";
 import Card from "@mui/material/Card";
@@ -31,8 +36,7 @@ import Loading from "../../../components/Loading";
 import * as bankCollections from "../../../api/Collections/bank";
 
 import CreditCard from "../../../assets/img/CreditCard.svg";
-const { Search } = Input;
-const { Option } = Select;
+
 const cardTitle = {
   total_revenue: "Tổng doanh thu (VND)",
   electronic_wallet: "Ví điện tử (VND)",
@@ -60,7 +64,7 @@ const SaleChart = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.analysis.listAll);
-
+  const type = useAppSelector((state) => state.analysis.type);
   const date = useAppSelector((state) => state.analysis.date);
   const fetchData = async (value) => {
     try {
@@ -68,11 +72,15 @@ const SaleChart = () => {
       let response = null;
       let stat = null;
       if (date) {
-        response = await collections.getData(date);
+        response = type
+          ? await collections.getData(date)
+          : await collections.getTotalMonth(date);
         stat = await collections.getStat(date);
       } else {
         let out = getMonthAndYear(new Date());
-        response = await collections.getData(out);
+        response = type
+          ? await collections.getData(out)
+          : await collections.getTotalMonth(date);
         stat = await collections.getStat(out);
       }
       let total = stat.statistics[0].bills_total[0].sum;
@@ -90,13 +98,22 @@ const SaleChart = () => {
         vn_pay: vn_pay,
       };
       dispatch(actions.analysisActions.setStats(group));
-
-      let data = response.sum_data.map((item) => {
-        return {
-          month: "Tháng  " + item.month,
-          value: item[0] ? item[0].sum : 0,
-        };
-      });
+      let data = [];
+      if (type) {
+        data = response.month_data.map((item) => {
+          return {
+            month: "Ngày  " + item.day,
+            value: item[0] ? item[0].sum : 0,
+          };
+        });
+      } else {
+        data = response.sum_data.map((item) => {
+          return {
+            month: "Tháng  " + item.month,
+            value: item[0] ? item[0].sum : 0,
+          };
+        });
+      }
 
       console.log(data);
       dispatch(actions.analysisActions.setListAll(data));
@@ -112,8 +129,9 @@ const SaleChart = () => {
 
   useEffect(() => {
     // test.current = 2;
+    console.log(date);
     fetchData();
-  }, [date]);
+  }, [date, type]);
 
   const config = {
     data,
@@ -217,13 +235,22 @@ export default function Analysis() {
     dispatch(actions.analysisActions.setDate(out));
     console.log(out);
   }
+  function changeType(e) {
+    getDate(new Date());
+    dispatch(actions.analysisActions.setType(e));
+  }
   return (
     <>
       <div className="analysisCont">
         <div className="leftAnalysis">
           <div className="cards">
             <Card
-              sx={{ width: "54%", marginRight: "2%", borderRadius: "12px" }}
+              sx={{
+                width: "54%",
+                height: "15vh",
+                marginRight: "2%",
+                borderRadius: "12px",
+              }}
               className="card drop-shadow"
             >
               <CardContent>
@@ -307,44 +334,41 @@ export default function Analysis() {
           <div className="charts">
             <div className="chartTitle">
               <h2>{labels.statistic}</h2>
-              <Form.Item
-                style={{ marginTop: "3.5%" }}
-                name=""
-                rules={[
-                  {
-                    required: true,
-                    message: `Không được để trống`,
-                  },
-                  {
-                    pattern: new RegExp(/^\w/),
-                    // message: errorText.space,
-                  },
-                ]}
-              >
-                {/* <Select
-                  // disabled={isDetail}
-                  dropdownStyle={{ zIndex: 2000 }}
-                  // onChange={handleSelect}
-                  placeholder="Nhập tháng"
-                >
-                  {/* {listCate.map((item) => {
-                                    return <Option value={item._id}>{item.name}</Option>;
-                                })} 
-                                                </Select>
-*/}
-                <LocalizationProvider locale={vi} dateAdapter={AdapterDateFns}>
-                  <DesktopDatePicker
-                    views={["year", "month"]}
-                    label="Chọn năm và tháng"
-                    minDate={new Date("2022-08-01")}
-                    maxDate={new Date()}
-                    value={date}
-                    onChange={getDate}
-                    renderInput={(params) => (
-                      <TextField {...params} helperText={null} size="small" />
-                    )}
-                  />
-                </LocalizationProvider>
+              <Form.Item style={{ marginTop: "3.5%" }}>
+                <div className="chartsHeader">
+                  <Box sx={{ minWidth: 200, marginRight: "5%" }}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">Lọc</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        defaultValue={true}
+                        size="small"
+                        label="Age"
+                        onChange={(e) => changeType(e)}
+                      >
+                        <MenuItem value={true}>Hiển thị theo ngày</MenuItem>
+                        <MenuItem value={false}>Hiển thị theo tháng</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  <LocalizationProvider
+                    locale={vi}
+                    dateAdapter={AdapterDateFns}
+                  >
+                    <DesktopDatePicker
+                      views={["year", "month"]}
+                      label="Chọn năm và tháng"
+                      minDate={new Date("2022-08-01")}
+                      maxDate={new Date()}
+                      value={date}
+                      onChange={getDate}
+                      renderInput={(params) => (
+                        <TextField {...params} helperText={null} size="small" />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </div>
               </Form.Item>
             </div>
             <div className="chartCont">
@@ -352,7 +376,7 @@ export default function Analysis() {
             </div>
           </div>
         </div>
-        <div className="rightAnalysis">
+        {/* <div className="rightAnalysis">
           <div className="bankCard">
             <h3>{labels.bank_card}</h3>
             <img src={CreditCard} />
@@ -367,10 +391,8 @@ export default function Analysis() {
               UNAVAILABLE
             </h3>
           </div>
-          {/* <div>
-            <h3>{labels.target}</h3>
-          </div> */}
-        </div>
+       
+        </div> */}
       </div>
       <BankColumn />
     </>

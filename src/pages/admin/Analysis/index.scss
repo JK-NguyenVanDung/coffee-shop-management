@@ -6,7 +6,7 @@
     margin-top: 5vh
 }
 .leftAnalysis {
-    width: 75%;
+    width: 100%; //75%
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -40,6 +40,12 @@
     width: 100%;
     padding-bottom: 4%;
 
+    .chartsHeader{
+        display:inline-flex;
+        flex-direction: row;
+        width: 100%;
+
+    }
 }
 .chartCont{
     padding: 3%;
@@ -52,6 +58,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
 }
 .bankCard {
     width: 100%;
@@ -89,6 +96,7 @@
   .card:hover{
     transform: scale(1.1);
     background: #4EADBA;
+    color: #fff;
 }
 
 
@@ -102,3 +110,4 @@
     -webkit-box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
     box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
 }
+

@@ -7,7 +7,8 @@ export const login = (body) => {
       } catch (err) {
         console.log(err)
 
-        throw err.message;
+        return err;
+
       }
 }
 export const logout = () => {

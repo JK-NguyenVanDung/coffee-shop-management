@@ -8,5 +8,6 @@ export const colors = {
     secondaryDark: "#312A21", // nau dam
     infoDark: "#111", // den
     info: "#fff", // trang
-    warning:"#FFA726" //vang
+    warning:"#FFA726", //vang
+    inherit:  "#111", // den
 }
