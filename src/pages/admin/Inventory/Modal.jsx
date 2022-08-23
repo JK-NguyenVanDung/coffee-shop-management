@@ -470,7 +470,11 @@ const ModalContent = () => {
                   },
                 ]}
               >
-                <Input disabled={isDetail} placeholder="Nhập tên món" />
+                <Input
+                  style={{ minWidth: "100%" }}
+                  disabled={isDetail}
+                  placeholder="Nhập tên món"
+                />
               </Form.Item>
 
               <h4>{labels.amount}</h4>
@@ -564,7 +568,11 @@ const ModalContent = () => {
                       },
                     ]}
                   >
-                    <Input disabled={true} placeholder="Nhập" />
+                    <Input
+                      style={{ minWidth: "100%" }}
+                      disabled={true}
+                      placeholder="Nhập"
+                    />
                   </Form.Item>
 
                   <h4>{labels.update}</h4>
@@ -577,7 +585,11 @@ const ModalContent = () => {
                       },
                     ]}
                   >
-                    <Input disabled={true} placeholder="Nhập" />
+                    <Input
+                      style={{ minWidth: "100%" }}
+                      disabled={true}
+                      placeholder="Nhập"
+                    />
                   </Form.Item>
                 </>
               ) : null}
@@ -606,7 +618,7 @@ const ModalContent = () => {
                 ]}
               >
                 <InputNumber
-                  style={{ width: "100%" }}
+                  style={{ minWidth: "100%" }}
                   formatter={(value) =>
                     `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }

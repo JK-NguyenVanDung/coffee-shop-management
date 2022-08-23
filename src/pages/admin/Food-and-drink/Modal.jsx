@@ -345,7 +345,11 @@ const ModalContent = () => {
                   },
                 ]}
               >
-                <Input disabled={isDetail} placeholder="Nhập tên món" />
+                <Input
+                  style={{ minWidth: "100%" }}
+                  disabled={isDetail}
+                  placeholder="Nhập tên món"
+                />
               </Form.Item>
               <h4>{labels.price}</h4>
               <Form.Item
@@ -388,7 +392,7 @@ const ModalContent = () => {
                     },
                   ]}
                 >
-                  <Input disabled={true} placeholder="Nhập đã bán" />
+                  <Input style={{minWidth:"100%"}} disabled={true} placeholder="Nhập đã bán" />
                 </Form.Item>
               </>
               ) : null} */}
@@ -433,7 +437,11 @@ const ModalContent = () => {
                       },
                     ]}
                   >
-                    <Input disabled={true} placeholder="Nhập" />
+                    <Input
+                      style={{ minWidth: "100%" }}
+                      disabled={true}
+                      placeholder="Nhập"
+                    />
                   </Form.Item>
                   <h4>{labels.update}</h4>
                   <Form.Item
@@ -445,7 +453,11 @@ const ModalContent = () => {
                       },
                     ]}
                   >
-                    <Input disabled={true} placeholder="Nhập" />
+                    <Input
+                      style={{ minWidth: "100%" }}
+                      disabled={true}
+                      placeholder="Nhập"
+                    />
                   </Form.Item>
                 </>
               ) : null}
@@ -488,7 +500,11 @@ const ModalContent = () => {
                   },
                 ]}
               >
-                <Input disabled={isDetail} placeholder="Nhập công thức" />
+                <Input
+                  style={{ minWidth: "100%" }}
+                  disabled={isDetail}
+                  placeholder="Nhập công thức"
+                />
               </Form.Item>
             </div>
           </div>
