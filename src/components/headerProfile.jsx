@@ -39,9 +39,9 @@ const labels = {
   activity_summary: "Tóm tắt hoạt động",
   bank_card: "Thẻ ngân hàng của tôi",
   target: "Mục tiêu",
-  morning_money: "Tiền sáng (VND)",
-  lunch_money: "Tiền trưa (VND)",
-  evening_money: "Tiền tối (VND)",
+  morning_money: "Tiền ca 1 (VND)",
+  lunch_money: "Tiền ca 2 (VND)",
+  evening_money: "Tiền ca 3 (VND)",
   end_money: "Tổng tiền trong ngày (VND)",
 };
 const test = {

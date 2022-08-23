@@ -355,7 +355,7 @@ const Schedule = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData(postList);
-  }, [checkOnload]);
+  }, [loadData]);
   const test = new Date();
 
   useEffect(() => {
@@ -474,7 +474,7 @@ const Schedule = () => {
           ]
         : []
     );
-  }, [showList, weekDetail]); // checkOnload, dataList, date
+  }, [showList, weekDetail, loadData]); // checkOnload, dataList, date
 
   const dispatch = useAppDispatch();
   const getDetail = (id) => {
