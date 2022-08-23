@@ -157,7 +157,7 @@ const Schedule = () => {
           <div className="userCont">
             {item.map((id) => {
               return (
-                <div key={id}>
+                <div key={id + Math.random()}>
                   <Button
                     onClick={() => getDetail(id)}
                     size="large"
@@ -183,7 +183,7 @@ const Schedule = () => {
           <div className="userCont">
             {item.tuesday.map((id) => {
               return (
-                <div key={id}>
+                <div key={id + Math.random()}>
                   <Button
                     onClick={() => getDetail(id)}
                     size="large"
@@ -210,7 +210,7 @@ const Schedule = () => {
           <div>
             {item.map((id) => {
               return (
-                <div key={id} className="userCont">
+                <div key={id + Math.random()} className="userCont">
                   <Button
                     onClick={() => getDetail(id)}
                     size="large"
@@ -237,7 +237,7 @@ const Schedule = () => {
           <div>
             {item.map((id) => {
               return (
-                <div key={id} className="userCont">
+                <div key={id + Math.random()} className="userCont">
                   <Button
                     onClick={() => getDetail(id)}
                     size="large"
@@ -264,7 +264,7 @@ const Schedule = () => {
           <div>
             {item.map((id) => {
               return (
-                <div key={id} className="userCont">
+                <div key={id + Math.random()} className="userCont">
                   <Button
                     onClick={() => getDetail(id)}
                     size="large"
@@ -291,7 +291,7 @@ const Schedule = () => {
           <div>
             {item.map((id) => {
               return (
-                <div key={id} className="userCont">
+                <div key={id + Math.random()} className="userCont">
                   <Button
                     onClick={() => getDetail(id)}
                     size="large"
@@ -318,7 +318,7 @@ const Schedule = () => {
           <div>
             {item.map((id) => {
               return (
-                <div key={id} className="userCont">
+                <div key={id + Math.random()} className="userCont">
                   <Button
                     onClick={() => getDetail(id)}
                     size="large"
@@ -355,13 +355,13 @@ const Schedule = () => {
   useEffect(() => {
     // test.current = 2;
     fetchData(postList);
+    dispatch(actions.scheduleActions.setCurrent(test.toUTCString()));
   }, [loadData]);
   const test = new Date();
 
   useEffect(() => {
     fetchData(postList);
     dispatch(actions.scheduleActions.setCurrent(test.toUTCString()));
-    console.log(date);
   }, []);
 
   useEffect(() => {
@@ -385,7 +385,7 @@ const Schedule = () => {
     console.log("index" + currentIndex);
     dispatch(actions.scheduleActions.setWeekDetail(dataList[currentIndex]));
     console.log(weekDetail);
-  }, [checkOnload, dataList, date]);
+  }, [dataList, date]);
   useEffect(() => {
     setData(
       showList && weekDetail
@@ -474,7 +474,7 @@ const Schedule = () => {
           ]
         : []
     );
-  }, [showList, weekDetail, loadData]); // checkOnload, dataList, date
+  }, [showList, weekDetail, dataList]); // checkOnload, dataList, date
 
   const dispatch = useAppDispatch();
   const getDetail = (id) => {
