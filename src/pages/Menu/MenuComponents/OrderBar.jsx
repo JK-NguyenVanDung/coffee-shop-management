@@ -68,26 +68,26 @@ const OrderBar = () => {
   let shortedList = [];
   const [maxI, setMaxI] = useState(8);
   function getMaxSize() {
-    // if (width >= 1920) {
-    //   setMaxI(8);
-    // } else if (width >= 1800) {
-    //   setMaxI(7);
-    // } else if (width >= 1600) {
-    //   setMaxI(6);
-    // } else if (width >= 1400) {
-    //   setMaxI(5);
-    // } else if (width >= 1200) {
-    //   setMaxI(4);
-    // } else if (width >= 1000) {
-    //   setMaxI(3);
-    // } else if (width < 1000) {
-    //   setMaxI(3);
-    // } else {
-    //   let i = width / orderList.length;
-    //   console.log(i);
-    // }
-    let i = width / 10 / orderList.length - 5;
-    setMaxI(Math.floor(i));
+    if (width >= 1920) {
+      setMaxI(8);
+    } else if (width >= 1800) {
+      setMaxI(7);
+    } else if (width >= 1600) {
+      setMaxI(6);
+    } else if (width >= 1400) {
+      setMaxI(5);
+    } else if (width >= 1200) {
+      setMaxI(4);
+    } else if (width >= 1000) {
+      setMaxI(3);
+    } else if (width < 1000) {
+      setMaxI(3);
+    } else {
+      let i = width / orderList.length;
+      console.log(i);
+    }
+    // let i = width / 10 / orderList.length - 5;
+    // setMaxI(Math.floor(i));
   }
   useEffect(() => {
     getMaxSize();
