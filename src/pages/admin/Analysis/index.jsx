@@ -368,27 +368,29 @@ export default function Analysis() {
                       </Select>
                     </FormControl>
                   </Box>
-                  <LocalizationProvider
-                    locale={vi}
-                    dateAdapter={AdapterDateFns}
-                  >
-                    <DesktopDatePicker
-                      views={["year", "month"]}
-                      label="Chọn năm và tháng"
-                      minDate={new Date("2022-08-01")}
-                      maxDate={new Date()}
-                      value={date}
-                      onChange={getDate}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          helperText={null}
-                          size="small"
-                          onKeyDown={onKeyDown}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
+                  <div className="datePickerCont">
+                    <LocalizationProvider
+                      locale={vi}
+                      dateAdapter={AdapterDateFns}
+                    >
+                      <DesktopDatePicker
+                        views={["year", "month"]}
+                        label="Chọn năm và tháng"
+                        minDate={new Date("2022-08-01")}
+                        maxDate={new Date()}
+                        value={date}
+                        onChange={getDate}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            helperText={null}
+                            size="small"
+                            onKeyDown={onKeyDown}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </div>
                 </div>
               </Form.Item>
             </div>
@@ -449,17 +451,17 @@ const BankColumn = () => {
         let m = {
           date: date,
           value: data[i].morning,
-          type: "Ca sáng",
+          type: "Ca 1",
         };
         let a = {
           date: date,
           value: data[i].afternoon,
-          type: "Ca chiều",
+          type: "Ca 2",
         };
         let n = {
           date: date,
           value: data[i].night,
-          type: "Ca tối",
+          type: "Ca 3",
         };
         let e = {
           date: date,
@@ -533,20 +535,7 @@ const BankColumn = () => {
     <div className="charts">
       <div className="chartTitle">
         <h2>{labels.bank}</h2>
-        <Form.Item
-          style={{ marginTop: "3.5%" }}
-          name=""
-          rules={[
-            {
-              required: true,
-              message: `Không được để trống`,
-            },
-            {
-              pattern: new RegExp(/^\w/),
-              // message: errorText.space,
-            },
-          ]}
-        >
+        <div className="datePickerCont">
           <LocalizationProvider locale={vi} dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
               views={["year", "month"]}
@@ -565,7 +554,7 @@ const BankColumn = () => {
               )}
             />
           </LocalizationProvider>
-        </Form.Item>
+        </div>
       </div>
       <div className="chartCont">
         <Column {...config} />

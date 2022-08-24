@@ -110,7 +110,7 @@
     -webkit-box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
     box-shadow: 2px 5px 5px 2px rgba(0,0,0,0.12); 
 }
-.analysisCont{
+.datePickerCont{
     .MuiOutlinedInput-root{
         pointer-events: none; 
         
@@ -122,14 +122,14 @@
 
     
 }
-.charts{
-    .MuiOutlinedInput-root{
-        pointer-events: none; 
+// .charts{
+//     .MuiOutlinedInput-root{
+//         pointer-events: none; 
         
         
-    }
-    .MuiButtonBase-root{
-        pointer-events:all;
-    }
+//     }
+//     .MuiButtonBase-root{
+//         pointer-events:all;
+//     }
  
-}
+// }
