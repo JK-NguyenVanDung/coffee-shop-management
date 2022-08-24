@@ -162,7 +162,7 @@ export default function HeaderProFile() {
           status: dataItem !== null ? dataItem.status : false,
         });
       };
-
+      setFinal(dataItem !== null ? dataItem.proceeds : 0);
       if (dataItem) {
         setForm();
       }
