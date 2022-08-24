@@ -12,8 +12,19 @@ const slice = createSlice({
         workLog: null,
         workedTime: null,
         selectedMonth:"",
+        workTimeInfo: [],
+        bonus: 0,
+        totalPay:0,
+        currentData:null
     },
-    reducers: { 
+    reducers: {
+         setCurrentData(state, actions) {
+        state.currentData = actions.payload;
+    }, 
+      
+        setWorkTimeInfo(state, actions) {
+            state.workTimeInfo = actions.payload;
+        }, 
         selectedMonth(state, actions) {
             state.selectedMonth = actions.payload;
         }, 

@@ -35,3 +35,4 @@ export const addEmployee = async (body) => {
       throw err.message;
     }
   };
+

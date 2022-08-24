@@ -65,7 +65,6 @@ const Schedule = () => {
   const weekDetail = useAppSelector((state) => state.schedule.weekDetail);
   const date = useAppSelector((state) => state.schedule.currentDate);
   const accessRight = useAppSelector((state) => state.auth.accessRight);
-
   const [select, setSelect] = useState("");
 
   const dataList = useAppSelector((state) => state.schedule.listAll);
@@ -96,7 +95,6 @@ const Schedule = () => {
     dispatch(actions.formActions.changeLoad(!loadData));
     message.success("Xoá thành công");
     dispatch(actions.formActions.hideDelete());
-
     setLoading(false);
   };
   const start = startOfWeek(date ? Date.parse(date) : new Date(), {
@@ -474,7 +472,7 @@ const Schedule = () => {
           ]
         : []
     );
-  }, [showList, weekDetail, dataList]); // checkOnload, dataList, date
+  }, [showList, weekDetail, dataList, date, checkOnload]); // checkOnload, dataList, date
 
   const dispatch = useAppDispatch();
   const getDetail = (id) => {

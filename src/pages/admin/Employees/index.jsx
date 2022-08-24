@@ -263,6 +263,8 @@ const Employees = () => {
   async function handleTimeSheet(item) {
     dispatch(actions.formActions.showSecondForm());
     dispatch(actions.formActions.setDetail(false));
+    dispatch(actions.employeesActions.setWorkTimeInfo([]));
+
     dispatch(actions.employeesActions.setDetail(item.id));
   }
   async function handleEdit(item) {

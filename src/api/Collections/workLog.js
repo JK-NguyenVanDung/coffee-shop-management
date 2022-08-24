@@ -40,3 +40,48 @@ export const addWorkLog = async (body) => {
       throw err.message;
     }
   };
+
+
+  export const getWorkTimes = async () => {
+    try {
+      const response = await api.get(`/WorkTimes`);
+      console.log(response);
+  
+      return response;
+    } catch (e) {
+      console.log(e);
+      throw e.message;
+    }
+  };
+  export const addWorkTime = async (body) => {
+      try {
+        const response = await api.post(`/WorkTimes`,body);
+        return response;
+      } catch (err) {
+        throw err.message;
+      }
+    };
+    export const editWorkTime = async (props) => {
+      try {
+        const response = await api.put(`/WorkTimes/${props._id}`,props.body);
+        return response;
+      } catch (err) {
+        throw err.message;
+      }
+    };
+    export const removeWorkTime = async (id) => {
+      try {
+        const response = await api.delete(`/WorkTimes/${id}`);
+        return response;
+      } catch (err) {
+        throw err.message;
+      }
+    };
+    export const getWorkTime = async (body) => {
+      try {
+        const response = await api.post(`/WorkTimes/showWorkTimePerAccount`,body);
+        return response;
+      } catch (err) {
+        throw err.message;
+      }
+    };

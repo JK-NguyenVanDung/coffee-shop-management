@@ -32,6 +32,8 @@ import { actions } from "../../../redux";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { colors } from "../../../helper/Color";
 import { errorText } from "../../../helper/Text";
+import { numbToDecimal } from "../../../helper/currency";
+
 import ImgCrop from "antd-img-crop";
 
 import NumberInput from "../../../components/FormElements/NumberInput";
@@ -63,7 +65,6 @@ const WorkColumn = (props) => {
       workedTime += data[i].hour;
     }
   }
-  console.log(month);
   data = monthData;
   const dispatch = useAppDispatch();
 
@@ -133,6 +134,9 @@ const TimeSheets = () => {
     state.employees.workLog ? state.employees.workLog : []
   );
   const workedTime = useAppSelector((state) => state.employees.workedTime);
+  const monthYear = useAppSelector((state) => state.employees.selectedMonth);
+  const workTimeInfo = useAppSelector((state) => state.employees.workTimeInfo);
+  const currentData = useAppSelector((state) => state.employees.currentData);
 
   const [date, setDate] = React.useState(new Date("2001-08-18"));
   const [status, setStatus] = React.useState("1");
@@ -140,7 +144,6 @@ const TimeSheets = () => {
   const loadData = useAppSelector((state) => state.form.loadData);
   const modalError = useAppSelector((state) => state.form.modalError);
   const isDetail = useAppSelector((state) => state.form.detail);
-
   const [note, setNote] = useState("");
   const [paid, setPaid] = useState(false);
   const [options, setOptions] = useState([]);
@@ -179,21 +182,31 @@ const TimeSheets = () => {
   function endOfMonth() {
     return false;
   }
+  function handleNote(e) {
+    e.preventDefault();
+    setNote(e.target.value);
+  }
   async function fetchData() {
     setLoading(true);
 
     let res = await workLogCollections.getSingleWorkLog({
       account: dataItem._id,
     });
-    // let test = {
-    //   _id: "62f61f2ed4e70db4a08b58f6",
-    //   logout_time: "2022-07-12T11:04:04.055Z",
-    //   work_log_days: "2022712",
-    //   working_time: 2.47,
-    //   createdAt: "2022-07-12T11:04:04.055Z",
-    // };
+    let re = await workLogCollections.getWorkTime({
+      account: dataItem._id,
+    });
+    dispatch(actions.employeesActions.setWorkTimeInfo(re.work_logs));
+
+    let test = {
+      _id: "62f61f2ed4e70db4a08b58f6",
+      logout_time: "2022-07-12T11:04:04.055Z",
+      work_log_days: "2022712",
+      working_time: 2.47,
+      createdAt: "2022-07-12T11:04:04.055Z",
+    };
 
     let data = res.work_logs;
+    data.push(test);
     let chartData = [];
     let ops = [];
     let countTotal = 0;
@@ -242,9 +255,30 @@ const TimeSheets = () => {
   }
   useEffect(() => {
     fetchData();
-  }, [dataItem]);
+  }, [dataItem, loadData]);
   useEffect(() => {
     form.resetFields();
+
+    let valid = workTimeInfo.length > 0;
+
+    let data = null;
+    if (valid) {
+      for (let i = 0; i < workTimeInfo.length; i++) {
+        let temp = workTimeInfo[i].month + "-" + workTimeInfo[i].year;
+
+        let my = monthYear
+          ? monthYear
+          : new Date().getMonth() + 1 + "-" + new Date().getFullYear();
+
+        if (temp === my) {
+          data = workTimeInfo[i];
+          break;
+        }
+      }
+    }
+
+    dispatch(actions.employeesActions.setCurrentData(data));
+
     const setForm = () => {
       form.setFieldsValue({
         email: dataItem.email,
@@ -263,13 +297,14 @@ const TimeSheets = () => {
         role: dataItem.role === 0 ? "Nhân viên" : "Quản lý",
         status: getStatus(dataItem.account_status),
         system_total: workedTime,
-        bonus: null,
-        punish: null,
-        payrate: 0,
-        total_margin: workedTime,
+        bonus: data ? data.bonus : null,
+        punish: data ? data.punish : null,
+        payRate: data ? data.payRate : null,
+        total_margin: data ? data.systemWorkTime : workedTime,
+        note: data ? data.note : null,
       });
-      setMiscalculation(workedTime);
-      setPayrate(0);
+      setMiscalculation(data ? data.systemWorkTime : workedTime);
+      setPayrate(data ? data.payRate : 0);
 
       // nếu không có dữ liệu đặc biệt thì xoá
       // setRole(dataItem.role === 0 ? true : false);
@@ -280,13 +315,13 @@ const TimeSheets = () => {
     if (dataItem) {
       setForm();
     }
-  }, [workedTime]);
+  }, [workedTime, workTimeInfo]);
 
   useEffect(() => {
-    let final = miscalculation * payrate;
-    final -= punish;
-    final += bonus;
-    setTotal(final);
+    let final = Number(miscalculation) * Number(payrate);
+    final -= Number(punish);
+    final += Number(bonus);
+    setTotal(Number(final));
   }, [miscalculation, payrate, bonus, punish]);
   function checkCustomValidation() {
     return true;
@@ -314,49 +349,55 @@ const TimeSheets = () => {
       .catch((info) => {});
   };
   const handleOk = async () => {
+    // await workLogCollections.removeWorkTime(workTimeInfo[0]._id);
+
     form
       .validateFields()
       .then(async (values) => {
         setLoading(true);
         const temp = [];
-        // if (dataItem) {
-        //   // await collections.editEmployee({
-        //   //   _id: dataItem._id,
-        //   //   body: {
 
-        //   //   },
-        //   // });
-
-        // } else {
-        //   await collections.addEmployee({
-        //     email: values.email.replace(/\s/g, ""),
-        //     phone_number: values.phone_number.replace(/\s/g, ""),
-        //     password: values.password.replace(/\s/g, ""),
-        //     address: values.address,
-        //     account_status: Number(status),
-        //     role: role ? 0 : 1,
-        //     full_name: values.full_name,
-        //     id_card: values.id_card,
-        //     date_of_birth:
-        //       date.getMonth() +
-        //       1 +
-        //       "/" +
-        //       date.getDate() +
-        //       "/" +
-        //       date.getFullYear(),
-        //   });
-        //   handleClose();
-        //   dispatch(actions.formActions.changeLoad(!loadData));
-        //   message.success("Thêm thành công");
-
+        if (currentData) {
+          await workLogCollections.editWorkTime({
+            _id: currentData._id,
+            body: {
+              bonus: values.bonus,
+              punish: values.punish,
+              systemWorkTime: values.total_margin,
+              totalSalary: total,
+              payRate: values.payRate,
+              note: values.note,
+              paymentStatus: paid,
+            },
+          });
+        } else {
+          await workLogCollections.addWorkTime({
+            bonus: values.bonus,
+            punish: values.punish,
+            systemWorkTime: values.total_margin,
+            totalSalary: total,
+            payRate: values.payRate,
+            note: values.note,
+            month: monthYear
+              ? monthYear.split("-")[0]
+              : new Date().getMonth() + 1,
+            year: monthYear
+              ? monthYear.split("-")[1]
+              : new Date().getFullYear(),
+            account_id: dataItem._id,
+            paymentStatus: paid,
+          });
+        }
+        // handleClose();
+        dispatch(actions.formActions.changeLoad(!loadData));
+        message.success("Lưu thành công");
         setLoading(false);
         // }
 
-        handleClose();
-        dispatch(actions.formActions.changeLoad(!loadData));
-        message.success("Xuất file thành công");
+        // handleClose();
+        // dispatch(actions.formActions.changeLoad(!loadData));
 
-        setLoading(false);
+        // setLoading(false);
       })
 
       .catch((info) => {
@@ -431,7 +472,7 @@ const TimeSheets = () => {
           <CloseOutlined />
         </IconButton>
       </div>
-      <Form form={form} className="form" initialValues={{ modifier: "public" }}>
+      <Form form={form} className="form">
         <PrintWrapper ref={billRef}>
           <div className="selectCont">
             <h4>{labels.month}</h4>
@@ -635,7 +676,7 @@ const TimeSheets = () => {
                         min={0}
                         max={1000000000000}
                         style={{ minWidth: "100%" }}
-                        onChange={(e) => setBonus(e)}
+                        onBlur={(e) => setBonus(e.target.value)}
                         disabled={endOfMonth()}
                         placeholder="Không bắt buộc"
                       />
@@ -665,7 +706,7 @@ const TimeSheets = () => {
                         min={0}
                         max={1000000000000}
                         style={{ minWidth: "100%" }}
-                        onChange={(e) => setPunish(e)}
+                        onBlur={(e) => setPunish(e.target.value)}
                         disabled={endOfMonth()}
                         placeholder="Không bắt buộc"
                       />
@@ -689,7 +730,7 @@ const TimeSheets = () => {
               */}
                 <Input
                   disabled={true}
-                  value={total + " VNĐ"}
+                  value={numbToDecimal(total) + " VNĐ"}
                   style={{ minWidth: "100%" }}
                   placeholder={`0 VNĐ`}
                 />
@@ -748,7 +789,7 @@ const TimeSheets = () => {
                         max={1000000000000}
                         style={{ minWidth: "100%" }}
                         disabled={endOfMonth()}
-                        onChange={(e) => setMiscalculation(e)}
+                        onBlur={(e) => setMiscalculation(e.target.value)}
                         placeholder="Nhập tổng giờ làm"
                       />
                     </Form.Item>
@@ -758,7 +799,7 @@ const TimeSheets = () => {
                 <div>
                   <h4>{labels.rate}</h4>
                   <Form.Item
-                    name="payrate"
+                    name="payRate"
                     rules={[
                       {
                         required: true,
@@ -781,7 +822,7 @@ const TimeSheets = () => {
                       max={1000000000000}
                       style={{ minWidth: "100%" }}
                       disabled={endOfMonth()}
-                      onChange={(e) => setPayrate(e)}
+                      onBlur={(e) => setPayrate(e.target.value)}
                       placeholder="Nhập tiền/giờ"
                     />
                   </Form.Item>
@@ -790,23 +831,48 @@ const TimeSheets = () => {
             </div>
           </div>
           <div className="noteSalary">
-            <TextField
-              placeholder="Nhập ghi chú của quản lý ở đây"
-              label="Ghi chú (Không bắt buộc)"
-              multiline
-              rows={2}
-              id="my-input"
-              maxRows={4}
-              value={note}
-              variant="outlined"
-              onChange={(e) => {
-                setNote(e.target.value);
-              }}
-              fullWidth
-            />
+            <Form.Item
+              name="note"
+              rules={[
+                {
+                  required: true,
+                  message: `Không được để trống rate/giờ`,
+                },
+                {
+                  pattern: new RegExp(/^\w/),
+                  message: errorText.space,
+                },
+              ]}
+            >
+              <TextField
+                placeholder="Nhập ghi chú của quản lý ở đây"
+                label="Ghi chú (Không bắt buộc)"
+                multiline
+                rows={2}
+                id="my-input"
+                maxRows={4}
+                variant="outlined"
+                fullWidth
+              />
+            </Form.Item>
           </div>
         </PrintWrapper>
         <div className="btnTimekeeping">
+          <Button
+            size="Large"
+            color={"primary"}
+            variant="contained"
+            style={{
+              paddingLeft: "10%",
+              paddingRight: "10%",
+              paddingTop: "2%",
+              paddingBottom: "2%",
+              color: "#fff",
+            }}
+            onClick={handleOk}
+          >
+            Lưu
+          </Button>
           <Button
             size="Large"
             color={"success"}

@@ -426,7 +426,7 @@ export default function HeaderProFile() {
 
   const menu = show ? (
     <Menu style={{ borderRadius: 12 }}>
-      <Menu.ItemGroup title={`Hi ${getProFile.name}`}>
+      <Menu.ItemGroup title={`Chào ${getProFile.name}`}>
         {/* <Menu.Divider />
         <Menu.Item icon={<SettingOutlined />}>Setting</Menu.Item>
                 <Menu.Item icon={<ProfileFilled />} onClick={routerProfile}>
