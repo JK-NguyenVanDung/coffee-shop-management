@@ -123,7 +123,6 @@ const BillDetail = () => {
       {open && (
         <div>
           <Loading loading={loading} />
-
           <div className="backdrop" onClick={onRemove}></div>
           <div className="billDetailCont">
             <img className="clipper" src={Clipper} />

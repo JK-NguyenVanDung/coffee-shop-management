@@ -34,13 +34,66 @@ function currentDate() {
     currentdate.getFullYear();
   return datetime;
 }
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+}
+function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowDimensions;
+}
+
 const OrderBar = () => {
   let visible = useAppSelector((state) => state.menu.show);
   let orderList = useAppSelector((state) => state.menu.orderList);
   let amount = useAppSelector((state) => state.menu.amount);
   let total = useAppSelector((state) => state.menu.total);
-
+  const { height, width } = useWindowDimensions();
+  let shortedList = [];
+  const [maxI, setMaxI] = useState(8);
+  function getMaxSize() {
+    // if (width >= 1920) {
+    //   setMaxI(8);
+    // } else if (width >= 1800) {
+    //   setMaxI(7);
+    // } else if (width >= 1600) {
+    //   setMaxI(6);
+    // } else if (width >= 1400) {
+    //   setMaxI(5);
+    // } else if (width >= 1200) {
+    //   setMaxI(4);
+    // } else if (width >= 1000) {
+    //   setMaxI(3);
+    // } else if (width < 1000) {
+    //   setMaxI(3);
+    // } else {
+    //   let i = width / orderList.length;
+    //   console.log(i);
+    // }
+    let i = width / 10 / orderList.length - 5;
+    setMaxI(Math.floor(i));
+  }
+  useEffect(() => {
+    getMaxSize();
+  }, [width, orderList]);
   const dispatch = useAppDispatch();
+
   function onRemove() {
     dispatch(actions.menuActions.closeOrderBar());
   }
@@ -58,12 +111,14 @@ const OrderBar = () => {
           className="orderBarCont drop-shadow"
           style={{ backgroundImage: `url(${WoodBoard})` }}
         >
-          {orderList.map((item) => {
-            return (
-              <div>
-                <OrderItem item={item} />
-              </div>
-            );
+          {orderList.map((item, i) => {
+            if (i <= maxI) {
+              return (
+                <div>
+                  <OrderItem item={item} />
+                </div>
+              );
+            }
           })}
           <div className="clipboardCont">
             <div className="divider"></div>
