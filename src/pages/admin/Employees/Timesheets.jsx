@@ -321,6 +321,7 @@ const TimeSheets = () => {
     let final = Number(miscalculation) * Number(payrate);
     final -= Number(punish);
     final += Number(bonus);
+    console.log(final, miscalculation, payrate, bonus, punish);
     setTotal(Number(final));
   }, [miscalculation, payrate, bonus, punish]);
   function checkCustomValidation() {
@@ -664,15 +665,6 @@ const TimeSheets = () => {
                       ]}
                     >
                       <InputNumber
-                        formatter={
-                          bonus === 0
-                            ? null
-                            : (value) =>
-                                `${value} `.replace(
-                                  /\B(?=(\d{3})+(?!\d))/g,
-                                  ","
-                                )
-                        }
                         min={0}
                         max={1000000000000}
                         style={{ minWidth: "100%" }}
@@ -694,15 +686,6 @@ const TimeSheets = () => {
                       ]}
                     >
                       <InputNumber
-                        formatter={
-                          punish === 0
-                            ? null
-                            : (value) =>
-                                `${value} `.replace(
-                                  /\B(?=(\d{3})+(?!\d))/g,
-                                  ","
-                                )
-                        }
                         min={0}
                         max={1000000000000}
                         style={{ minWidth: "100%" }}
@@ -776,15 +759,6 @@ const TimeSheets = () => {
                       ]}
                     >
                       <InputNumber
-                        formatter={
-                          miscalculation === 0
-                            ? null
-                            : (value) =>
-                                `${value} `.replace(
-                                  /\B(?=(\d{3})+(?!\d))/g,
-                                  ","
-                                )
-                        }
                         min={0}
                         max={1000000000000}
                         style={{ minWidth: "100%" }}
@@ -812,14 +786,8 @@ const TimeSheets = () => {
                     ]}
                   >
                     <InputNumber
-                      formatter={
-                        payrate === 0
-                          ? null
-                          : (value) =>
-                              `${value} `.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
                       min={0}
-                      max={1000000000000}
+                      max={100000000}
                       style={{ minWidth: "100%" }}
                       disabled={endOfMonth() || isDetail || !show}
                       onBlur={(e) => setPayrate(e.target.value)}
