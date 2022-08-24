@@ -599,7 +599,7 @@ const TimeSheets = () => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            disabled={isDetail}
+                            disabled={isDetail || !show}
                             onChange={handleCheckbox}
                             checked={paid}
                           />
@@ -610,7 +610,7 @@ const TimeSheets = () => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            disabled={isDetail}
+                            disabled={isDetail || !show}
                             onChange={handleCheckbox}
                             checked={!paid}
                           />
@@ -677,7 +677,7 @@ const TimeSheets = () => {
                         max={1000000000000}
                         style={{ minWidth: "100%" }}
                         onBlur={(e) => setBonus(e.target.value)}
-                        disabled={endOfMonth()}
+                        disabled={endOfMonth() || isDetail || !show}
                         placeholder="Không bắt buộc"
                       />
                     </Form.Item>
@@ -707,7 +707,7 @@ const TimeSheets = () => {
                         max={1000000000000}
                         style={{ minWidth: "100%" }}
                         onBlur={(e) => setPunish(e.target.value)}
-                        disabled={endOfMonth()}
+                        disabled={endOfMonth() || isDetail || !show}
                         placeholder="Không bắt buộc"
                       />
                     </Form.Item>
@@ -788,7 +788,7 @@ const TimeSheets = () => {
                         min={0}
                         max={1000000000000}
                         style={{ minWidth: "100%" }}
-                        disabled={endOfMonth()}
+                        disabled={endOfMonth() || isDetail || !show}
                         onBlur={(e) => setMiscalculation(e.target.value)}
                         placeholder="Nhập tổng giờ làm"
                       />
@@ -821,7 +821,7 @@ const TimeSheets = () => {
                       min={0}
                       max={1000000000000}
                       style={{ minWidth: "100%" }}
-                      disabled={endOfMonth()}
+                      disabled={endOfMonth() || isDetail || !show}
                       onBlur={(e) => setPayrate(e.target.value)}
                       placeholder="Nhập tiền/giờ"
                     />
@@ -845,6 +845,7 @@ const TimeSheets = () => {
               ]}
             >
               <TextField
+                disabled={isDetail || !show}
                 placeholder="Nhập ghi chú của quản lý ở đây"
                 label="Ghi chú (Không bắt buộc)"
                 multiline
@@ -857,53 +858,55 @@ const TimeSheets = () => {
             </Form.Item>
           </div>
         </PrintWrapper>
-        <div className="btnTimekeeping">
-          <Button
-            size="Large"
-            color={"primary"}
-            variant="contained"
-            style={{
-              paddingLeft: "10%",
-              paddingRight: "10%",
-              paddingTop: "2%",
-              paddingBottom: "2%",
-              color: "#fff",
-            }}
-            onClick={handleOk}
-          >
-            Lưu
-          </Button>
-          <Button
-            size="Large"
-            color={"success"}
-            variant="contained"
-            style={{
-              paddingLeft: "10%",
-              paddingRight: "10%",
-              paddingTop: "2%",
-              paddingBottom: "2%",
-              color: "#fff",
-            }}
-            onClick={(e) => validateForm(e)}
-          >
-            Xuất File
-          </Button>
-          <Button
-            size="Large"
-            color="error"
-            variant="contained"
-            style={{
-              paddingLeft: "10%",
-              paddingRight: "10%",
-              paddingTop: "2%",
-              paddingBottom: "2%",
-              color: "#fff",
-            }}
-            onClick={() => handleClose()}
-          >
-            Hủy
-          </Button>
-        </div>
+        {show && (
+          <div className="btnTimekeeping">
+            <Button
+              size="Large"
+              color={"primary"}
+              variant="contained"
+              style={{
+                paddingLeft: "10%",
+                paddingRight: "10%",
+                paddingTop: "2%",
+                paddingBottom: "2%",
+                color: "#fff",
+              }}
+              onClick={handleOk}
+            >
+              Lưu
+            </Button>
+            <Button
+              size="Large"
+              color={"success"}
+              variant="contained"
+              style={{
+                paddingLeft: "10%",
+                paddingRight: "10%",
+                paddingTop: "2%",
+                paddingBottom: "2%",
+                color: "#fff",
+              }}
+              onClick={(e) => validateForm(e)}
+            >
+              Xuất File
+            </Button>
+            <Button
+              size="Large"
+              color="error"
+              variant="contained"
+              style={{
+                paddingLeft: "10%",
+                paddingRight: "10%",
+                paddingTop: "2%",
+                paddingBottom: "2%",
+                color: "#fff",
+              }}
+              onClick={() => handleClose()}
+            >
+              Hủy
+            </Button>
+          </div>
+        )}
       </Form>
     </div>
   );

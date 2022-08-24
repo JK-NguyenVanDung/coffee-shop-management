@@ -143,7 +143,6 @@ const Employees = () => {
         return (
           <>
             <Button
-              disabled={accessRight == false}
               variant="contained"
               color="dark"
               endIcon={<PendingActionsOutlinedIcon />}
