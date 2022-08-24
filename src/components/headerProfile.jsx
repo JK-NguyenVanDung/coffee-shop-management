@@ -172,7 +172,6 @@ export default function HeaderProFile() {
         .validateFields()
         .then(async (values) => {
           setLoading(true);
-          const temp = [];
           if (dataItem) {
             await bankCollections.editBank({
               _id: dataItem._id,
@@ -181,7 +180,7 @@ export default function HeaderProFile() {
                 afternoon: values.afternoon,
                 night: values.night,
                 proceeds: values.proceeds,
-                status: !confirm,
+                status: confirm,
               },
             });
             setShowBank(false);
