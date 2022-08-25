@@ -803,10 +803,6 @@ const TimeSheets = () => {
               name="note"
               rules={[
                 {
-                  required: true,
-                  message: `Không được để trống rate/giờ`,
-                },
-                {
                   pattern: new RegExp(/^\w/),
                   message: errorText.space,
                 },
@@ -820,6 +816,7 @@ const TimeSheets = () => {
                 rows={2}
                 id="my-input"
                 maxRows={4}
+                inputProps={{ maxLength: 500 }}
                 variant="outlined"
                 fullWidth
               />
