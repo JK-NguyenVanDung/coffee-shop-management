@@ -268,7 +268,7 @@ export default function HeaderProFile() {
                     rules={[
                       {
                         required: true,
-                        message: `Không được để trống tiền buổi sáng`,
+                        message: `Không được để trống tiền ca 1`,
                       },
                       {
                         pattern: new RegExp(/^\w/),
@@ -284,7 +284,7 @@ export default function HeaderProFile() {
                       min={0}
                       max={1000000000000}
                       disabled={dataItem ? dataItem.status : false}
-                      placeholder="Nhập tiền buổi trưa"
+                      placeholder="Nhập tiền ca 1"
                     />
                   </Form.Item>
                   <h4>{labels.lunch_money}</h4>
@@ -293,7 +293,7 @@ export default function HeaderProFile() {
                     rules={[
                       {
                         required: true,
-                        message: `Không được để trống tiền buổi trưa`,
+                        message: `Không được để trống tiền ca 2`,
                       },
                       {
                         pattern: new RegExp(/^\w/),
@@ -309,7 +309,7 @@ export default function HeaderProFile() {
                       min={0}
                       max={1000000000000}
                       disabled={dataItem ? dataItem.status : false}
-                      placeholder="Nhập tiền buổi trưa"
+                      placeholder="Nhập tiền ca 2"
                     />
                   </Form.Item>
                   <h4>{labels.evening_money}</h4>
@@ -318,7 +318,7 @@ export default function HeaderProFile() {
                     rules={[
                       {
                         required: true,
-                        message: `Không được để trống tiền buổi tối`,
+                        message: `Không được để trống tiền ca 3`,
                       },
                       {
                         pattern: new RegExp(/^\w/),
@@ -334,7 +334,7 @@ export default function HeaderProFile() {
                       min={0}
                       max={1000000000000}
                       disabled={dataItem ? dataItem.status : false}
-                      placeholder="Nhập tiền buổi tối"
+                      placeholder="Nhập tiền ca 3"
                     />
                   </Form.Item>
                   <h4>{labels.end_money}</h4>
