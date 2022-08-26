@@ -45,7 +45,7 @@ function currentDate() {
   let datetime =
     currentdate.getHours() +
     ":" +
-    (currentdate.getMinutes() < 10 ? "0" : null) +
+    (currentdate.getMinutes() < 10 ? "0" : "") +
     currentdate.getMinutes() +
     " " +
     currentdate.getDate() +
