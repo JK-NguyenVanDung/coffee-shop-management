@@ -233,14 +233,14 @@ const Bills = () => {
               _id: item._id,
               account_id: getUserName(item.account_id),
               price_total: numbToCurrency(item.price_total),
-              details: item.details.map((item) => {
+              details: item.details.map((detail, index) => {
                 return `${
-                  item.name +
+                  detail.name +
                   ", " +
-                  numbToCurrency(item.price) +
+                  numbToCurrency(detail.price) +
                   " x " +
-                  item.amount +
-                  "\n&  "
+                  detail.amount +
+                  (index !== item.details.length - 1 ? "\n& " : "")
                 }`;
               }),
 

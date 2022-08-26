@@ -154,7 +154,6 @@ const ModalContent = () => {
           handleClose();
           dispatch(actions.formActions.changeLoad(!loadData));
           message.success("Thay đổi thành công");
-
           setLoading(false);
         } else {
           await collections.addBill({
@@ -163,7 +162,6 @@ const ModalContent = () => {
           handleClose();
           dispatch(actions.formActions.changeLoad(!loadData));
           message.success("Thêm thành công");
-
           setLoading(false);
         }
       })
