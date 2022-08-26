@@ -25,6 +25,7 @@ function currentDate() {
   let datetime =
     currentdate.getHours() +
     ":" +
+    (currentdate.getMinutes() < 10 ? "0" : null) +
     currentdate.getMinutes() +
     " " +
     currentdate.getDate() +
@@ -34,7 +35,6 @@ function currentDate() {
     currentdate.getFullYear();
   return datetime;
 }
-
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
   return {
