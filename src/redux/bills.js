@@ -20,7 +20,6 @@ const slice = createSlice({
 
 
         setListAll(state, actions) {
-            console.log(actions.payload);
             state.listAll = actions.payload;
 
         },      

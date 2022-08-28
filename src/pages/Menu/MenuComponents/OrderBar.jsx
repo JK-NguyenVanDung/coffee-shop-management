@@ -84,10 +84,7 @@ const OrderBar = () => {
       setMaxI(3);
     } else {
       let i = width / orderList.length;
-      console.log(i);
     }
-    // let i = width / 10 / orderList.length - 5;
-    // setMaxI(Math.floor(i));
   }
   useEffect(() => {
     getMaxSize();

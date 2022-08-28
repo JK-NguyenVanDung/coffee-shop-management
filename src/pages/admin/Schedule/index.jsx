@@ -125,12 +125,7 @@ const Schedule = () => {
       </div>
     );
   };
-  function logOut(e, f) {
-    let test = "62d68b7a83d7ce588288fb14";
 
-    console.log(e);
-    console.log(f);
-  }
   const columns = [
     {
       title: "Ca làm",
@@ -380,9 +375,7 @@ const Schedule = () => {
         currentIndex = -1;
       }
     }
-    console.log("index" + currentIndex);
     dispatch(actions.scheduleActions.setWeekDetail(dataList[currentIndex]));
-    console.log(weekDetail);
   }, [dataList, date]);
   useEffect(() => {
     setData(
@@ -502,11 +495,6 @@ const Schedule = () => {
 
     setLoading(false);
   }
-  function cancel(e) {
-    // message.error('Click on No');
-  }
-
-  const onSearch = (value) => console.log(value);
 
   return (
     <>

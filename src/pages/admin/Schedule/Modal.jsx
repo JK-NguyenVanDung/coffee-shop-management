@@ -163,19 +163,13 @@ const ModalContent = () => {
       end_at: newWeekSchedule.end,
       status: newWeekSchedule.false,
     };
-    // console.log(obj);
 
     if (newWeekSchedule._id === "") {
-      console.log("s1");
       const response = await collections.addSchedule(obj);
       if (response) {
-        console.log("s2");
-
         await collections.editSchedule({ _id: response._id, body: obj });
       }
     } else {
-      console.log("s3");
-
       await collections.editSchedule({
         _id: newWeekSchedule._id,
         body: editObj,
@@ -245,7 +239,6 @@ const ModalContent = () => {
   };
 
   const checkedDate = (item, day) => {
-    console.log(item);
     if (select) {
       if (newWeekSchedule.shifts.length === 3) {
         let clone = JSON.parse(JSON.stringify(newWeekSchedule));
@@ -480,7 +473,6 @@ const ModalContent = () => {
       }
     }
     let existedSchedule = dataList[currentIndex];
-    // console.log("why" + start.toLocaleDateString("vi-VN"));
     if (currentIndex !== -1 && dataList.length > 0) {
       let temp = {
         _id: existedSchedule._id,

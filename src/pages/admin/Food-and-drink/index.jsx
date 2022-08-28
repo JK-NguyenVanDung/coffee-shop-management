@@ -31,14 +31,7 @@ import { numbToCurrency } from "../../../helper/currency";
 
 const { Search } = Input;
 
-// const rowSelection = {
-//     onChange: (selectedRowKeys, selectedRows) => {
-//         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-//     },
-// };
-
 const FoodAndDrink = () => {
-  // const [selectionType, setSelectionType] = useState('checkbox');
   const [postList, setPostList] = useState({ page: 1, per_page: 10 });
   const checkOnload = useAppSelector((state) => state.form.loadData);
 
@@ -47,7 +40,6 @@ const FoodAndDrink = () => {
   const dataList = useAppSelector((state) => state.dishes.listAll);
   const [showList, setShowList] = useState(false);
   const dispatch = useAppDispatch();
-  const onSearch = (value) => console.log(value);
   const [switchStatus, setSwitchStatus] = useState(true);
   const [data, setData] = useState([]);
 

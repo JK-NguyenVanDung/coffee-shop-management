@@ -321,12 +321,9 @@ const TimeSheets = () => {
     let final = Number(miscalculation) * Number(payrate);
     final -= Number(punish);
     final += Number(bonus);
-    console.log(final, miscalculation, payrate, bonus, punish);
     setTotal(Number(final));
   }, [miscalculation, payrate, bonus, punish]);
-  function checkCustomValidation() {
-    return true;
-  }
+
   let billRef = useRef();
 
   const handlePrint = useReactToPrint({

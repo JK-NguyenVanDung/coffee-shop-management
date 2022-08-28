@@ -23,7 +23,6 @@ const MenuHeader = (props) => {
   const navigate = useNavigate();
   const onChangeSearch = async (value) => {
     setSearch(value);
-    // console.log(value);
   };
   const onSearch = async () => {
     const reg = new RegExp(search, "gi");

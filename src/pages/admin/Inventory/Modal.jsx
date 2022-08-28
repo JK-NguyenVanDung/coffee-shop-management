@@ -318,7 +318,6 @@ const ModalContent = () => {
       .catch((info) => {
         dispatch(actions.formActions.showError());
         setLoading(false);
-        console.log("error" + info);
       });
   };
 

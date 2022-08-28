@@ -21,7 +21,6 @@ const slice = createSlice({
 
         },
         login(state, actions) { 
-            console.log(actions.payload);
             state.token = actions.payload
         },
         logout(state) {

@@ -48,7 +48,6 @@ const getBase64 = (img, callback) => {
 
 const beforeUpload = (file) => {
   const isLt5M = file.size / 1024 / 1024 >= 5;
-  console.log(file.size / 1024 / 1024);
   if (isLt5M) {
     message.error("Ảnh phải nhỏ hơn 5MB!");
   }
@@ -313,7 +312,6 @@ const ModalContent = () => {
 
       .catch((e) => {
         dispatch(actions.formActions.showError());
-        console.log(e);
 
         setLoading(false);
       });

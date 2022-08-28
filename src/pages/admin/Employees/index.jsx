@@ -29,13 +29,7 @@ import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlin
 import errorNotification from "../../../helper/errorNotification";
 
 const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
+  onChange: (selectedRowKeys, selectedRows) => {},
 };
 const Employees = () => {
   const [loading, setLoading] = useState(false);
@@ -220,7 +214,6 @@ const Employees = () => {
   }, []);
 
   useEffect(() => {
-    console.log(accessRight);
     let data =
       showList && dataList
         ? dataList.map((item, index) => {

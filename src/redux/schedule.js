@@ -28,7 +28,6 @@ const slice = createSlice({
         setExistedSchedule(state, actions) {
             state.existedSchedule = actions.payload;
 
-            console.log(actions.payload)
 
         },
         setWeekDetail(state, actions) {
@@ -46,7 +45,6 @@ const slice = createSlice({
 
         },    
         setListAll(state, actions) {
-            console.log(actions.payload);
             state.listAll = actions.payload;
 
         },      

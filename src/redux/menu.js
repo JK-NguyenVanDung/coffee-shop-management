@@ -47,7 +47,6 @@ const slice = createSlice({
         },
         showInfo(state,actions){
             state.showInfo = true;
-            console.log(actions.payload);
             state.info = actions.payload;
         },
         hideInfo(state) {
@@ -162,7 +161,6 @@ const slice = createSlice({
                 temp.amount = 1;
                 state.orderList.push(temp); 
             }
-            console.log(12)
             state.show = true;
 
         },

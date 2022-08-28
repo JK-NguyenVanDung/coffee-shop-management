@@ -81,9 +81,7 @@ function Login() {
           dispatch(actions.authActions.setAdminAuth());
         }
         localStorage.setItem("Bearer", `Bearer ${response.accessToken}`);
-        // setToken(response.access_token);
-        // dispatch(loginSuccess(token));
-        // console.log(response);
+
         setTimeout(() => {
           setLoading(false);
         }, 1000);

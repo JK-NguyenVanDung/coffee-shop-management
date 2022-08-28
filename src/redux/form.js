@@ -27,7 +27,6 @@ const slice = createSlice({
         },
         showError(state,actions) {
             state.modalError = true;
-            console.log(actions.payload);
             state.errorText = actions.payload?actions.payload:"" ;
         },
         hideError(state) {
@@ -47,7 +46,6 @@ const slice = createSlice({
             state.detail=false
         },
         setNameMenu(state, actions) {
-            console.log(actions.payload);
 
             state.nameMenu = actions.payload
         },

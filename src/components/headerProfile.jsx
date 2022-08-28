@@ -97,7 +97,6 @@ export default function HeaderProFile() {
   const token = useAppSelector((state) => state.auth.token);
 
   const logout = async () => {
-    console.log(token);
     // const response = await collections.logout(token);
     dispatch(actions.authActions.logout());
     localStorage.removeItem("Bearer");
@@ -128,19 +127,11 @@ export default function HeaderProFile() {
             setDataItem(null);
           }
         }
-        console.log(dataItem);
-        // setDataItem(response);
-        // setPagination({
-        //   totalDocs: response.metadata.count,
-        // });
-      } catch (error) {
-        //history.replace("/");
-      }
+      } catch (error) {}
       setLoading(false);
     };
 
     useEffect(() => {
-      // test.current = 2;
       fetchData();
     }, []);
 
@@ -148,13 +139,9 @@ export default function HeaderProFile() {
       form.resetFields();
 
       const setForm = () => {
-        console.log(dataItem);
         form.setFieldsValue({
           //truyền data khi bấm vào => dataItem.
           id: dataItem !== null ? dataItem._id : null,
-          // createdAt: moment(new Date(dataItem.createdAt)).format(
-          //   "h:mma - DD/MM/YYYY"
-          // ),
           morning: dataItem !== null ? dataItem.morning : 0,
           afternoon: dataItem !== null ? dataItem.afternoon : 0,
           night: dataItem !== null ? dataItem.night : 0,

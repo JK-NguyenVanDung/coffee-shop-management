@@ -34,8 +34,6 @@ axiosConfig.interceptors.request.use(async (config) => {
 axiosConfig.interceptors.response.use(
   (response) => {
     if (response && response.data) {
-      console.log(response);
-
       return response.data;
     }
     return response;
@@ -44,30 +42,19 @@ axiosConfig.interceptors.response.use(
     // Handle errors
 
     const { config, data } = error.response;
-    console.log({
-      baseUrl: config.baseURL,
-      url: config.url,
-      method: config.method,
-      body: config.data, //&& JSON.parse(config.data)
-      response: data.error,
-      token: config.headers && config.headers.Authorization,
-    });
-    // if (error.response?.status === 403) {
-    //   localStorage.setItem("access", false);
-    // } else {
-    //   localStorage.setItem("access", true);
-    // }
+    // console.log({
+    //   baseUrl: config.baseURL,
+    //   url: config.url,
+    //   method: config.method,
+    //   body: config.data, //&& JSON.parse(config.data)
+    //   response: data.error,
+    //   token: config.headers && config.headers.Authorization,
+    // });
+
     if (error.response.data.error.message) {
       throw error.response.data.error.message;
     }
     message.error(error.response?.data?.error);
-    if (error.response?.status === 401) {
-      // localStorage.clear();
-    }
-    if (error.response?.status === 404) {
-      //  localStorage.clear();
-    }
-
     throw error;
   }
 );

@@ -54,11 +54,6 @@ const BillPrint = () => {
   function cancelPrint() {
     dispatch(actions.menuActions.cancelOrder());
   }
-  useEffect(() => {
-    // let res = collections.getBill(id);
-    // console.log(res);
-    // setBill(res);
-  }, []);
 
   const paymentText = [
     { value: "cash", label: "Tiền mặt" },

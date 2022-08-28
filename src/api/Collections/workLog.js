@@ -45,11 +45,9 @@ export const addWorkLog = async (body) => {
   export const getWorkTimes = async () => {
     try {
       const response = await api.get(`/WorkTimes`);
-      console.log(response);
   
       return response;
     } catch (e) {
-      console.log(e);
       throw e.message;
     }
   };

@@ -5,7 +5,6 @@ export const login = (body) => {
         const response =  api.post(`/auth/login`,body);
         return response;
       } catch (err) {
-        console.log(err)
 
         return err;
 
@@ -16,7 +15,6 @@ export const logout = () => {
       const response =  api.post(`/auth/logout`);
       return response;
     } catch (err) {
-      console.log(err)
 
       throw err.message;
     }

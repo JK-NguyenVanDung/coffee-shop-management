@@ -3,11 +3,9 @@ const v1 = "/v1/admin";
 export const getEmployees = async () => {
   try {
     const response = await api.get(`/accounts`);
-    console.log(response);
 
     return response;
   } catch (e) {
-    console.log(e);
     throw e.message;
   }
 };

@@ -114,22 +114,14 @@ const SaleChart = () => {
           };
         });
       }
-
-      console.log(data);
       dispatch(actions.analysisActions.setListAll(data));
 
       setLoading(false);
-      // setPagination({
-      //   totalDocs: response.metadata.count,
-      // });
-    } catch (error) {
-      //history.replace("/");
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
     // test.current = 2;
-    console.log(date);
     fetchData();
   }, [date, type]);
 
@@ -233,7 +225,6 @@ export default function Analysis() {
     setDate(e);
     let out = getMonthAndYear(e);
     dispatch(actions.analysisActions.setDate(out));
-    console.log(out);
   }
   function changeType(e) {
     getDate(new Date());
@@ -471,12 +462,10 @@ const BankColumn = () => {
         tempList.push(e, n, a, m);
       }
     }
-    console.log(tempList);
     setData(tempList);
   }
   const asyncFetch = async () => {
     let data = await bankCollections.getBanks();
-    console.log(data);
     getData(data);
     setAPIData(data);
   };

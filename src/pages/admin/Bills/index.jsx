@@ -301,7 +301,6 @@ const Bills = () => {
     // message.error('Click on No');
   }
 
-  const onSearch = (value) => console.log(value);
   const [confirmDelete, setConfirmDelete] = useState(false);
   function setConfirm() {
     dispatch(actions.formActions.showDelete());
@@ -347,7 +346,6 @@ const Bills = () => {
             size="default"
             value={search}
             onChange={(e) => onChangeSearch(e.target.value)}
-            // onSearch={onSearch}
             enterButton
           />
         </div>
