@@ -42,13 +42,12 @@
 
 @media print{
   @page{
-    size: 2480px 3508px;
 
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 14pt;
     line-height: 24pt;
     background:none;
-    color:#000;
+    color:rgb(97, 43, 43);
     font-weight: 900;
   }
 }
