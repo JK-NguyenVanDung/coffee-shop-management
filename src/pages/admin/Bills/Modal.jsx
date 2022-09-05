@@ -255,7 +255,7 @@ const ModalContent = () => {
         </div> */}
         <div className="locationCont">
           <Typography
-            sx={{ fontWeight: "900" }}
+            sx={{ fontSize: "24pt", fontWeight: "bold" }}
             color="text.secondary"
             gutterBottom
             textAlign="left"
@@ -263,7 +263,7 @@ const ModalContent = () => {
             Địa chỉ: {shopAddress}
           </Typography>
           <Typography
-            sx={{ fontWeight: "900" }}
+            sx={{ fontSize: "24pt", fontWeight: "bold" }}
             color="text.secondary"
             gutterBottom
             textAlign="left"
@@ -276,7 +276,7 @@ const ModalContent = () => {
         <div className="cardCont">
           <div className="billContentsCont">
             <Typography
-              sx={{ fontSize: "14pt", mb: 5, fontWeight: "900" }}
+              sx={{ fontSize: "32pt", mb: 5, fontWeight: "bold" }}
               color="text.secondary"
               gutterBottom
               textAlign="center"
@@ -288,14 +288,14 @@ const ModalContent = () => {
                 <>
                   <div className="billContentCont">
                     <Typography
-                      sx={{ fontWeight: "900" }}
+                      sx={{ fontSize: "24pt", fontWeight: "bold" }}
                       color="text.secondary"
                       gutterBottom
                     >
                       {item.label}
                     </Typography>
                     <Typography
-                      sx={{ fontWeight: "900" }}
+                      sx={{ fontSize: "24pt", fontWeight: "bold" }}
                       color="text.secondary"
                       gutterBottom
                     >
@@ -308,14 +308,14 @@ const ModalContent = () => {
             <hr width="100%" size="1%" align="center" />
             <div className="billItemsCont">
               <Typography
-                sx={{ fontWeight: "900" }}
+                sx={{ fontSize: "24pt", fontWeight: "bold" }}
                 color="text.secondary"
                 gutterBottom
               >
                 {billContent2.label}
               </Typography>
               <Typography
-                sx={{ fontWeight: "900" }}
+                sx={{ fontSize: "24pt", fontWeight: "bold" }}
                 color="text.secondary"
                 gutterBottom
               >
@@ -323,7 +323,8 @@ const ModalContent = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontWeight: "900",
+                  fontSize: "24pt",
+                  fontWeight: "bold",
                   textAlign: "center",
                 }}
                 color="text.secondary"
@@ -338,14 +339,14 @@ const ModalContent = () => {
                   <div className="billItemsCont">
                     <div className="rowCont">
                       <Typography
-                        sx={{ fontWeight: "900" }}
+                        sx={{ fontSize: "24pt", fontWeight: "bold" }}
                         color="text.secondary"
                         gutterBottom
                       >
                         {item.name}
                       </Typography>
                       <Typography
-                        sx={{ fontWeight: "900" }}
+                        sx={{ fontSize: "24pt", fontWeight: "bold" }}
                         color="text.secondary"
                         gutterBottom
                       >
@@ -354,7 +355,8 @@ const ModalContent = () => {
                     </div>
                     <Typography
                       sx={{
-                        fontWeight: "900",
+                        fontSize: "24pt",
+                        fontWeight: "bold",
                         textAlign: "center",
                       }}
                       color="text.secondary"
@@ -372,14 +374,14 @@ const ModalContent = () => {
                 <>
                   <div className="billContentCont">
                     <Typography
-                      sx={{ fontWeight: "900" }}
+                      sx={{ fontSize: "24pt", fontWeight: "bold" }}
                       color="text.secondary"
                       gutterBottom
                     >
                       {item.label}
                     </Typography>
                     <Typography
-                      sx={{ fontWeight: "900" }}
+                      sx={{ fontSize: "24pt", fontWeight: "bold" }}
                       color="text.secondary"
                       gutterBottom
                     >
