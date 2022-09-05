@@ -41,7 +41,9 @@
 
 
 @media print{
-  body{
+  @page{
+    size: 2480px 3508px;
+
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 14pt;
     line-height: 24pt;
