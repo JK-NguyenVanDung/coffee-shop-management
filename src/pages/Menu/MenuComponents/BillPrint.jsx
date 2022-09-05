@@ -118,8 +118,12 @@ const BillPrint = () => {
         <div className="cardCont">
           <div className="billContentsCont">
             <Typography
-              sx={{ fontSize: "1.5rem", mb: 3 }}
-              color="text.secondary"
+              sx={{
+                fontSize: "20pt",
+                mb: 3,
+                color: "#111",
+                fontWeight: "bold",
+              }}
               gutterBottom
               textAlign="center"
             >
@@ -130,15 +134,21 @@ const BillPrint = () => {
                 <>
                   <div className="billContentCont">
                     <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                      color="text.secondary"
+                      sx={{
+                        fontSize: "16pt",
+                        color: "#111",
+                        fontWeight: "bold",
+                      }}
                       gutterBottom
                     >
                       {item.label}
                     </Typography>
                     <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                      color="text.secondary"
+                      sx={{
+                        fontSize: "16pt",
+                        color: "#111",
+                        fontWeight: "bold",
+                      }}
                       gutterBottom
                     >
                       {item.content}
@@ -150,26 +160,31 @@ const BillPrint = () => {
             <hr width="100%" size="1%" align="center" />
             <div className="billItemsCont">
               <Typography
-                sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                color="text.secondary"
+                sx={{
+                  fontSize: "16pt",
+                  color: "#111",
+                  fontWeight: "bold",
+                }}
                 gutterBottom
               >
                 {billContent2.label}
               </Typography>
               <Typography
-                sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                color="text.secondary"
+                sx={{
+                  fontSize: "16pt",
+                  color: "#111",
+                  fontWeight: "bold",
+                }}
                 gutterBottom
               >
                 {billContent2.content1}
               </Typography>
               <Typography
                 sx={{
-                  fontSize: "0.8rem",
+                  fontSize: "16pt",
+                  color: "#111",
                   fontWeight: "bold",
-                  textAlign: "center",
                 }}
-                color="text.secondary"
                 gutterBottom
               >
                 {billContent2.content2}
@@ -181,15 +196,21 @@ const BillPrint = () => {
                   <div className="billItemsCont">
                     <div className="rowCont">
                       <Typography
-                        sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                        color="text.secondary"
+                        sx={{
+                          fontSize: "16pt",
+                          color: "#111",
+                          fontWeight: "bold",
+                        }}
                         gutterBottom
                       >
                         {item.name}
                       </Typography>
                       <Typography
-                        sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                        color="text.secondary"
+                        sx={{
+                          fontSize: "16pt",
+                          color: "#111",
+                          fontWeight: "bold",
+                        }}
                         gutterBottom
                       >
                         {item.amount}
@@ -197,11 +218,10 @@ const BillPrint = () => {
                     </div>
                     <Typography
                       sx={{
-                        fontSize: "0.8rem",
+                        fontSize: "16pt",
+                        color: "#111",
                         fontWeight: "bold",
-                        textAlign: "center",
                       }}
-                      color="text.secondary"
                       gutterBottom
                     >
                       {numbToCurrency(item.price)}
@@ -216,15 +236,21 @@ const BillPrint = () => {
                 <>
                   <div className="billContentCont">
                     <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                      color="text.secondary"
+                      sx={{
+                        fontSize: "16pt",
+                        color: "#111",
+                        fontWeight: "bold",
+                      }}
                       gutterBottom
                     >
                       {item.label}
                     </Typography>
                     <Typography
-                      sx={{ fontSize: "0.8rem", fontWeight: "bold" }}
-                      color="text.secondary"
+                      sx={{
+                        fontSize: "16pt",
+                        color: "#111",
+                        fontWeight: "bold",
+                      }}
                       gutterBottom
                     >
                       {item.content}
