@@ -38,3 +38,14 @@
   }
   
 }
+
+
+@media print{
+  body{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 16pt;
+    line-height: 24pt;
+    background:none;
+    color:#000;
+  }
+}
